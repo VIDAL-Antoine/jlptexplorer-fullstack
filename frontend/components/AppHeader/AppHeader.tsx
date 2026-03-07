@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import {
   ActionIcon,
+  Anchor,
   Burger,
   Group,
   Text,
@@ -22,9 +24,11 @@ export function AppHeader({ opened, toggle }: AppHeaderProps) {
     <Group h="100%" px="md" justify="space-between">
       <Group>
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        <Text fw={700} size="lg">
-          JLPTExplorer
-        </Text>
+        <Anchor component={Link} href="/" underline="never" c="inherit">
+          <Text fw={700} size="lg">
+            JLPTExplorer
+          </Text>
+        </Anchor>
       </Group>
       <ActionIcon
         variant="default"
