@@ -1,12 +1,31 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { IconDeviceGamepad2, IconDeviceTv, IconMovie, IconMusic } from '@tabler/icons-react';
-import { AspectRatio, Card, Group, Image, SimpleGrid, Text } from '@mantine/core';
+import {
+  IconDeviceGamepad2,
+  IconDeviceTv,
+  IconMovie,
+  IconMusic,
+  IconSearch,
+  IconTag,
+} from '@tabler/icons-react';
+import {
+  AspectRatio,
+  Card,
+  Chip,
+  Group,
+  Image,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { api, type Source } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
 
-const TYPE_ICONS: Record<Source['type'], React.ComponentType<{ size?: number; color?: string }>> = {
+type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
+
+const TYPE_ICONS: Partial<Record<Source['type'], IconComponent>> = {
   game: IconDeviceGamepad2,
   anime: IconDeviceTv,
   series: IconDeviceTv,
@@ -14,9 +33,15 @@ const TYPE_ICONS: Record<Source['type'], React.ComponentType<{ size?: number; co
   music: IconMusic,
 };
 
+function getTypeIcon(type: Source['type']): IconComponent {
+  return TYPE_ICONS[type] ?? IconTag;
+}
+
 export function SourcesList() {
   const [sources, setSources] = useState<Source[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [activeType, setActiveType] = useState<string>('all');
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     api.sources.list().then((data) => {
@@ -27,38 +52,72 @@ export function SourcesList() {
 
   if (loading) return <PageLoader />;
 
+  const availableTypes = Array.from(new Set(sources.map((s) => s.type))) as Source['type'][];
+  const filtered = sources.filter((s) => {
+    const matchesType = activeType === 'all' || s.type === activeType;
+    const q = search.toLowerCase();
+    const matchesSearch =
+      s.title.toLowerCase().includes(q) || (s.japanese_title ?? '').toLowerCase().includes(q);
+    return matchesType && matchesSearch;
+  });
+
   return (
-    <SimpleGrid cols={{ base: 3, sm: 3, md: 4, lg: 8 }} mt="xl">
-      {sources.map((source) => {
-        const TypeIcon = TYPE_ICONS[source.type];
-        return (
-          <Card key={source.id} shadow="sm" padding="md" radius="md" withBorder>
-            <Card.Section>
-              <AspectRatio ratio={2 / 3}>
-                <Image
-                  src={source.cover_image_url}
-                  alt={source.title}
-                  fit="cover"
-                  fallbackSrc="https://placehold.co/400x600?text=No+image"
-                />
-              </AspectRatio>
-            </Card.Section>
-            <Group justify="space-between" mt="sm">
-              <div>
-                <Text fw={600} size="sm">
-                  {source.title}
-                </Text>
-                {source.japanese_title && (
-                  <Text size="xs" c="dimmed">
-                    {source.japanese_title}
+    <Stack mt="xl">
+      <TextInput
+        placeholder="Search..."
+        leftSection={<IconSearch size={16} />}
+        value={search}
+        size="lg"
+        onChange={(e) => setSearch(e.currentTarget.value)}
+      />
+      <Chip.Group value={activeType} onChange={(v) => setActiveType(v as string)}>
+        <Group gap="xs">
+          <Chip value="all" size="xl">
+            All
+          </Chip>
+          {availableTypes.map((type) => {
+            const Icon = getTypeIcon(type);
+            return (
+              <Chip key={type} value={type} size="xl" tt="capitalize" icon={<Icon size={14} />}>
+                {type}
+              </Chip>
+            );
+          })}
+        </Group>
+      </Chip.Group>
+
+      <SimpleGrid cols={{ base: 3, sm: 3, md: 4, lg: 8 }}>
+        {filtered.map((source) => {
+          const TypeIcon = getTypeIcon(source.type);
+          return (
+            <Card key={source.id} shadow="sm" padding="md" radius="md" withBorder>
+              <Card.Section>
+                <AspectRatio ratio={2 / 3}>
+                  <Image
+                    src={source.cover_image_url}
+                    alt={source.title}
+                    fit="cover"
+                    fallbackSrc="https://placehold.co/400x600?text=No+image"
+                  />
+                </AspectRatio>
+              </Card.Section>
+              <Group justify="space-between" mt="sm">
+                <div>
+                  <Text fw={600} size="md">
+                    {source.title}
                   </Text>
-                )}
-              </div>
-              <TypeIcon size={20} color="gray" />
-            </Group>
-          </Card>
-        );
-      })}
-    </SimpleGrid>
+                  {source.japanese_title && (
+                    <Text size="xs" c="dimmed">
+                      {source.japanese_title}
+                    </Text>
+                  )}
+                </div>
+                <TypeIcon size={20} color="gray" />
+              </Group>
+            </Card>
+          );
+        })}
+      </SimpleGrid>
+    </Stack>
   );
 }
