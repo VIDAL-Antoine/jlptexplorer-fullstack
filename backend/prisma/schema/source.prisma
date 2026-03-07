@@ -1,9 +1,9 @@
 enum source_type {
-  Game
-  Anime
-  Movie
-  Series
-  Music
+  game
+  anime
+  movie
+  series
+  music
 }
 
 model sources {
