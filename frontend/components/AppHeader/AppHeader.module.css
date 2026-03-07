@@ -1,0 +1,7 @@
+[data-mantine-color-scheme='light'] .iconDark {
+  display: none;
+}
+
+[data-mantine-color-scheme='dark'] .iconLight {
+  display: none;
+}
