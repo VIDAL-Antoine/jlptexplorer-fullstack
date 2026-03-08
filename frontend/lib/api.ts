@@ -1,3 +1,5 @@
+import { type JlptLevel } from '../constants/jlpt';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
 
 export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
@@ -39,7 +41,7 @@ export type GrammarPoint = {
   title: string;
   romaji: string;
   meaning: string;
-  jlpt_level: string;
+  jlpt_level: JlptLevel;
   notes: string | null;
   created_at: string;
 };

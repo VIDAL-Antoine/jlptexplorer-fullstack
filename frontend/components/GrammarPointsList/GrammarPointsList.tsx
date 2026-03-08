@@ -14,10 +14,11 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
+
+const LEVEL_FILTER_OPTIONS = ['All', ...Object.keys(JLPT_LEVEL_COLORS)];
 import { api, type GrammarPoint } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
-
-const LEVELS = ['All', 'N5', 'N4', 'N3', 'N2', 'N1'];
 
 export function GrammarPointsList() {
   const [grammarPoints, setGrammarPoints] = useState<GrammarPoint[]>([]);
@@ -45,14 +46,14 @@ export function GrammarPointsList() {
   return (
     <Stack mt="xl">
       <Select
-        data={LEVELS}
+        data={LEVEL_FILTER_OPTIONS}
         value={level}
         onChange={(v) => setLevel(v ?? 'All')}
         size="lg"
         hiddenFrom="xs"
         allowDeselect={false}
       />
-      <SegmentedControl data={LEVELS} value={level} onChange={setLevel} size="xl" fullWidth visibleFrom="xs" />
+      <SegmentedControl data={LEVEL_FILTER_OPTIONS} value={level} onChange={setLevel} size="xl" fullWidth visibleFrom="xs" />
       <TextInput
         placeholder="Search..."
         leftSection={<IconSearch size={16} />}
@@ -71,7 +72,7 @@ export function GrammarPointsList() {
                 <Title order={1} flex={1}>
                   {gp.title}
                 </Title>
-                <Badge color="blue">{gp.jlpt_level}</Badge>
+                <Badge color={JLPT_LEVEL_COLORS[gp.jlpt_level]}>{gp.jlpt_level}</Badge>
               </Group>
               <Text size="md" c="dimmed">
                 {gp.romaji}
