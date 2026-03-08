@@ -114,3 +114,5 @@ type-NNNNN/branch-description
 ```
 
 Example: `feat-00003/setup-prisma-models`
+
+Use git switch and never git checkout. `git switch -C` allows you to create a branch and switch to it while `git switch` switches to a branch.
