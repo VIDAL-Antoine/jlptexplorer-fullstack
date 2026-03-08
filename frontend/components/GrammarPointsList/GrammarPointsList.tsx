@@ -7,6 +7,7 @@ import {
   Card,
   Group,
   SegmentedControl,
+  Select,
   SimpleGrid,
   Stack,
   Text,
@@ -43,7 +44,15 @@ export function GrammarPointsList() {
 
   return (
     <Stack mt="xl">
-      <SegmentedControl data={LEVELS} value={level} onChange={setLevel} size="xl" fullWidth />
+      <Select
+        data={LEVELS}
+        value={level}
+        onChange={(v) => setLevel(v ?? 'All')}
+        size="lg"
+        hiddenFrom="xs"
+        allowDeselect={false}
+      />
+      <SegmentedControl data={LEVELS} value={level} onChange={setLevel} size="xl" fullWidth visibleFrom="xs" />
       <TextInput
         placeholder="Search..."
         leftSection={<IconSearch size={16} />}
@@ -58,8 +67,10 @@ export function GrammarPointsList() {
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }}>
           {filtered.map((gp) => (
             <Card key={gp.id} shadow="sm" padding="md" radius="md" withBorder>
-              <Group justify="space-between">
-                <Title order={1}>{gp.title}</Title>
+              <Group justify="space-between" wrap="nowrap" align="flex-start">
+                <Title order={1} flex={1}>
+                  {gp.title}
+                </Title>
                 <Badge color="blue">{gp.jlpt_level}</Badge>
               </Group>
               <Text size="md" c="dimmed">
