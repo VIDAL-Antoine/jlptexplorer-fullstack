@@ -10,14 +10,14 @@ import {
   Text,
   useMantineColorScheme,
 } from '@mantine/core';
-import classes from './AppHeader.module.css';
+import classes from './Header.module.css';
 
-interface AppHeaderProps {
+interface HeaderProps {
   opened: boolean;
   toggle: () => void;
 }
 
-export function AppHeader({ opened, toggle }: AppHeaderProps) {
+export function Header({ opened, toggle }: HeaderProps) {
   const { toggleColorScheme } = useMantineColorScheme();
 
   return (

@@ -9,7 +9,7 @@ const links = [
   { href: '/sources', label: 'Sources', icon: IconMovie },
 ];
 
-export function AppNavbar() {
+export function Navbar() {
   const pathname = usePathname();
 
   return (

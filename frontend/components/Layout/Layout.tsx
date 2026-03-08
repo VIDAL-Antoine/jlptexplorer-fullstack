@@ -2,15 +2,15 @@
 
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { AppFooter } from '../AppFooter/AppFooter';
-import { AppHeader } from '../AppHeader/AppHeader';
-import { AppNavbar } from '../AppNavbar/AppNavbar';
+import { Footer } from '../Footer/Footer';
+import { Header } from '../Header/Header';
+import { Navbar } from '../Navbar/Navbar';
 
-interface AppLayoutProps {
+interface LayoutProps {
   children: React.ReactNode;
 }
 
-export function AppLayout({ children }: AppLayoutProps) {
+export function Layout({ children }: LayoutProps) {
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -21,17 +21,17 @@ export function AppLayout({ children }: AppLayoutProps) {
       padding="md"
     >
       <AppShell.Header>
-        <AppHeader opened={opened} toggle={toggle} />
+        <Header opened={opened} toggle={toggle} />
       </AppShell.Header>
 
       <AppShell.Navbar>
-        <AppNavbar />
+        <Navbar />
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>
 
       <AppShell.Footer>
-        <AppFooter />
+        <Footer />
       </AppShell.Footer>
     </AppShell>
   );
