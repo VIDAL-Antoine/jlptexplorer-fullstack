@@ -4,19 +4,10 @@ model clips {
   youtube_video_id    String                @db.VarChar(20)
   start_time          Int
   end_time            Int
-  transcript          String
   translation         String?
   notes               String?
   created_at          DateTime              @default(now()) @db.Timestamp(6)
   clip_grammar_points clip_grammar_points[]
+  transcript_lines    transcript_lines[]
   sources             sources               @relation(fields: [source_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "clips_source_id_sources_id_fk")
-}
-
-model clip_grammar_points {
-  clip_id          Int
-  grammar_point_id Int
-  clips            clips          @relation(fields: [clip_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "clip_grammar_points_clip_id_clips_id_fk")
-  grammar_points   grammar_points @relation(fields: [grammar_point_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "clip_grammar_points_grammar_point_id_grammar_points_id_fk")
-
-  @@id([clip_id, grammar_point_id], map: "clip_grammar_points_clip_id_grammar_point_id_pk")
 }

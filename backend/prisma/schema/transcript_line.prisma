@@ -1,0 +1,11 @@
+model transcript_lines {
+  id                  Int                   @id @default(autoincrement())
+  clip_id             Int
+  position            Int
+  speaker             String?               @db.VarChar(100)
+  text                String
+  clips               clips                 @relation(fields: [clip_id], references: [id], onDelete: Cascade)
+  clip_grammar_points clip_grammar_points[]
+
+  @@unique([clip_id, position])
+}
