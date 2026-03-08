@@ -31,4 +31,36 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
 
     return grammarPoint;
   });
+
+  server.post<{ Body: { slug: string; title: string; romaji: string; meaning: string; jlpt_level: string; notes?: string } }>(
+    "/",
+    async (request, reply) => {
+      const { slug, title, romaji, meaning, jlpt_level, notes } = request.body;
+
+      const grammarPoint = await prisma.grammar_points.create({
+        data: { slug, title, romaji, meaning, jlpt_level: jlpt_level as any, notes },
+      });
+
+      return reply.status(201).send(grammarPoint);
+    }
+  );
+
+  server.put<{ Params: { slug: string }; Body: { slug: string; title: string; romaji: string; meaning: string; jlpt_level: string; notes?: string } }>(
+    "/:slug",
+    async (request) => {
+      const { slug, title, romaji, meaning, jlpt_level, notes } = request.body;
+
+      const grammarPoint = await prisma.grammar_points.update({
+        where: { slug: request.params.slug },
+        data: { slug, title, romaji, meaning, jlpt_level: jlpt_level as any, notes },
+      });
+
+      return grammarPoint;
+    }
+  );
+
+  server.delete<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
+    await prisma.grammar_points.delete({ where: { slug: request.params.slug } });
+    return reply.status(204).send();
+  });
 }

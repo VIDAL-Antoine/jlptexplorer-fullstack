@@ -29,4 +29,34 @@ export async function sourcesRoutes(server: FastifyInstance) {
 
     return source;
   });
+
+  server.post<{ Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string } }>(
+    "/",
+    async (request, reply) => {
+      const { title, japanese_title, type, cover_image_url, slug } = request.body;
+
+      const source = await prisma.sources.create({
+        data: { title, japanese_title, type: type as any, cover_image_url, slug },
+      });
+
+      return reply.status(201).send(source);
+    }
+  );
+
+  server.put<{ Params: { slug: string }; Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string } }>(
+    "/:slug",
+    async (request) => {
+      const { title, japanese_title, type, cover_image_url, slug } = request.body;
+
+      return prisma.sources.update({
+        where: { slug: request.params.slug },
+        data: { title, japanese_title, type: type as any, cover_image_url, slug },
+      });
+    }
+  );
+
+  server.delete<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
+    await prisma.sources.delete({ where: { slug: request.params.slug } });
+    return reply.status(204).send();
+  });
 }
