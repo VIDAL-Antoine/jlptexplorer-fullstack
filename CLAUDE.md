@@ -107,7 +107,7 @@ type(scope): description
 
 ### Branches
 
-Never commit directly to `main`. Branch format:
+Never commit directly to `main`. Always work on a separate branch — if currently on `main`, create and switch to a new branch before making any code changes. Branch format:
 
 ```
 type-NNNNN/branch-description
