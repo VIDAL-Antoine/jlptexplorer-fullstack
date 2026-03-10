@@ -1,7 +1,7 @@
 import "dotenv/config";
 import fastify from "fastify";
 import { registerCors } from "./plugins/cors.js";
-import { clipsRoutes } from "./routes/v1/clips/index.js";
+import { scenesRoutes } from "./routes/v1/scenes/index.js";
 import { grammarPointsRoutes } from "./routes/v1/grammar-points/index.js";
 import { sourcesRoutes } from "./routes/v1/sources/index.js";
 
@@ -17,7 +17,7 @@ async function start() {
   await server.register(
     async (api) => {
       api.register(sourcesRoutes, { prefix: "/sources" });
-      api.register(clipsRoutes, { prefix: "/clips" });
+      api.register(scenesRoutes, { prefix: "/scenes" });
       api.register(grammarPointsRoutes, { prefix: "/grammar-points" });
     },
     { prefix: "/api/v1" }

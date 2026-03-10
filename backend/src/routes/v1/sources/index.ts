@@ -12,7 +12,7 @@ export async function sourcesRoutes(server: FastifyInstance) {
     const source = await prisma.sources.findUnique({
       where: { slug: request.params.slug },
       include: {
-        clips: {
+        scenes: {
           include: {
             transcript_lines: {
               orderBy: { position: "asc" },

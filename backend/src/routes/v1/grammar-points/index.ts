@@ -20,7 +20,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       return reply.status(404).send({ error: "Grammar point not found" });
     }
 
-    const clips = await prisma.clips.findMany({
+    const scenes = await prisma.scenes.findMany({
       where: {
         transcript_lines: {
           some: {
@@ -44,36 +44,68 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       orderBy: { created_at: "desc" },
     });
 
-    return { ...grammarPoint, clips };
+    return { ...grammarPoint, scenes };
   });
 
-  server.post<{ Body: { slug: string; title: string; romaji: string; meaning: string; jlpt_level: string; notes?: string } }>(
-    "/",
-    async (request, reply) => {
-      const { slug, title, romaji, meaning, jlpt_level, notes } = request.body;
+  server.post<{
+    Body: {
+      slug: string;
+      title: string;
+      romaji: string;
+      meaning: string;
+      jlpt_level: string;
+      notes?: string;
+    };
+  }>("/", async (request, reply) => {
+    const { slug, title, romaji, meaning, jlpt_level, notes } = request.body;
 
-      const grammarPoint = await prisma.grammar_points.create({
-        data: { slug, title, romaji, meaning, jlpt_level: jlpt_level as any, notes },
-      });
+    const grammarPoint = await prisma.grammar_points.create({
+      data: {
+        slug,
+        title,
+        romaji,
+        meaning,
+        jlpt_level: jlpt_level as any,
+        notes,
+      },
+    });
 
-      return reply.status(201).send(grammarPoint);
-    }
-  );
+    return reply.status(201).send(grammarPoint);
+  });
 
-  server.put<{ Params: { slug: string }; Body: { slug: string; title: string; romaji: string; meaning: string; jlpt_level: string; notes?: string } }>(
+  server.put<{
+    Params: { slug: string };
+    Body: {
+      slug: string;
+      title: string;
+      romaji: string;
+      meaning: string;
+      jlpt_level: string;
+      notes?: string;
+    };
+  }>("/:slug", async (request) => {
+    const { slug, title, romaji, meaning, jlpt_level, notes } = request.body;
+
+    return prisma.grammar_points.update({
+      where: { slug: request.params.slug },
+      data: {
+        slug,
+        title,
+        romaji,
+        meaning,
+        jlpt_level: jlpt_level as any,
+        notes,
+      },
+    });
+  });
+
+  server.delete<{ Params: { slug: string } }>(
     "/:slug",
-    async (request) => {
-      const { slug, title, romaji, meaning, jlpt_level, notes } = request.body;
-
-      return prisma.grammar_points.update({
+    async (request, reply) => {
+      await prisma.grammar_points.delete({
         where: { slug: request.params.slug },
-        data: { slug, title, romaji, meaning, jlpt_level: jlpt_level as any, notes },
       });
-    }
+      return reply.status(204).send();
+    },
   );
-
-  server.delete<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
-    await prisma.grammar_points.delete({ where: { slug: request.params.slug } });
-    return reply.status(204).send();
-  });
 }

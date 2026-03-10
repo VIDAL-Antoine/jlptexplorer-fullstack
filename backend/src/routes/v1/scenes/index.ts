@@ -9,13 +9,13 @@ type TranscriptLineInput = {
   grammar_point_ids?: number[];
 };
 
-export async function clipsRoutes(server: FastifyInstance) {
+export async function scenesRoutes(server: FastifyInstance) {
   server.get<{ Querystring: { sourceId?: string; level?: string } }>(
     "/",
     async (request) => {
       const { sourceId, level } = request.query;
 
-      return prisma.clips.findMany({
+      return prisma.scenes.findMany({
         where: {
           ...(sourceId ? { source_id: parseInt(sourceId) } : {}),
           ...(level
@@ -52,10 +52,10 @@ export async function clipsRoutes(server: FastifyInstance) {
     const id = parseInt(request.params.id);
 
     if (isNaN(id)) {
-      return reply.status(400).send({ error: "Invalid clip id" });
+      return reply.status(400).send({ error: "Invalid scene id" });
     }
 
-    const clip = await prisma.clips.findUnique({
+    const scene = await prisma.scenes.findUnique({
       where: { id },
       include: {
         sources: true,
@@ -70,11 +70,11 @@ export async function clipsRoutes(server: FastifyInstance) {
       },
     });
 
-    if (!clip) {
-      return reply.status(404).send({ error: "Clip not found" });
+    if (!scene) {
+      return reply.status(404).send({ error: "Scene not found" });
     }
 
-    return clip;
+    return scene;
   });
 
   server.post<{
@@ -89,7 +89,7 @@ export async function clipsRoutes(server: FastifyInstance) {
   }>("/", async (request, reply) => {
     const { source_id, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
 
-    const clip = await prisma.clips.create({
+    const scene = await prisma.scenes.create({
       data: {
         source_id,
         youtube_video_id,
@@ -121,7 +121,7 @@ export async function clipsRoutes(server: FastifyInstance) {
       },
     });
 
-    return reply.status(201).send(clip);
+    return reply.status(201).send(scene);
   });
 
   server.put<{
@@ -138,12 +138,12 @@ export async function clipsRoutes(server: FastifyInstance) {
     const id = parseInt(request.params.id);
 
     if (isNaN(id)) {
-      return reply.status(400).send({ error: "Invalid clip id" });
+      return reply.status(400).send({ error: "Invalid scene id" });
     }
 
     const { source_id, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
 
-    const clip = await prisma.clips.update({
+    const scene = await prisma.scenes.update({
       where: { id },
       data: {
         source_id,
@@ -177,17 +177,17 @@ export async function clipsRoutes(server: FastifyInstance) {
       },
     });
 
-    return clip;
+    return scene;
   });
 
   server.delete<{ Params: { id: string } }>("/:id", async (request, reply) => {
     const id = parseInt(request.params.id);
 
     if (isNaN(id)) {
-      return reply.status(400).send({ error: "Invalid clip id" });
+      return reply.status(400).send({ error: "Invalid scene id" });
     }
 
-    await prisma.clips.delete({ where: { id } });
+    await prisma.scenes.delete({ where: { id } });
     return reply.status(204).send();
   });
 }
