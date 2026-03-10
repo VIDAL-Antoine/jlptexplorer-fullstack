@@ -16,21 +16,21 @@ export const api = {
   grammarPoints: {
     list: (level?: string) =>
       apiFetch<GrammarPoint[]>(`/api/v1/grammar-points${level ? `?level=${level}` : ''}`),
-    get: (slug: string) => apiFetch<GrammarPointWithClips>(`/api/v1/grammar-points/${slug}`),
+    get: (slug: string) => apiFetch<GrammarPointWithScenes>(`/api/v1/grammar-points/${slug}`),
   },
   sources: {
     list: () => apiFetch<Source[]>('/api/v1/sources'),
-    get: (slug: string) => apiFetch<SourceWithClips>(`/api/v1/sources/${slug}`),
+    get: (slug: string) => apiFetch<SourceWithScenes>(`/api/v1/sources/${slug}`),
   },
-  clips: {
+  scenes: {
     list: (params?: { sourceId?: number; level?: string }) => {
       const query = new URLSearchParams();
       if (params?.sourceId) query.set('sourceId', String(params.sourceId));
       if (params?.level) query.set('level', params.level);
       const qs = query.toString();
-      return apiFetch<Clip[]>(`/api/v1/clips${qs ? `?${qs}` : ''}`);
+      return apiFetch<Scene[]>(`/api/v1/scenes${qs ? `?${qs}` : ''}`);
     },
-    get: (id: number) => apiFetch<ClipWithDetails>(`/api/v1/clips/${id}`),
+    get: (id: number) => apiFetch<SceneWithDetails>(`/api/v1/scenes/${id}`),
   },
 };
 
@@ -56,31 +56,37 @@ export type Source = {
   created_at: string;
 };
 
-export type Clip = {
+export type TranscriptLine = {
+  id: number;
+  scene_id: number;
+  position: number;
+  speaker: string | null;
+  text: string;
+  translation: string | null;
+  transcript_line_grammar_points: Array<{ grammar_point_id: number }>;
+};
+
+export type Scene = {
   id: number;
   source_id: number;
   youtube_video_id: string;
   start_time: number;
   end_time: number;
-  transcript: string;
-  translation: string | null;
   notes: string | null;
   created_at: string;
 };
 
-export type GrammarPointWithClips = GrammarPoint & {
-  clip_grammar_points: Array<{
-    clips: Clip & { sources: Source };
-  }>;
-};
-
-export type SourceWithClips = Source & {
-  clips: Array<Clip & {
-    clip_grammar_points: Array<{ grammar_points: GrammarPoint }>;
-  }>;
-};
-
-export type ClipWithDetails = Clip & {
+export type SceneWithDetails = Scene & {
   sources: Source;
-  clip_grammar_points: Array<{ grammar_points: GrammarPoint }>;
+  transcript_lines: TranscriptLine[];
+};
+
+export type GrammarPointWithScenes = GrammarPoint & {
+  scenes: SceneWithDetails[];
+};
+
+export type SourceWithScenes = Source & {
+  scenes: Array<Scene & {
+    transcript_lines: Omit<TranscriptLine, 'transcript_line_grammar_points'>[];
+  }>;
 };

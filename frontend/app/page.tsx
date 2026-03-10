@@ -5,7 +5,7 @@ export default function HomePage() {
     <Stack mt="xl" gap="sm">
       <Title order={1}>JLPTExplorer</Title>
       <Text c="dimmed">
-        Learn Japanese grammar in context — JLPT N5 to N1, illustrated by real clips from video
+        Learn Japanese grammar in context — JLPT N5 to N1, illustrated by real scenes from video
         games and anime.
       </Text>
     </Stack>
