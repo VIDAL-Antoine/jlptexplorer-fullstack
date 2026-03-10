@@ -3,6 +3,8 @@
 import { useEffect, useId, useRef } from 'react';
 import { loadYouTubeApi, type YTPlayer } from '../../lib/youtube';
 
+const YT_PLAYING = 1;
+
 interface YoutubePlayerProps {
   videoId: string;
   startTime: number;
@@ -26,7 +28,6 @@ export function YoutubePlayer({ videoId, startTime, endTime }: YoutubePlayerProp
           start: startTime,
           end: endTime,
           rel: 0,
-          modestbranding: 1,
         },
         events: {
           onStateChange: (event) => {
@@ -39,8 +40,21 @@ export function YoutubePlayer({ videoId, startTime, endTime }: YoutubePlayerProp
       });
     });
 
+    // Poll every 500ms to block seeks outside [startTime, endTime]
+    const interval = setInterval(() => {
+      const player = playerRef.current;
+      if (!player) return;
+      if (player.getPlayerState() !== YT_PLAYING) return;
+
+      const t = player.getCurrentTime();
+      if (t < startTime || t > endTime) {
+        player.seekTo(startTime, true);
+      }
+    }, 500);
+
     return () => {
       cancelled = true;
+      clearInterval(interval);
       playerRef.current?.destroy();
       playerRef.current = null;
     };

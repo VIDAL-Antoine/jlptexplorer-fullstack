@@ -4,6 +4,8 @@ export interface YTPlayer {
   playVideo: () => void;
   pauseVideo: () => void;
   destroy: () => void;
+  getCurrentTime: () => number;
+  getPlayerState: () => number;
 }
 
 declare global {
