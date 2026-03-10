@@ -50,13 +50,13 @@ jlptexplorer-fullstack/
     │   │   └── prisma.ts       ← PrismaClient singleton
     │   ├── plugins/            ← Fastify plugins (cors, etc.)
     │   └── routes/             ← Route handlers par ressource
-    │       ├── clips/
+    │       ├── scenes/
     │       ├── grammar-points/
     │       └── sources/
     ├── prisma/
     │   ├── schema/
     │   │   ├── base.prisma     ← generator + datasource
-    │   │   ├── clip.prisma
+    │   │   ├── scene.prisma
     │   │   ├── source.prisma
     │   │   └── grammar.prisma
     │   └── migrations/
@@ -114,5 +114,7 @@ type-NNNNN/branch-description
 ```
 
 Example: `feat-00003/setup-prisma-models`
+
+Before creating a new branch, always run `git branch` to find the latest branch index and increment it by one.
 
 Use git switch and never git checkout. `git switch -C` allows you to create a branch and switch to it while `git switch` switches to a branch.
