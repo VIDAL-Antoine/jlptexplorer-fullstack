@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { IconSearch } from '@tabler/icons-react';
 import {
   Badge,
@@ -67,7 +68,7 @@ export function GrammarPointsList() {
       ) : (
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }}>
           {filtered.map((gp) => (
-            <Card key={gp.id} shadow="sm" padding="md" radius="md" withBorder>
+            <Card key={gp.id} shadow="sm" padding="md" radius="md" withBorder component={Link} href={`/grammar-points/${gp.slug}`} style={{ textDecoration: 'none' }}>
               <Group justify="space-between" wrap="nowrap" align="flex-start">
                 <Title order={1} flex={1}>
                   {gp.title}
