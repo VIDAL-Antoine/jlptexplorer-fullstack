@@ -36,7 +36,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
           orderBy: { position: "asc" },
           include: {
             transcript_line_grammar_points: {
-              where: { grammar_point_id: grammarPoint.id },
+              include: { grammar_points: true },
             },
           },
         },
