@@ -56,6 +56,12 @@ export type Source = {
   created_at: string;
 };
 
+export type TranscriptLineGrammarPoint = {
+  transcript_line_id: number;
+  grammar_point_id: number;
+  grammar_points: GrammarPoint;
+};
+
 export type TranscriptLine = {
   id: number;
   scene_id: number;
@@ -63,7 +69,7 @@ export type TranscriptLine = {
   speaker: string | null;
   text: string;
   translation: string | null;
-  transcript_line_grammar_points: Array<{ grammar_point_id: number }>;
+  transcript_line_grammar_points: TranscriptLineGrammarPoint[];
 };
 
 export type Scene = {

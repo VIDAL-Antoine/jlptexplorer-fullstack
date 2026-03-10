@@ -1,0 +1,12 @@
+.line {
+  border-radius: var(--mantine-radius-sm);
+}
+
+.highlightedLine {
+  border-radius: var(--mantine-radius-sm);
+  background-color: light-dark(
+    var(--mantine-color-yellow-0),
+    rgba(255, 212, 59, 0.08)
+  );
+  border-left: 3px solid var(--mantine-color-yellow-5);
+}
