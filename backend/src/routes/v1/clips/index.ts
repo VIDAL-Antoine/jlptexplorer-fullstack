@@ -6,6 +6,7 @@ type TranscriptLineInput = {
   speaker?: string;
   text: string;
   translation?: string;
+  grammar_point_ids?: number[];
 };
 
 export async function clipsRoutes(server: FastifyInstance) {
@@ -19,9 +20,13 @@ export async function clipsRoutes(server: FastifyInstance) {
           ...(sourceId ? { source_id: parseInt(sourceId) } : {}),
           ...(level
             ? {
-                clip_grammar_points: {
+                transcript_lines: {
                   some: {
-                    grammar_points: { jlpt_level: level as any },
+                    transcript_line_grammar_points: {
+                      some: {
+                        grammar_points: { jlpt_level: level as any },
+                      },
+                    },
                   },
                 },
               }
@@ -29,11 +34,13 @@ export async function clipsRoutes(server: FastifyInstance) {
         },
         include: {
           sources: true,
-          clip_grammar_points: {
-            include: { grammar_points: true },
-          },
           transcript_lines: {
             orderBy: { position: "asc" },
+            include: {
+              transcript_line_grammar_points: {
+                include: { grammar_points: true },
+              },
+            },
           },
         },
         orderBy: { created_at: "desc" },
@@ -52,11 +59,13 @@ export async function clipsRoutes(server: FastifyInstance) {
       where: { id },
       include: {
         sources: true,
-        clip_grammar_points: {
-          include: { grammar_points: true },
-        },
         transcript_lines: {
           orderBy: { position: "asc" },
+          include: {
+            transcript_line_grammar_points: {
+              include: { grammar_points: true },
+            },
+          },
         },
       },
     });
@@ -88,11 +97,27 @@ export async function clipsRoutes(server: FastifyInstance) {
         end_time,
         notes,
         transcript_lines: {
-          create: transcript_lines,
+          create: transcript_lines.map(({ grammar_point_ids, ...line }) => ({
+            ...line,
+            ...(grammar_point_ids?.length
+              ? {
+                  transcript_line_grammar_points: {
+                    create: grammar_point_ids.map((id) => ({ grammar_point_id: id })),
+                  },
+                }
+              : {}),
+          })),
         },
       },
       include: {
-        transcript_lines: { orderBy: { position: "asc" } },
+        transcript_lines: {
+          orderBy: { position: "asc" },
+          include: {
+            transcript_line_grammar_points: {
+              include: { grammar_points: true },
+            },
+          },
+        },
       },
     });
 
@@ -128,11 +153,27 @@ export async function clipsRoutes(server: FastifyInstance) {
         notes,
         transcript_lines: {
           deleteMany: {},
-          create: transcript_lines,
+          create: transcript_lines.map(({ grammar_point_ids, ...line }) => ({
+            ...line,
+            ...(grammar_point_ids?.length
+              ? {
+                  transcript_line_grammar_points: {
+                    create: grammar_point_ids.map((id) => ({ grammar_point_id: id })),
+                  },
+                }
+              : {}),
+          })),
         },
       },
       include: {
-        transcript_lines: { orderBy: { position: "asc" } },
+        transcript_lines: {
+          orderBy: { position: "asc" },
+          include: {
+            transcript_line_grammar_points: {
+              include: { grammar_points: true },
+            },
+          },
+        },
       },
     });
 

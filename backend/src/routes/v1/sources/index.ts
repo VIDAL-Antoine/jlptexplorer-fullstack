@@ -14,8 +14,8 @@ export async function sourcesRoutes(server: FastifyInstance) {
       include: {
         clips: {
           include: {
-            clip_grammar_points: {
-              include: { grammar_points: true },
+            transcript_lines: {
+              orderBy: { position: "asc" },
             },
           },
           orderBy: { created_at: "desc" },

@@ -1,0 +1,8 @@
+model transcript_line_grammar_points {
+  transcript_line_id Int
+  grammar_point_id   Int
+  transcript_lines   transcript_lines @relation(fields: [transcript_line_id], references: [id], onDelete: Cascade)
+  grammar_points     grammar_points   @relation(fields: [grammar_point_id], references: [id], onDelete: Cascade)
+
+  @@id([transcript_line_id, grammar_point_id])
+}

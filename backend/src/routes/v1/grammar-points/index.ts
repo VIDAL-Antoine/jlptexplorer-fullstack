@@ -14,22 +14,37 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
   server.get<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
     const grammarPoint = await prisma.grammar_points.findUnique({
       where: { slug: request.params.slug },
-      include: {
-        clip_grammar_points: {
-          include: {
-            clips: {
-              include: { sources: true },
-            },
-          },
-        },
-      },
     });
 
     if (!grammarPoint) {
       return reply.status(404).send({ error: "Grammar point not found" });
     }
 
-    return grammarPoint;
+    const clips = await prisma.clips.findMany({
+      where: {
+        transcript_lines: {
+          some: {
+            transcript_line_grammar_points: {
+              some: { grammar_point_id: grammarPoint.id },
+            },
+          },
+        },
+      },
+      include: {
+        sources: true,
+        transcript_lines: {
+          orderBy: { position: "asc" },
+          include: {
+            transcript_line_grammar_points: {
+              where: { grammar_point_id: grammarPoint.id },
+            },
+          },
+        },
+      },
+      orderBy: { created_at: "desc" },
+    });
+
+    return { ...grammarPoint, clips };
   });
 
   server.post<{ Body: { slug: string; title: string; romaji: string; meaning: string; jlpt_level: string; notes?: string } }>(
@@ -50,12 +65,10 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     async (request) => {
       const { slug, title, romaji, meaning, jlpt_level, notes } = request.body;
 
-      const grammarPoint = await prisma.grammar_points.update({
+      return prisma.grammar_points.update({
         where: { slug: request.params.slug },
         data: { slug, title, romaji, meaning, jlpt_level: jlpt_level as any, notes },
       });
-
-      return grammarPoint;
     }
   );
 

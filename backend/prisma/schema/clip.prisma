@@ -6,7 +6,6 @@ model clips {
   end_time            Int
   notes               String?
   created_at          DateTime              @default(now()) @db.Timestamp(6)
-  clip_grammar_points clip_grammar_points[]
-  transcript_lines    transcript_lines[]
+  transcript_lines transcript_lines[]
   sources             sources               @relation(fields: [source_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "clips_source_id_sources_id_fk")
 }
