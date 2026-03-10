@@ -6,8 +6,42 @@ type TranscriptLineInput = {
   speaker?: string;
   text: string;
   translation?: string;
-  grammar_point_ids?: number[];
+  grammar_point_slugs?: string[];
 };
+
+async function resolveGrammarPointSlugs(
+  lines: TranscriptLineInput[]
+): Promise<Map<string, number>> {
+  const allSlugs = [...new Set(lines.flatMap((l) => l.grammar_point_slugs ?? []))];
+  if (!allSlugs.length) return new Map();
+
+  const points = await prisma.grammar_points.findMany({
+    where: { slug: { in: allSlugs } },
+    select: { id: true, slug: true },
+  });
+
+  const missing = allSlugs.filter((s) => !points.find((p) => p.slug === s));
+  if (missing.length) {
+    throw Object.assign(new Error(`Unknown grammar point slugs: ${missing.join(", ")}`), {
+      statusCode: 400,
+    });
+  }
+
+  return new Map(points.map((p) => [p.slug, p.id]));
+}
+
+function buildLineData(lines: TranscriptLineInput[], slugToId: Map<string, number>) {
+  return lines.map(({ grammar_point_slugs, ...line }) => ({
+    ...line,
+    ...(grammar_point_slugs?.length
+      ? {
+          transcript_line_grammar_points: {
+            create: grammar_point_slugs.map((slug) => ({ grammar_point_id: slugToId.get(slug)! })),
+          },
+        }
+      : {}),
+  }));
+}
 
 export async function scenesRoutes(server: FastifyInstance) {
   server.get<{ Querystring: { sourceId?: string; level?: string } }>(
@@ -79,7 +113,7 @@ export async function scenesRoutes(server: FastifyInstance) {
 
   server.post<{
     Body: {
-      source_id: number;
+      source_slug: string;
       youtube_video_id: string;
       start_time: number;
       end_time: number;
@@ -87,27 +121,21 @@ export async function scenesRoutes(server: FastifyInstance) {
       transcript_lines: TranscriptLineInput[];
     };
   }>("/", async (request, reply) => {
-    const { source_id, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+
+    const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
+    if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
+
+    const slugToId = await resolveGrammarPointSlugs(transcript_lines);
 
     const scene = await prisma.scenes.create({
       data: {
-        source_id,
+        source_id: source.id,
         youtube_video_id,
         start_time,
         end_time,
         notes,
-        transcript_lines: {
-          create: transcript_lines.map(({ grammar_point_ids, ...line }) => ({
-            ...line,
-            ...(grammar_point_ids?.length
-              ? {
-                  transcript_line_grammar_points: {
-                    create: grammar_point_ids.map((id) => ({ grammar_point_id: id })),
-                  },
-                }
-              : {}),
-          })),
-        },
+        transcript_lines: { create: buildLineData(transcript_lines, slugToId) },
       },
       include: {
         transcript_lines: {
@@ -127,7 +155,7 @@ export async function scenesRoutes(server: FastifyInstance) {
   server.put<{
     Params: { id: string };
     Body: {
-      source_id: number;
+      source_slug: string;
       youtube_video_id: string;
       start_time: number;
       end_time: number;
@@ -141,28 +169,24 @@ export async function scenesRoutes(server: FastifyInstance) {
       return reply.status(400).send({ error: "Invalid scene id" });
     }
 
-    const { source_id, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+
+    const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
+    if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
+
+    const slugToId = await resolveGrammarPointSlugs(transcript_lines);
 
     const scene = await prisma.scenes.update({
       where: { id },
       data: {
-        source_id,
+        source_id: source.id,
         youtube_video_id,
         start_time,
         end_time,
         notes,
         transcript_lines: {
           deleteMany: {},
-          create: transcript_lines.map(({ grammar_point_ids, ...line }) => ({
-            ...line,
-            ...(grammar_point_ids?.length
-              ? {
-                  transcript_line_grammar_points: {
-                    create: grammar_point_ids.map((id) => ({ grammar_point_id: id })),
-                  },
-                }
-              : {}),
-          })),
+          create: buildLineData(transcript_lines, slugToId),
         },
       },
       include: {
