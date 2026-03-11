@@ -62,11 +62,21 @@ export type TranscriptLineGrammarPoint = {
   grammar_points: GrammarPoint;
 };
 
+export type Speaker = {
+  id: number;
+  slug: string;
+  name_english: string;
+  name_japanese: string | null;
+  description: string | null;
+  image_url: string | null;
+};
+
 export type TranscriptLine = {
   id: number;
   scene_id: number;
   position: number;
-  speaker: string | null;
+  speaker_id: number | null;
+  speakers: Speaker | null;
   text: string;
   translation: string | null;
   transcript_line_grammar_points: TranscriptLineGrammarPoint[];

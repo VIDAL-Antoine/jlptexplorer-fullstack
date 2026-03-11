@@ -122,6 +122,7 @@ export async function scenesRoutes(server: FastifyInstance) {
         transcript_lines: {
           orderBy: { position: "asc" },
           include: {
+            speakers: true,
             transcript_line_grammar_points: {
               include: { grammar_points: true },
             },
@@ -170,6 +171,7 @@ export async function scenesRoutes(server: FastifyInstance) {
         transcript_lines: {
           orderBy: { position: "asc" },
           include: {
+            speakers: true,
             transcript_line_grammar_points: {
               include: { grammar_points: true },
             },
@@ -225,6 +227,7 @@ export async function scenesRoutes(server: FastifyInstance) {
         transcript_lines: {
           orderBy: { position: "asc" },
           include: {
+            speakers: true,
             transcript_line_grammar_points: {
               include: { grammar_points: true },
             },
