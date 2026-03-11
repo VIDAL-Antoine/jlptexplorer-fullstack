@@ -14,7 +14,14 @@ export async function sourcesRoutes(server: FastifyInstance) {
       include: {
         scenes: {
           include: {
+            sources: true,
             transcript_lines: {
+              include: {
+                speakers: true,
+                transcript_line_grammar_points: {
+                  include: { grammar_points: true },
+                },
+              },
               orderBy: { position: "asc" },
             },
           },
