@@ -20,6 +20,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
+import Link from 'next/link';
 import { api, type Source } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
 
@@ -90,7 +91,7 @@ export function SourcesList() {
         {filtered.map((source) => {
           const TypeIcon = getTypeIcon(source.type);
           return (
-            <Card key={source.id} shadow="sm" padding="md" radius="md" withBorder>
+            <Card key={source.id} shadow="sm" padding="md" radius="md" withBorder component={Link} href={`/sources/${source.slug}`} style={{ textDecoration: 'none', cursor: 'pointer' }}>
               <Card.Section>
                 <AspectRatio ratio={2 / 3}>
                   <Image

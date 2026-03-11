@@ -102,7 +102,5 @@ export type GrammarPointWithScenes = GrammarPoint & {
 };
 
 export type SourceWithScenes = Source & {
-  scenes: Array<Scene & {
-    transcript_lines: Omit<TranscriptLine, 'transcript_line_grammar_points'>[];
-  }>;
+  scenes: SceneWithDetails[];
 };
