@@ -1,7 +1,18 @@
 import Link from 'next/link';
-import { AspectRatio, Badge, Box, Button, Card, Collapse, Group, Stack, Text, Title } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import {
+  AspectRatio,
+  Badge,
+  Box,
+  Button,
+  Card,
+  Collapse,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
 import { type SceneWithDetails } from '../../lib/api';
 import { YoutubePlayer } from '../YoutubePlayer/YoutubePlayer';
@@ -63,7 +74,8 @@ export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
                 style={{
                   borderRadius: 'var(--mantine-radius-sm)',
                   ...(hasGrammar && {
-                    backgroundColor: 'light-dark(var(--mantine-color-yellow-0), rgba(255, 212, 59, 0.08))',
+                    backgroundColor:
+                      'light-dark(var(--mantine-color-yellow-0), rgba(255, 212, 59, 0.08))',
                     borderLeft: '3px solid var(--mantine-color-yellow-5)',
                   }),
                 }}
@@ -83,21 +95,29 @@ export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
                 )}
                 {grammarPoints.length > 0 && (
                   <Group gap="xs" mt="xs">
-                    {grammarPoints.map((tlgp) =>
-                      tlgp.grammar_points ? (
-                        <Badge
-                          key={tlgp.grammar_point_id}
-                          size="xs"
-                          color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
-                          variant={tlgp.grammar_point_id === currentGrammarPointId ? 'filled' : 'light'}
-                          component={Link}
-                          href={`/grammar-points/${tlgp.grammar_points.slug}`}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          {tlgp.grammar_points.title}
-                        </Badge>
-                      ) : null
-                    )}
+                    {[...grammarPoints]
+                      .sort((a, b) =>
+                        (b.grammar_points?.jlpt_level ?? 'N5').localeCompare(
+                          a.grammar_points?.jlpt_level ?? 'N5'
+                        )
+                      )
+                      .map((tlgp) =>
+                        tlgp.grammar_points ? (
+                          <Badge
+                            key={tlgp.grammar_point_id}
+                            size="xs"
+                            color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
+                            variant={
+                              tlgp.grammar_point_id === currentGrammarPointId ? 'filled' : 'light'
+                            }
+                            component={Link}
+                            href={`/grammar-points/${tlgp.grammar_points.slug}`}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {tlgp.grammar_points.title}
+                          </Badge>
+                        ) : null
+                      )}
                   </Group>
                 )}
               </Box>
