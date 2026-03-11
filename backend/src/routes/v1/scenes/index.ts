@@ -9,6 +9,15 @@ type TranscriptLineInput = {
   grammar_point_slugs?: string[];
 };
 
+function parseTime(value: number | string): number {
+  if (typeof value === "number") return value;
+  const parts = value.split(":").map(Number);
+  if (parts.some(isNaN)) throw Object.assign(new Error(`Invalid time format: "${value}"`), { statusCode: 400 });
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  throw Object.assign(new Error(`Invalid time format: "${value}"`), { statusCode: 400 });
+}
+
 async function resolveGrammarPointSlugs(
   lines: TranscriptLineInput[]
 ): Promise<Map<string, number>> {
@@ -142,8 +151,8 @@ export async function scenesRoutes(server: FastifyInstance) {
     Body: {
       source_slug: string;
       youtube_video_id: string;
-      start_time: number;
-      end_time: number;
+      start_time: number | string;
+      end_time: number | string;
       notes?: string;
       transcript_lines: TranscriptLineInput[];
     };
@@ -162,8 +171,8 @@ export async function scenesRoutes(server: FastifyInstance) {
       data: {
         source_id: source.id,
         youtube_video_id,
-        start_time,
-        end_time,
+        start_time: parseTime(start_time),
+        end_time: parseTime(end_time),
         notes,
         transcript_lines: { create: buildLineData(transcript_lines, grammarSlugToId, speakerSlugToId) },
       },
@@ -188,8 +197,8 @@ export async function scenesRoutes(server: FastifyInstance) {
     Body: {
       source_slug: string;
       youtube_video_id: string;
-      start_time: number;
-      end_time: number;
+      start_time: number | string;
+      end_time: number | string;
       notes?: string;
       transcript_lines: TranscriptLineInput[];
     };
@@ -215,8 +224,8 @@ export async function scenesRoutes(server: FastifyInstance) {
       data: {
         source_id: source.id,
         youtube_video_id,
-        start_time,
-        end_time,
+        start_time: parseTime(start_time),
+        end_time: parseTime(end_time),
         notes,
         transcript_lines: {
           deleteMany: {},
