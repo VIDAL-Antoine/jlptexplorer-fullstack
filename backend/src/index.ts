@@ -4,6 +4,7 @@ import { registerCors } from "./plugins/cors.js";
 import { scenesRoutes } from "./routes/v1/scenes/index.js";
 import { grammarPointsRoutes } from "./routes/v1/grammar-points/index.js";
 import { sourcesRoutes } from "./routes/v1/sources/index.js";
+import { speakersRoutes } from "./routes/v1/speakers/index.js";
 
 async function start() {
   const server = fastify({ logger: true });
@@ -19,6 +20,7 @@ async function start() {
       api.register(sourcesRoutes, { prefix: "/sources" });
       api.register(scenesRoutes, { prefix: "/scenes" });
       api.register(grammarPointsRoutes, { prefix: "/grammar-points" });
+      api.register(speakersRoutes, { prefix: "/speakers" });
     },
     { prefix: "/api/v1" }
   );

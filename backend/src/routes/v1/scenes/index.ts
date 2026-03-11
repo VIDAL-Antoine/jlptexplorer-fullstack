@@ -3,7 +3,7 @@ import { prisma } from "../../../lib/prisma.js";
 
 type TranscriptLineInput = {
   position: number;
-  speaker?: string;
+  speaker_slug?: string;
   text: string;
   translation?: string;
   grammar_point_slugs?: string[];
@@ -30,13 +30,39 @@ async function resolveGrammarPointSlugs(
   return new Map(points.map((p) => [p.slug, p.id]));
 }
 
-function buildLineData(lines: TranscriptLineInput[], slugToId: Map<string, number>) {
-  return lines.map(({ grammar_point_slugs, ...line }) => ({
+async function resolveSpeakerSlugs(
+  lines: TranscriptLineInput[]
+): Promise<Map<string, number>> {
+  const allSlugs = [...new Set(lines.flatMap((l) => (l.speaker_slug ? [l.speaker_slug] : [])))];
+  if (!allSlugs.length) return new Map();
+
+  const speakers = await prisma.speakers.findMany({
+    where: { slug: { in: allSlugs } },
+    select: { id: true, slug: true },
+  });
+
+  const missing = allSlugs.filter((s) => !speakers.find((sp) => sp.slug === s));
+  if (missing.length) {
+    throw Object.assign(new Error(`Unknown speaker slugs: ${missing.join(", ")}`), {
+      statusCode: 400,
+    });
+  }
+
+  return new Map(speakers.map((sp) => [sp.slug, sp.id]));
+}
+
+function buildLineData(
+  lines: TranscriptLineInput[],
+  grammarSlugToId: Map<string, number>,
+  speakerSlugToId: Map<string, number>
+) {
+  return lines.map(({ grammar_point_slugs, speaker_slug, ...line }) => ({
     ...line,
+    ...(speaker_slug ? { speaker_id: speakerSlugToId.get(speaker_slug)! } : {}),
     ...(grammar_point_slugs?.length
       ? {
           transcript_line_grammar_points: {
-            create: grammar_point_slugs.map((slug) => ({ grammar_point_id: slugToId.get(slug)! })),
+            create: grammar_point_slugs.map((slug) => ({ grammar_point_id: grammarSlugToId.get(slug)! })),
           },
         }
       : {}),
@@ -126,7 +152,10 @@ export async function scenesRoutes(server: FastifyInstance) {
     const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
     if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
 
-    const slugToId = await resolveGrammarPointSlugs(transcript_lines);
+    const [grammarSlugToId, speakerSlugToId] = await Promise.all([
+      resolveGrammarPointSlugs(transcript_lines),
+      resolveSpeakerSlugs(transcript_lines),
+    ]);
 
     const scene = await prisma.scenes.create({
       data: {
@@ -135,7 +164,7 @@ export async function scenesRoutes(server: FastifyInstance) {
         start_time,
         end_time,
         notes,
-        transcript_lines: { create: buildLineData(transcript_lines, slugToId) },
+        transcript_lines: { create: buildLineData(transcript_lines, grammarSlugToId, speakerSlugToId) },
       },
       include: {
         transcript_lines: {
@@ -174,7 +203,10 @@ export async function scenesRoutes(server: FastifyInstance) {
     const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
     if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
 
-    const slugToId = await resolveGrammarPointSlugs(transcript_lines);
+    const [grammarSlugToId, speakerSlugToId] = await Promise.all([
+      resolveGrammarPointSlugs(transcript_lines),
+      resolveSpeakerSlugs(transcript_lines),
+    ]);
 
     const scene = await prisma.scenes.update({
       where: { id },
@@ -186,7 +218,7 @@ export async function scenesRoutes(server: FastifyInstance) {
         notes,
         transcript_lines: {
           deleteMany: {},
-          create: buildLineData(transcript_lines, slugToId),
+          create: buildLineData(transcript_lines, grammarSlugToId, speakerSlugToId),
         },
       },
       include: {
