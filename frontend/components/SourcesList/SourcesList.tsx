@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import {
   IconDeviceGamepad2,
   IconDeviceTv,
@@ -11,7 +12,9 @@ import {
 } from '@tabler/icons-react';
 import {
   AspectRatio,
+  Box,
   Card,
+  Center,
   Chip,
   Group,
   Image,
@@ -20,7 +23,6 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import Link from 'next/link';
 import { useSettings } from '../../contexts/SettingsContext';
 import { api, type Source } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
@@ -81,8 +83,11 @@ export function SourcesList() {
           {availableTypes.map((type) => {
             const Icon = getTypeIcon(type);
             return (
-              <Chip key={type} value={type} size="xl" tt="capitalize" icon={<Icon size={14} />}>
-                {type}
+              <Chip key={type} value={type} size="xl" tt="capitalize">
+                <Group gap={6} wrap="nowrap">
+                  <Icon size={14} />
+                  {type}
+                </Group>
               </Chip>
             );
           })}
@@ -93,8 +98,16 @@ export function SourcesList() {
         {filtered.map((source) => {
           const TypeIcon = getTypeIcon(source.type);
           return (
-            <Card key={source.id} shadow="sm" padding="md" radius="md" withBorder component={Link} href={`/sources/${source.slug}`} style={{ textDecoration: 'none', cursor: 'pointer' }}>
-              <Card.Section>
+            <Card
+              key={source.id}
+              shadow="sm"
+              padding="md"
+              radius="md"
+              withBorder
+              component={Link}
+              href={`/sources/${source.slug}`}
+            >
+              <Card.Section style={{ position: 'relative' }}>
                 <AspectRatio ratio={2 / 3}>
                   <Image
                     src={source.cover_image_url}
@@ -103,17 +116,19 @@ export function SourcesList() {
                     fallbackSrc="https://placehold.co/400x600?text=No+image"
                   />
                 </AspectRatio>
+                <Box pos="absolute" top={6} right={6} bg="rgba(0,0,0,0.5)" w={28} h={28} bdrs="50%">
+                  <Center w="100%" h="100%">
+                    <TypeIcon size={16} color="white" />
+                  </Center>
+                </Box>
               </Card.Section>
-              <Group justify="space-between" mt="sm">
-                <div>
-                  <Text fw={600} size="md">
-                    {sourceTitleLang === 'japanese'
-                      ? (source.japanese_title ?? source.title)
-                      : source.title}
-                  </Text>
-                </div>
-                <TypeIcon size={20} color="gray" />
-              </Group>
+              <Center w="100%">
+                <Text fw={600} size="md" mt="sm">
+                  {sourceTitleLang === 'japanese'
+                    ? (source.japanese_title ?? source.title)
+                    : source.title}
+                </Text>
+              </Center>
             </Card>
           );
         })}

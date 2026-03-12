@@ -1,5 +1,13 @@
 import Link from 'next/link';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconDeviceGamepad2,
+  IconDeviceTv,
+  IconMovie,
+  IconMusic,
+  IconTag,
+} from '@tabler/icons-react';
 import {
   Anchor,
   AspectRatio,
@@ -19,6 +27,21 @@ import { useSettings } from '../../contexts/SettingsContext';
 import { type SceneWithDetails } from '../../lib/api';
 import { YoutubePlayer } from '../YoutubePlayer/YoutubePlayer';
 
+type SourceType = SceneWithDetails['sources']['type'];
+type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
+
+const SOURCE_TYPE_ICONS: Partial<Record<SourceType, IconComponent>> = {
+  game: IconDeviceGamepad2,
+  anime: IconDeviceTv,
+  series: IconDeviceTv,
+  movie: IconMovie,
+  music: IconMusic,
+};
+
+function getSourceTypeIcon(type: SourceType): IconComponent {
+  return SOURCE_TYPE_ICONS[type] ?? IconTag;
+}
+
 interface SceneCardProps {
   scene: SceneWithDetails;
   currentGrammarPointId?: number;
@@ -33,6 +56,8 @@ export function SceneCard({
   const [opened, { toggle }] = useDisclosure(false);
   const { speakerNameLang, sourceTitleLang, showDialogueTranslations } = useSettings();
 
+  const SourceTypeIcon = getSourceTypeIcon(scene.sources.type);
+
   return (
     <Card shadow="sm" padding="md" radius="md" withBorder>
       <Card.Section mb="md">
@@ -46,7 +71,7 @@ export function SceneCard({
       </Card.Section>
 
       {!hideSourceInfo && (
-        <Group mb="xs" align="center">
+        <Group mb="xs" align="flex-start" justify="space-between" wrap="nowrap">
           <Anchor
             component={Link}
             href={`/sources/${scene.sources.slug}`}
@@ -59,9 +84,9 @@ export function SceneCard({
                 : scene.sources.title}
             </Title>
           </Anchor>
-          <Badge size="sm" variant="light">
-            {scene.sources.type}
-          </Badge>
+          <Box mt={4} style={{ flexShrink: 0 }}>
+            <SourceTypeIcon size={16} color="gray" />
+          </Box>
         </Group>
       )}
 
