@@ -25,7 +25,7 @@ interface SceneCardProps {
 
 export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
   const [opened, { toggle }] = useDisclosure(false);
-  const { speakerNameLang, showDialogueTranslations } = useSettings();
+  const { speakerNameLang, sourceTitleLang, showDialogueTranslations } = useSettings();
 
   return (
     <Card shadow="sm" padding="md" radius="md" withBorder>
@@ -40,12 +40,11 @@ export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
       </Card.Section>
 
       <Group mb="xs" align="center">
-        <Title order={4}>{scene.sources.title}</Title>
-        {scene.sources.japanese_title && (
-          <Text size="sm" c="dimmed">
-            {scene.sources.japanese_title}
-          </Text>
-        )}
+        <Title order={4}>
+          {sourceTitleLang === 'japanese'
+            ? (scene.sources.japanese_title ?? scene.sources.title)
+            : scene.sources.title}
+        </Title>
         <Badge size="sm" variant="light">
           {scene.sources.type}
         </Badge>

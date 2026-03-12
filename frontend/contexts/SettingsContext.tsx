@@ -6,6 +6,8 @@ import { useLocalStorage } from '@mantine/hooks';
 interface SettingsContextValue {
   speakerNameLang: 'english' | 'japanese';
   setSpeakerNameLang: (v: 'english' | 'japanese') => void;
+  sourceTitleLang: 'english' | 'japanese';
+  setSourceTitleLang: (v: 'english' | 'japanese') => void;
   showDialogueTranslations: boolean;
   setShowDialogueTranslations: (v: boolean) => void;
   showGrammarPointRomaji: boolean;
@@ -18,6 +20,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [speakerNameLang, setSpeakerNameLang] = useLocalStorage<'english' | 'japanese'>({
     key: 'setting-speaker-lang',
     defaultValue: 'japanese',
+  });
+  const [sourceTitleLang, setSourceTitleLang] = useLocalStorage<'english' | 'japanese'>({
+    key: 'setting-source-title-lang',
+    defaultValue: 'english',
   });
   const [showDialogueTranslations, setShowDialogueTranslations] = useLocalStorage({
     key: 'setting-show-dialogue-translations',
@@ -33,6 +39,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       value={{
         speakerNameLang,
         setSpeakerNameLang,
+        sourceTitleLang,
+        setSourceTitleLang,
         showDialogueTranslations,
         setShowDialogueTranslations,
         showGrammarPointRomaji,

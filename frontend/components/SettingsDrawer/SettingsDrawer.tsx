@@ -12,6 +12,8 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
   const {
     speakerNameLang,
     setSpeakerNameLang,
+    sourceTitleLang,
+    setSourceTitleLang,
     showDialogueTranslations,
     setShowDialogueTranslations,
     showGrammarPointRomaji,
@@ -21,6 +23,20 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
   return (
     <Drawer opened={opened} onClose={onClose} title="Settings" position="right">
       <Stack gap="lg">
+        <div>
+          <Text size="sm" fw={500} mb="xs">
+            Source titles
+          </Text>
+          <SegmentedControl
+            fullWidth
+            value={sourceTitleLang}
+            onChange={(v) => setSourceTitleLang(v as 'english' | 'japanese')}
+            data={[
+              { label: '日本語', value: 'japanese' },
+              { label: 'English', value: 'english' },
+            ]}
+          />
+        </div>
         <div>
           <Text size="sm" fw={500} mb="xs">
             Speaker names

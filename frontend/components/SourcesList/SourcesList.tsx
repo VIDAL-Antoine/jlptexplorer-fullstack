@@ -21,6 +21,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import Link from 'next/link';
+import { useSettings } from '../../contexts/SettingsContext';
 import { api, type Source } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
 
@@ -43,6 +44,7 @@ export function SourcesList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeType, setActiveType] = useState<string>('all');
   const [search, setSearch] = useState('');
+  const { sourceTitleLang } = useSettings();
 
   useEffect(() => {
     api.sources.list().then((data) => {
@@ -105,13 +107,10 @@ export function SourcesList() {
               <Group justify="space-between" mt="sm">
                 <div>
                   <Text fw={600} size="md">
-                    {source.title}
+                    {sourceTitleLang === 'japanese'
+                      ? (source.japanese_title ?? source.title)
+                      : source.title}
                   </Text>
-                  {source.japanese_title && (
-                    <Text size="xs" c="dimmed">
-                      {source.japanese_title}
-                    </Text>
-                  )}
                 </div>
                 <TypeIcon size={20} color="gray" />
               </Group>
