@@ -16,6 +16,7 @@ import {
   Title,
 } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
+import { useSettings } from '../../contexts/SettingsContext';
 
 const LEVEL_FILTER_OPTIONS = ['All', ...Object.keys(JLPT_LEVEL_COLORS)];
 import { api, type GrammarPoint } from '../../lib/api';
@@ -26,6 +27,7 @@ export function GrammarPointsList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [level, setLevel] = useState('All');
   const [search, setSearch] = useState('');
+  const { showGrammarPointRomaji } = useSettings();
 
   useEffect(() => {
     setLoading(true);
@@ -75,9 +77,11 @@ export function GrammarPointsList() {
                 </Title>
                 <Badge color={JLPT_LEVEL_COLORS[gp.jlpt_level]}>{gp.jlpt_level}</Badge>
               </Group>
-              <Text size="md" c="dimmed">
-                {gp.romaji}
-              </Text>
+              {showGrammarPointRomaji && (
+                <Text size="md" c="dimmed">
+                  {gp.romaji}
+                </Text>
+              )}
               <Text size="md" mt="xs">
                 {gp.meaning}
               </Text>

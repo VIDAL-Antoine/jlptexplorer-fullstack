@@ -1,15 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { IconMoon, IconSun } from '@tabler/icons-react';
-import {
-  ActionIcon,
-  Anchor,
-  Burger,
-  Group,
-  Text,
-  useMantineColorScheme,
-} from '@mantine/core';
+import { IconMoon, IconSettings, IconSun } from '@tabler/icons-react';
+import { ActionIcon, Anchor, Burger, Group, Text, useMantineColorScheme } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { SettingsDrawer } from '../SettingsDrawer/SettingsDrawer';
 import classes from './Header.module.css';
 
 interface HeaderProps {
@@ -19,26 +14,35 @@ interface HeaderProps {
 
 export function Header({ opened, toggle }: HeaderProps) {
   const { toggleColorScheme } = useMantineColorScheme();
+  const [settingsOpened, { open: openSettings, close: closeSettings }] = useDisclosure(false);
 
   return (
-    <Group h="100%" px="md" justify="space-between">
-      <Group>
-        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        <Anchor component={Link} href="/" underline="never" c="inherit">
-          <Text fw={700} size="lg">
-            JLPTExplorer
-          </Text>
-        </Anchor>
+    <>
+      <Group h="100%" px="md" justify="space-between">
+        <Group>
+          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          <Anchor component={Link} href="/" underline="never" c="inherit">
+            <Text fw={700} size="lg">
+              JLPTExplorer
+            </Text>
+          </Anchor>
+        </Group>
+        <Group gap="xs">
+          <ActionIcon
+            variant="default"
+            size="lg"
+            onClick={toggleColorScheme}
+            aria-label="Toggle color scheme"
+          >
+            <IconSun size={18} className={classes.iconLight} />
+            <IconMoon size={18} className={classes.iconDark} />
+          </ActionIcon>
+          <ActionIcon variant="default" size="lg" onClick={openSettings} aria-label="Settings">
+            <IconSettings size={18} />
+          </ActionIcon>
+        </Group>
       </Group>
-      <ActionIcon
-        variant="default"
-        size="lg"
-        onClick={toggleColorScheme}
-        aria-label="Toggle color scheme"
-      >
-        <IconSun size={18} className={classes.iconLight} />
-        <IconMoon size={18} className={classes.iconDark} />
-      </ActionIcon>
-    </Group>
+      <SettingsDrawer opened={settingsOpened} onClose={closeSettings} />
+    </>
   );
 }

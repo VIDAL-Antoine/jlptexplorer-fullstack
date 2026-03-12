@@ -14,6 +14,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
+import { useSettings } from '../../contexts/SettingsContext';
 import { type SceneWithDetails } from '../../lib/api';
 import { YoutubePlayer } from '../YoutubePlayer/YoutubePlayer';
 
@@ -24,6 +25,7 @@ interface SceneCardProps {
 
 export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
   const [opened, { toggle }] = useDisclosure(false);
+  const { speakerNameLang, showDialogueTranslations } = useSettings();
 
   return (
     <Card shadow="sm" padding="md" radius="md" withBorder>
@@ -82,13 +84,15 @@ export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
               >
                 {line.speakers && (
                   <Text size="xs" fw={700} c="dimmed" mb={2}>
-                    {line.speakers.name_english}
+                    {speakerNameLang === 'japanese'
+                      ? (line.speakers.name_japanese ?? line.speakers.name_english)
+                      : line.speakers.name_english}
                   </Text>
                 )}
                 <Text size="md" fw={hasGrammar ? 600 : 400} lang="ja">
                   {line.text}
                 </Text>
-                {line.translation && (
+                {showDialogueTranslations && line.translation && (
                   <Text size="sm" c="dimmed" mt={2}>
                     {line.translation}
                   </Text>

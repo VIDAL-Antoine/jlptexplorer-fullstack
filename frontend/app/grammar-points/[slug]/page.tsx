@@ -6,6 +6,7 @@ import { Badge, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { PageLoader } from '../../../components/PageLoader/PageLoader';
 import { SceneCard } from '../../../components/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS } from '../../../constants/jlpt';
+import { useSettings } from '../../../contexts/SettingsContext';
 import { api, type GrammarPointWithScenes } from '../../../lib/api';
 
 export default function GrammarPointPage() {
@@ -20,6 +21,8 @@ export default function GrammarPointPage() {
     });
   }, [slug]);
 
+  const { showGrammarPointRomaji } = useSettings();
+
   if (loading) return <PageLoader />;
   if (!grammarPoint) return <Text mt="xl">Grammar point not found.</Text>;
 
@@ -32,7 +35,7 @@ export default function GrammarPointPage() {
             {grammarPoint.jlpt_level}
           </Badge>
         </Group>
-        <Text c="dimmed">{grammarPoint.romaji}</Text>
+        {showGrammarPointRomaji && <Text c="dimmed">{grammarPoint.romaji}</Text>}
         <Text mt="xs">{grammarPoint.meaning}</Text>
         {grammarPoint.notes && (
           <Text size="sm" c="dimmed" mt="xs">

@@ -3,6 +3,7 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { Layout } from '../components/Layout/Layout';
+import { SettingsProvider } from '../contexts/SettingsContext';
 import { theme } from '../theme';
 
 export const metadata = {
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <MantineProvider theme={theme}>
-          <Layout>{children}</Layout>
+          <SettingsProvider>
+            <Layout>{children}</Layout>
+          </SettingsProvider>
         </MantineProvider>
       </body>
     </html>
