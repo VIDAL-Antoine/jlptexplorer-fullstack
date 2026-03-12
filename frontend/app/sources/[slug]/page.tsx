@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import NotFound from '../../not-found';
 import Link from 'next/link';
 import {
   AspectRatio,
@@ -26,12 +27,15 @@ export default function SourcePage() {
   useEffect(() => {
     api.sources.get(slug).then((data) => {
       setSource(data);
+    }).catch(() => {
+      setSource(null);
+    }).finally(() => {
       setLoading(false);
     });
   }, [slug]);
 
   if (loading) return <PageLoader />;
-  if (!source) return <Text mt="xl">Source not found.</Text>;
+  if (!source) return <NotFound />;
 
   const grammarPoints = Array.from(
     new Map(

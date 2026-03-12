@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import NotFound from '../../not-found';
 import { Badge, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { PageLoader } from '../../../components/PageLoader/PageLoader';
 import { SceneCard } from '../../../components/SceneCard/SceneCard';
@@ -17,6 +18,9 @@ export default function GrammarPointPage() {
   useEffect(() => {
     api.grammarPoints.get(slug).then((data) => {
       setGrammarPoint(data);
+    }).catch(() => {
+      setGrammarPoint(null);
+    }).finally(() => {
       setLoading(false);
     });
   }, [slug]);
@@ -24,7 +28,7 @@ export default function GrammarPointPage() {
   const { showGrammarPointRomaji } = useSettings();
 
   if (loading) return <PageLoader />;
-  if (!grammarPoint) return <Text mt="xl">Grammar point not found.</Text>;
+  if (!grammarPoint) return <NotFound />;
 
   return (
     <Stack mt="xl" gap="lg">
