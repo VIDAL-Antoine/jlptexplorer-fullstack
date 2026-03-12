@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import {
+  Anchor,
   AspectRatio,
   Badge,
   Box,
@@ -21,9 +22,14 @@ import { YoutubePlayer } from '../YoutubePlayer/YoutubePlayer';
 interface SceneCardProps {
   scene: SceneWithDetails;
   currentGrammarPointId?: number;
+  hideSourceInfo?: boolean;
 }
 
-export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
+export function SceneCard({
+  scene,
+  currentGrammarPointId,
+  hideSourceInfo = false,
+}: SceneCardProps) {
   const [opened, { toggle }] = useDisclosure(false);
   const { speakerNameLang, sourceTitleLang, showDialogueTranslations } = useSettings();
 
@@ -39,16 +45,25 @@ export function SceneCard({ scene, currentGrammarPointId }: SceneCardProps) {
         </AspectRatio>
       </Card.Section>
 
-      <Group mb="xs" align="center">
-        <Title order={4}>
-          {sourceTitleLang === 'japanese'
-            ? (scene.sources.japanese_title ?? scene.sources.title)
-            : scene.sources.title}
-        </Title>
-        <Badge size="sm" variant="light">
-          {scene.sources.type}
-        </Badge>
-      </Group>
+      {!hideSourceInfo && (
+        <Group mb="xs" align="center">
+          <Anchor
+            component={Link}
+            href={`/sources/${scene.sources.slug}`}
+            underline="never"
+            c="inherit"
+          >
+            <Title order={4}>
+              {sourceTitleLang === 'japanese'
+                ? (scene.sources.japanese_title ?? scene.sources.title)
+                : scene.sources.title}
+            </Title>
+          </Anchor>
+          <Badge size="sm" variant="light">
+            {scene.sources.type}
+          </Badge>
+        </Group>
+      )}
 
       <Button
         variant="subtle"

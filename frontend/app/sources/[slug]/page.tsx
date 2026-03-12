@@ -101,7 +101,7 @@ export default function SourcePage() {
       ) : (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
           {source.scenes.map((scene) => (
-            <SceneCard key={scene.id} scene={scene} />
+            <SceneCard key={scene.id} scene={scene} hideSourceInfo />
           ))}
         </SimpleGrid>
       )}
