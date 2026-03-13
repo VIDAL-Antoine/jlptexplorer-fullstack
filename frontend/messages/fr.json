@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "toggleColorScheme": "Changer le thème",
+    "openSettings": "Paramètres"
+  },
+  "Footer": {
+    "tagline": "JLPTExplorer — La grammaire japonaise en contexte"
+  },
+  "Navbar": {
+    "browse": "Parcourir",
+    "grammarPoints": "Points de grammaire",
+    "sources": "Sources"
+  },
+  "SettingsDrawer": {
+    "title": "Paramètres",
+    "contentLanguage": "Langue du contenu",
+    "sourceTitles": "Titres des sources",
+    "speakerNames": "Noms des personnages",
+    "grammarBadges": "Badges de transcription",
+    "localized": "Localisé",
+    "showDialogueTranslations": "Afficher les traductions des dialogues",
+    "showGrammarPointRomaji": "Afficher le romaji des points de grammaire"
+  },
+  "GrammarPointsList": {
+    "searchPlaceholder": "Rechercher...",
+    "all": "Tous"
+  },
+  "SourcesList": {
+    "searchPlaceholder": "Rechercher...",
+    "all": "Tous",
+    "types": {
+      "game": "Jeu",
+      "anime": "Animé",
+      "series": "Série",
+      "movie": "Film",
+      "music": "Musique"
+    }
+  },
+  "SceneCard": {
+    "transcript": "Transcription"
+  },
+  "HomePage": {
+    "description": "Apprenez la grammaire japonaise en contexte — JLPT N5 à N1, illustrée par des scènes réelles de jeux vidéo et d'animés."
+  },
+  "GrammarPointPage": {
+    "noScenes": "Aucune scène pour ce point de grammaire."
+  },
+  "SourcePage": {
+    "grammarPointsTitle": "Points de grammaire dans cette source",
+    "scenesCount": "{count, plural, one {# scène} other {# scènes}}",
+    "grammarPointsCount": "{count, plural, one {# point de grammaire} other {# points de grammaire}}",
+    "noScenes": "Aucune scène pour cette source."
+  },
+  "NotFound": {
+    "message": "Page introuvable.",
+    "backHome": "Retour à l'accueil"
+  }
+}

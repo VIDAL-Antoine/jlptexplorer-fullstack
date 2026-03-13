@@ -2,20 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import NotFound from '../../not-found';
+import { useLocale, useTranslations } from 'next-intl';
+import NotFound from '../../../not-found';
 import { Badge, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
-import { PageLoader } from '../../../components/PageLoader/PageLoader';
-import { SceneCard } from '../../../components/SceneCard/SceneCard';
-import { JLPT_LEVEL_COLORS } from '../../../constants/jlpt';
-import { useSettings } from '../../../contexts/SettingsContext';
-import { api, type GrammarPointWithScenes } from '../../../lib/api';
+import { PageLoader } from '../../../../components/PageLoader/PageLoader';
+import { SceneCard } from '../../../../components/SceneCard/SceneCard';
+import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
+import { useSettings } from '../../../../contexts/SettingsContext';
+import { api, type GrammarPointWithScenes } from '../../../../lib/api';
 
 export default function GrammarPointPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams<{ lang: string; slug: string }>();
   const [grammarPoint, setGrammarPoint] = useState<GrammarPointWithScenes | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const { locale, showGrammarPointRomaji } = useSettings();
+  const t = useTranslations('GrammarPointPage');
+  const locale = useLocale();
+  const { showGrammarPointRomaji } = useSettings();
 
   useEffect(() => {
     api.grammarPoints.get(locale, slug).then((data) => {
@@ -49,7 +52,7 @@ export default function GrammarPointPage() {
       </div>
 
       {grammarPoint.scenes.length === 0 ? (
-        <Text c="dimmed">No scenes yet for this grammar point.</Text>
+        <Text c="dimmed">{t('noScenes')}</Text>
       ) : (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
           {grammarPoint.scenes.map((scene) => (

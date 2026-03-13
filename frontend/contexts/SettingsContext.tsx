@@ -4,8 +4,6 @@ import { createContext, useContext } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
 
 interface SettingsContextValue {
-  locale: string;
-  setLocale: (v: string) => void;
   speakerNameLang: 'localized' | 'japanese';
   setSpeakerNameLang: (v: 'localized' | 'japanese') => void;
   sourceTitleLang: 'localized' | 'japanese';
@@ -21,10 +19,6 @@ interface SettingsContextValue {
 const SettingsContext = createContext<SettingsContextValue | null>(null);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocale] = useLocalStorage<string>({
-    key: 'setting-locale',
-    defaultValue: 'en',
-  });
   const [speakerNameLang, setSpeakerNameLang] = useLocalStorage<'localized' | 'japanese'>({
     key: 'setting-speaker-lang',
     defaultValue: 'japanese',
@@ -49,8 +43,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   return (
     <SettingsContext.Provider
       value={{
-        locale,
-        setLocale,
         speakerNameLang,
         setSpeakerNameLang,
         sourceTitleLang,

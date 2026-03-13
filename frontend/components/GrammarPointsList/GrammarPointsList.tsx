@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
+import { Link } from '../../i18n/navigation';
 import { IconSearch } from '@tabler/icons-react';
 import {
   Badge,
@@ -18,16 +19,23 @@ import {
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
 import { useSettings } from '../../contexts/SettingsContext';
 
-const LEVEL_FILTER_OPTIONS = ['All', ...Object.keys(JLPT_LEVEL_COLORS)];
+const LEVELS = Object.keys(JLPT_LEVEL_COLORS);
 import { api, type GrammarPoint } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
 
 export function GrammarPointsList() {
+  const t = useTranslations('GrammarPointsList');
   const [grammarPoints, setGrammarPoints] = useState<GrammarPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [level, setLevel] = useState('All');
   const [search, setSearch] = useState('');
-  const { locale, showGrammarPointRomaji } = useSettings();
+  const locale = useLocale();
+  const { showGrammarPointRomaji } = useSettings();
+
+  const levelFilterData = [
+    { label: t('all'), value: 'All' },
+    ...LEVELS.map((l) => ({ label: l, value: l })),
+  ];
 
   useEffect(() => {
     setLoading(true);
@@ -49,16 +57,16 @@ export function GrammarPointsList() {
   return (
     <Stack mt="xl">
       <Select
-        data={LEVEL_FILTER_OPTIONS}
+        data={levelFilterData}
         value={level}
         onChange={(v) => setLevel(v ?? 'All')}
         size="lg"
         hiddenFrom="xs"
         allowDeselect={false}
       />
-      <SegmentedControl data={LEVEL_FILTER_OPTIONS} value={level} onChange={setLevel} size="xl" fullWidth visibleFrom="xs" />
+      <SegmentedControl data={levelFilterData} value={level} onChange={setLevel} size="xl" fullWidth visibleFrom="xs" />
       <TextInput
-        placeholder="Search..."
+        placeholder={t('searchPlaceholder')}
         leftSection={<IconSearch size={16} />}
         value={search}
         size="lg"

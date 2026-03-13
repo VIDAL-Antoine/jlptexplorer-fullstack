@@ -1,4 +1,4 @@
-import { SourcesList } from '../../components/SourcesList/SourcesList';
+import { SourcesList } from '../../../components/SourcesList/SourcesList';
 
 export const metadata = {
   title: 'Sources — JLPTExplorer',

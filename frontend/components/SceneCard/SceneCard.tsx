@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {
   IconChevronDown,
   IconChevronUp,
@@ -8,6 +7,7 @@ import {
   IconMusic,
   IconTag,
 } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import {
   Anchor,
   AspectRatio,
@@ -24,6 +24,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
 import { useSettings } from '../../contexts/SettingsContext';
+import { Link } from '../../i18n/navigation';
 import { type SceneWithDetails } from '../../lib/api';
 import { YoutubePlayer } from '../YoutubePlayer/YoutubePlayer';
 
@@ -53,6 +54,7 @@ export function SceneCard({
   currentGrammarPointId,
   hideSourceInfo = false,
 }: SceneCardProps) {
+  const t = useTranslations('SceneCard');
   const [opened, { toggle }] = useDisclosure(false);
   const {
     speakerNameLang,
@@ -102,7 +104,7 @@ export function SceneCard({
         rightSection={opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
         mb="xs"
       >
-        Transcript
+        {t('transcript')}
       </Button>
 
       <Collapse in={opened}>

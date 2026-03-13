@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import {
   IconDeviceGamepad2,
   IconDeviceTv,
@@ -10,6 +9,7 @@ import {
   IconSearch,
   IconTag,
 } from '@tabler/icons-react';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   AspectRatio,
   Box,
@@ -24,6 +24,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useSettings } from '../../contexts/SettingsContext';
+import { Link } from '../../i18n/navigation';
 import { api, type Source } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
 
@@ -42,18 +43,20 @@ function getTypeIcon(type: Source['type']): IconComponent {
 }
 
 export function SourcesList() {
+  const t = useTranslations('SourcesList');
   const [sources, setSources] = useState<Source[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeType, setActiveType] = useState<string>('all');
   const [search, setSearch] = useState('');
-  const { locale, sourceTitleLang } = useSettings();
+  const locale = useLocale();
+  const { sourceTitleLang } = useSettings();
 
   useEffect(() => {
     api.sources.list(locale).then((data) => {
       setSources(data);
       setLoading(false);
     });
-  }, []);
+  }, [locale]);
 
   if (loading) return <PageLoader />;
 
@@ -62,14 +65,15 @@ export function SourcesList() {
     const matchesType = activeType === 'all' || s.type === activeType;
     const q = search.toLowerCase();
     const matchesSearch =
-      (s.title ?? '').toLowerCase().includes(q) || (s.japanese_title ?? '').toLowerCase().includes(q);
+      (s.title ?? '').toLowerCase().includes(q) ||
+      (s.japanese_title ?? '').toLowerCase().includes(q);
     return matchesType && matchesSearch;
   });
 
   return (
     <Stack mt="xl">
       <TextInput
-        placeholder="Search..."
+        placeholder={t('searchPlaceholder')}
         leftSection={<IconSearch size={16} />}
         value={search}
         size="lg"
@@ -78,15 +82,15 @@ export function SourcesList() {
       <Chip.Group value={activeType} onChange={(v) => setActiveType(v as string)}>
         <Group gap="xs">
           <Chip value="all" size="xl">
-            All
+            {t('all')}
           </Chip>
           {availableTypes.map((type) => {
             const Icon = getTypeIcon(type);
             return (
-              <Chip key={type} value={type} size="xl" tt="capitalize">
+              <Chip key={type} value={type} size="xl">
                 <Group gap={6} wrap="nowrap">
                   <Icon size={14} />
-                  {type}
+                  {t(`types.${type}`)}
                 </Group>
               </Chip>
             );

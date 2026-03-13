@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '../../i18n/navigation';
 import { IconMoon, IconSettings, IconSun } from '@tabler/icons-react';
 import { ActionIcon, Anchor, Burger, Group, Text, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -13,6 +14,7 @@ interface HeaderProps {
 }
 
 export function Header({ opened, toggle }: HeaderProps) {
+  const t = useTranslations('Header');
   const { toggleColorScheme } = useMantineColorScheme();
   const [settingsOpened, { open: openSettings, close: closeSettings }] = useDisclosure(false);
 
@@ -32,12 +34,12 @@ export function Header({ opened, toggle }: HeaderProps) {
             variant="default"
             size="lg"
             onClick={toggleColorScheme}
-            aria-label="Toggle color scheme"
+            aria-label={t('toggleColorScheme')}
           >
             <IconSun size={18} className={classes.iconLight} />
             <IconMoon size={18} className={classes.iconDark} />
           </ActionIcon>
-          <ActionIcon variant="default" size="lg" onClick={openSettings} aria-label="Settings">
+          <ActionIcon variant="default" size="lg" onClick={openSettings} aria-label={t('openSettings')}>
             <IconSettings size={18} />
           </ActionIcon>
         </Group>

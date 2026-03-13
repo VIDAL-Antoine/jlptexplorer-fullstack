@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import NotFound from '../../not-found';
-import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
+import NotFound from '../../../not-found';
+import { Link } from '../../../../i18n/navigation';
 import {
   AspectRatio,
   Badge,
@@ -14,17 +15,17 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { PageLoader } from '../../../components/PageLoader/PageLoader';
-import { SceneCard } from '../../../components/SceneCard/SceneCard';
-import { JLPT_LEVEL_COLORS } from '../../../constants/jlpt';
-import { useSettings } from '../../../contexts/SettingsContext';
-import { api, type GrammarPoint, type SourceWithScenes } from '../../../lib/api';
+import { PageLoader } from '../../../../components/PageLoader/PageLoader';
+import { SceneCard } from '../../../../components/SceneCard/SceneCard';
+import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
+import { api, type GrammarPoint, type SourceWithScenes } from '../../../../lib/api';
 
 export default function SourcePage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams<{ lang: string; slug: string }>();
   const [source, setSource] = useState<SourceWithScenes | null>(null);
   const [loading, setLoading] = useState(true);
-  const { locale } = useSettings();
+  const t = useTranslations('SourcePage');
+  const locale = useLocale();
 
   useEffect(() => {
     api.sources.get(locale, slug).then((data) => {
@@ -68,13 +69,13 @@ export default function SourcePage() {
           {source.japanese_title && <Text c="dimmed">{source.japanese_title}</Text>}
           <Group gap="xs">
             <Text size="sm" c="dimmed">
-              {source.scenes.length} scene{source.scenes.length !== 1 ? 's' : ''}
+              {t('scenesCount', { count: source.scenes.length })}
             </Text>
             {grammarPoints.length > 0 && (
               <>
                 <Text size="sm" c="dimmed">·</Text>
                 <Text size="sm" c="dimmed">
-                  {grammarPoints.length} grammar point{grammarPoints.length !== 1 ? 's' : ''}
+                  {t('grammarPointsCount', { count: grammarPoints.length })}
                 </Text>
               </>
             )}
@@ -84,7 +85,7 @@ export default function SourcePage() {
 
       {grammarPoints.length > 0 && (
         <Stack gap="xs">
-          <Text fw={600}>Grammar points in this source</Text>
+          <Text fw={600}>{t('grammarPointsTitle')}</Text>
           <Group gap="xs">
             {grammarPoints.map((gp) => (
               <Badge
@@ -103,7 +104,7 @@ export default function SourcePage() {
       )}
 
       {source.scenes.length === 0 ? (
-        <Text c="dimmed">No scenes yet for this source.</Text>
+        <Text c="dimmed">{t('noScenes')}</Text>
       ) : (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
           {source.scenes.map((scene) => (
