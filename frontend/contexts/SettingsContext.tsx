@@ -12,6 +12,8 @@ interface SettingsContextValue {
   setShowDialogueTranslations: (v: boolean) => void;
   showGrammarPointRomaji: boolean;
   setShowGrammarPointRomaji: (v: boolean) => void;
+  grammarPointTranscriptScript: 'romaji' | 'kana';
+  setGrammarPointTranscriptScript: (v: 'romaji' | 'kana') => void;
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
@@ -33,6 +35,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     key: 'setting-show-grammar-point-romaji',
     defaultValue: true,
   });
+  const [grammarPointTranscriptScript, setGrammarPointTranscriptScript] = useLocalStorage<'romaji' | 'kana'>({
+    key: 'setting-grammar-point-script',
+    defaultValue: 'kana',
+  });
 
   return (
     <SettingsContext.Provider
@@ -45,6 +51,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         setShowDialogueTranslations,
         showGrammarPointRomaji,
         setShowGrammarPointRomaji,
+        grammarPointTranscriptScript,
+        setGrammarPointTranscriptScript,
       }}
     >
       {children}

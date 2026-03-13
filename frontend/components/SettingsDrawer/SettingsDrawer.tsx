@@ -18,6 +18,8 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
     setShowDialogueTranslations,
     showGrammarPointRomaji,
     setShowGrammarPointRomaji,
+    grammarPointTranscriptScript,
+    setGrammarPointTranscriptScript,
   } = useSettings();
 
   return (
@@ -51,7 +53,20 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
             ]}
           />
         </div>
-        <Divider />
+        <div>
+          <Text size="sm" fw={500} mb="xs">
+            Grammar point transcript badges
+          </Text>
+          <SegmentedControl
+            fullWidth
+            value={grammarPointTranscriptScript}
+            onChange={(v) => setGrammarPointTranscriptScript(v as 'romaji' | 'kana')}
+            data={[
+              { label: 'Romaji', value: 'romaji' },
+              { label: 'かな', value: 'kana' },
+            ]}
+          />
+        </div>
         <Switch
           label="Show dialogue translations"
           checked={showDialogueTranslations}

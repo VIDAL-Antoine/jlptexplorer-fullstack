@@ -54,7 +54,12 @@ export function SceneCard({
   hideSourceInfo = false,
 }: SceneCardProps) {
   const [opened, { toggle }] = useDisclosure(false);
-  const { speakerNameLang, sourceTitleLang, showDialogueTranslations } = useSettings();
+  const {
+    speakerNameLang,
+    sourceTitleLang,
+    showDialogueTranslations,
+    grammarPointTranscriptScript,
+  } = useSettings();
 
   const SourceTypeIcon = getSourceTypeIcon(scene.sources.type);
 
@@ -153,11 +158,14 @@ export function SceneCard({
                             variant={
                               tlgp.grammar_point_id === currentGrammarPointId ? 'filled' : 'light'
                             }
+                            tt="lowercase"
                             component={Link}
                             href={`/grammar-points/${tlgp.grammar_points.slug}`}
                             style={{ cursor: 'pointer' }}
                           >
-                            {tlgp.grammar_points.title}
+                            {grammarPointTranscriptScript === 'romaji'
+                              ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
+                              : tlgp.grammar_points.title}
                           </Badge>
                         ) : null
                       )}
