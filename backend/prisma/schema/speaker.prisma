@@ -1,9 +1,8 @@
 model speakers {
-  id               Int                @id @default(autoincrement())
-  slug             String             @unique @db.VarChar(100)
-  name_english     String             @db.VarChar(100)
-  name_japanese    String?            @db.VarChar(100)
-  description      String?
-  image_url        String?            @db.VarChar(500)
+  id               Int                  @id @default(autoincrement())
+  slug             String               @unique @db.VarChar(100)
+  name_japanese    String?              @db.VarChar(100)
+  image_url        String?              @db.VarChar(500)
   transcript_lines transcript_lines[]
+  translations     speaker_translations[]
 }

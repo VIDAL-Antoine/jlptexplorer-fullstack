@@ -1,0 +1,10 @@
+model grammar_point_translations {
+  id               Int            @id @default(autoincrement())
+  grammar_point_id Int
+  locale           String         @db.VarChar(10)
+  meaning          String
+  notes            String?
+  grammar_points   grammar_points @relation(fields: [grammar_point_id], references: [id], onDelete: Cascade)
+
+  @@unique([grammar_point_id, locale])
+}

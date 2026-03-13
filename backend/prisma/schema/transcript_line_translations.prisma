@@ -1,0 +1,9 @@
+model transcript_line_translations {
+  id                 Int              @id @default(autoincrement())
+  transcript_line_id Int
+  locale             String           @db.VarChar(10)
+  translation        String?
+  transcript_lines   transcript_lines @relation(fields: [transcript_line_id], references: [id], onDelete: Cascade)
+
+  @@unique([transcript_line_id, locale])
+}

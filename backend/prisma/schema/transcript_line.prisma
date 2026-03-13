@@ -4,10 +4,10 @@ model transcript_lines {
   position                       Int
   speaker_id                     Int?
   text                           String
-  translation                    String?
   scenes                         scenes                           @relation(fields: [scene_id], references: [id], onDelete: Cascade)
   speakers                       speakers?                        @relation(fields: [speaker_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   transcript_line_grammar_points transcript_line_grammar_points[]
+  translations                   transcript_line_translations[]
 
   @@unique([scene_id, position])
 }

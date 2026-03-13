@@ -1,0 +1,10 @@
+model speaker_translations {
+  id          Int      @id @default(autoincrement())
+  speaker_id  Int
+  locale      String   @db.VarChar(10)
+  name        String   @db.VarChar(100)
+  description String?
+  speakers    speakers @relation(fields: [speaker_id], references: [id], onDelete: Cascade)
+
+  @@unique([speaker_id, locale])
+}
