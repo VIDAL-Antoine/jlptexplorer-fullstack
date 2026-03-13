@@ -17,10 +17,12 @@ async function start() {
 
   await server.register(
     async (api) => {
-      api.register(sourcesRoutes, { prefix: "/sources" });
-      api.register(scenesRoutes, { prefix: "/scenes" });
-      api.register(grammarPointsRoutes, { prefix: "/grammar-points" });
-      api.register(speakersRoutes, { prefix: "/speakers" });
+      api.register(async (localeApi) => {
+        localeApi.register(sourcesRoutes, { prefix: "/sources" });
+        localeApi.register(scenesRoutes, { prefix: "/scenes" });
+        localeApi.register(grammarPointsRoutes, { prefix: "/grammar-points" });
+        localeApi.register(speakersRoutes, { prefix: "/speakers" });
+      }, { prefix: "/:locale" });
     },
     { prefix: "/api/v1" }
   );

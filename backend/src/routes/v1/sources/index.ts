@@ -1,25 +1,39 @@
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../../lib/prisma.js";
+import { flattenSource, flattenSpeaker, flattenTranscriptLine, flattenGrammarPoint } from "../../../lib/flatten.js";
+
+type LocaleParams = { locale: string };
 
 export async function sourcesRoutes(server: FastifyInstance) {
-  server.get("/", async () => {
-    return prisma.sources.findMany({
-      orderBy: { title: "asc" },
+  server.get<{ Params: LocaleParams }>("/", async (request) => {
+    const { locale } = request.params;
+
+    const sources = await prisma.sources.findMany({
+      include: { translations: { where: { locale } } },
+      orderBy: { id: "asc" },
     });
+
+    return sources.map(flattenSource);
   });
 
-  server.get<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
+  server.get<{ Params: LocaleParams & { slug: string } }>("/:slug", async (request, reply) => {
+    const { locale, slug } = request.params;
+
     const source = await prisma.sources.findUnique({
-      where: { slug: request.params.slug },
+      where: { slug },
       include: {
+        translations: { where: { locale } },
         scenes: {
           include: {
-            sources: true,
+            sources: { include: { translations: { where: { locale } } } },
             transcript_lines: {
               include: {
-                speakers: true,
+                translations: { where: { locale } },
+                speakers: { include: { translations: { where: { locale } } } },
                 transcript_line_grammar_points: {
-                  include: { grammar_points: true },
+                  include: {
+                    grammar_points: { include: { translations: { where: { locale } } } },
+                  },
                 },
               },
               orderBy: { position: "asc" },
@@ -34,35 +48,76 @@ export async function sourcesRoutes(server: FastifyInstance) {
       return reply.status(404).send({ error: "Source not found" });
     }
 
-    return source;
+    return {
+      ...flattenSource(source),
+      scenes: source.scenes.map((scene) => ({
+        ...scene,
+        sources: flattenSource(scene.sources),
+        transcript_lines: scene.transcript_lines.map((line) => ({
+          ...flattenTranscriptLine(line),
+          speakers: line.speakers ? flattenSpeaker(line.speakers) : null,
+          transcript_line_grammar_points: line.transcript_line_grammar_points.map((tlgp) => ({
+            ...tlgp,
+            grammar_points: flattenGrammarPoint(tlgp.grammar_points),
+          })),
+        })),
+      })),
+    };
   });
 
-  server.post<{ Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string } }>(
-    "/",
-    async (request, reply) => {
-      const { title, japanese_title, type, cover_image_url, slug } = request.body;
+  server.post<{
+    Params: LocaleParams;
+    Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string };
+  }>("/", async (request, reply) => {
+    const { locale } = request.params;
+    const { title, japanese_title, type, cover_image_url, slug } = request.body;
 
-      const source = await prisma.sources.create({
-        data: { title, japanese_title, type: type as any, cover_image_url, slug },
-      });
+    const source = await prisma.sources.create({
+      data: {
+        japanese_title,
+        type: type as any,
+        cover_image_url,
+        slug,
+        translations: { create: { locale, title } },
+      },
+      include: { translations: { where: { locale } } },
+    });
 
-      return reply.status(201).send(source);
-    }
-  );
+    return reply.status(201).send(flattenSource(source));
+  });
 
-  server.put<{ Params: { slug: string }; Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string } }>(
-    "/:slug",
-    async (request) => {
-      const { title, japanese_title, type, cover_image_url, slug } = request.body;
+  server.put<{
+    Params: LocaleParams & { slug: string };
+    Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string };
+  }>("/:slug", async (request, reply) => {
+    const { locale, slug: paramSlug } = request.params;
+    const { title, japanese_title, type, cover_image_url, slug } = request.body;
 
-      return prisma.sources.update({
-        where: { slug: request.params.slug },
-        data: { title, japanese_title, type: type as any, cover_image_url, slug },
-      });
-    }
-  );
+    const existing = await prisma.sources.findUnique({ where: { slug: paramSlug }, select: { id: true } });
+    if (!existing) return reply.status(404).send({ error: "Source not found" });
 
-  server.delete<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
+    const source = await prisma.sources.update({
+      where: { slug: paramSlug },
+      data: {
+        japanese_title,
+        type: type as any,
+        cover_image_url,
+        slug,
+        translations: {
+          upsert: {
+            where: { source_id_locale: { source_id: existing.id, locale } },
+            create: { locale, title },
+            update: { title },
+          },
+        },
+      },
+      include: { translations: { where: { locale } } },
+    });
+
+    return flattenSource(source);
+  });
+
+  server.delete<{ Params: LocaleParams & { slug: string } }>("/:slug", async (request, reply) => {
     await prisma.sources.delete({ where: { slug: request.params.slug } });
     return reply.status(204).send();
   });
