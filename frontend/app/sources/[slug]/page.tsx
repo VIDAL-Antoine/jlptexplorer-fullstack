@@ -17,22 +17,24 @@ import {
 import { PageLoader } from '../../../components/PageLoader/PageLoader';
 import { SceneCard } from '../../../components/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS } from '../../../constants/jlpt';
+import { useSettings } from '../../../contexts/SettingsContext';
 import { api, type GrammarPoint, type SourceWithScenes } from '../../../lib/api';
 
 export default function SourcePage() {
   const { slug } = useParams<{ slug: string }>();
   const [source, setSource] = useState<SourceWithScenes | null>(null);
   const [loading, setLoading] = useState(true);
+  const { locale } = useSettings();
 
   useEffect(() => {
-    api.sources.get(slug).then((data) => {
+    api.sources.get(locale, slug).then((data) => {
       setSource(data);
     }).catch(() => {
       setSource(null);
     }).finally(() => {
       setLoading(false);
     });
-  }, [slug]);
+  }, [slug, locale]);
 
   if (loading) return <PageLoader />;
   if (!source) return <NotFound />;
@@ -53,7 +55,7 @@ export default function SourcePage() {
       <Group align="flex-start" gap="xl">
         {source.cover_image_url && (
           <AspectRatio ratio={2 / 3} w={120} style={{ flexShrink: 0 }}>
-            <Image src={source.cover_image_url} alt={source.title} radius="md" fit="cover" />
+            <Image src={source.cover_image_url} alt={source.title ?? ''} radius="md" fit="cover" />
           </AspectRatio>
         )}
         <Stack gap="xs">

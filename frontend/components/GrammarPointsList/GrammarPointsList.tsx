@@ -27,22 +27,22 @@ export function GrammarPointsList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [level, setLevel] = useState('All');
   const [search, setSearch] = useState('');
-  const { showGrammarPointRomaji } = useSettings();
+  const { locale, showGrammarPointRomaji } = useSettings();
 
   useEffect(() => {
     setLoading(true);
-    api.grammarPoints.list(level === 'All' ? undefined : level).then((data) => {
+    api.grammarPoints.list(locale, level === 'All' ? undefined : level).then((data) => {
       setGrammarPoints(data);
       setLoading(false);
     });
-  }, [level]);
+  }, [level, locale]);
 
   const filtered = grammarPoints.filter((gp) => {
     const q = search.toLowerCase();
     return (
       gp.title.toLowerCase().includes(q) ||
       gp.romaji.toLowerCase().includes(q) ||
-      gp.meaning.toLowerCase().includes(q)
+      (gp.meaning ?? '').toLowerCase().includes(q)
     );
   });
 

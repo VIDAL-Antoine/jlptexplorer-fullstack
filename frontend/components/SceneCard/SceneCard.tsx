@@ -129,8 +129,8 @@ export function SceneCard({
                 {line.speakers && (
                   <Text size="xs" fw={700} c="dimmed" mb={2}>
                     {speakerNameLang === 'japanese'
-                      ? (line.speakers.name_japanese ?? line.speakers.name_english)
-                      : line.speakers.name_english}
+                      ? (line.speakers.name_japanese ?? line.speakers.name)
+                      : line.speakers.name}
                   </Text>
                 )}
                 <Text size="md" fw={hasGrammar ? 600 : 400} lang="ja">

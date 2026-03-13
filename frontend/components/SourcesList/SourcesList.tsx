@@ -46,10 +46,10 @@ export function SourcesList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeType, setActiveType] = useState<string>('all');
   const [search, setSearch] = useState('');
-  const { sourceTitleLang } = useSettings();
+  const { locale, sourceTitleLang } = useSettings();
 
   useEffect(() => {
-    api.sources.list().then((data) => {
+    api.sources.list(locale).then((data) => {
       setSources(data);
       setLoading(false);
     });
@@ -62,7 +62,7 @@ export function SourcesList() {
     const matchesType = activeType === 'all' || s.type === activeType;
     const q = search.toLowerCase();
     const matchesSearch =
-      s.title.toLowerCase().includes(q) || (s.japanese_title ?? '').toLowerCase().includes(q);
+      (s.title ?? '').toLowerCase().includes(q) || (s.japanese_title ?? '').toLowerCase().includes(q);
     return matchesType && matchesSearch;
   });
 
@@ -111,7 +111,7 @@ export function SourcesList() {
                 <AspectRatio ratio={2 / 3}>
                   <Image
                     src={source.cover_image_url}
-                    alt={source.title}
+                    alt={source.title ?? ''}
                     fit="cover"
                     fallbackSrc="https://placehold.co/400x600?text=No+image"
                   />

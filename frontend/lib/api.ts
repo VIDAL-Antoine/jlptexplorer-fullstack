@@ -14,23 +14,24 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
 
 export const api = {
   grammarPoints: {
-    list: (level?: string) =>
-      apiFetch<GrammarPoint[]>(`/api/v1/grammar-points${level ? `?level=${level}` : ''}`),
-    get: (slug: string) => apiFetch<GrammarPointWithScenes>(`/api/v1/grammar-points/${slug}`),
+    list: (locale: string, level?: string) =>
+      apiFetch<GrammarPoint[]>(`/api/v1/${locale}/grammar-points${level ? `?level=${level}` : ''}`),
+    get: (locale: string, slug: string) =>
+      apiFetch<GrammarPointWithScenes>(`/api/v1/${locale}/grammar-points/${slug}`),
   },
   sources: {
-    list: () => apiFetch<Source[]>('/api/v1/sources'),
-    get: (slug: string) => apiFetch<SourceWithScenes>(`/api/v1/sources/${slug}`),
+    list: (locale: string) => apiFetch<Source[]>(`/api/v1/${locale}/sources`),
+    get: (locale: string, slug: string) => apiFetch<SourceWithScenes>(`/api/v1/${locale}/sources/${slug}`),
   },
   scenes: {
-    list: (params?: { sourceId?: number; level?: string }) => {
+    list: (locale: string, params?: { sourceId?: number; level?: string }) => {
       const query = new URLSearchParams();
       if (params?.sourceId) query.set('sourceId', String(params.sourceId));
       if (params?.level) query.set('level', params.level);
       const qs = query.toString();
-      return apiFetch<Scene[]>(`/api/v1/scenes${qs ? `?${qs}` : ''}`);
+      return apiFetch<Scene[]>(`/api/v1/${locale}/scenes${qs ? `?${qs}` : ''}`);
     },
-    get: (id: number) => apiFetch<SceneWithDetails>(`/api/v1/scenes/${id}`),
+    get: (locale: string, id: number) => apiFetch<SceneWithDetails>(`/api/v1/${locale}/scenes/${id}`),
   },
 };
 
@@ -40,7 +41,7 @@ export type GrammarPoint = {
   slug: string;
   title: string;
   romaji: string;
-  meaning: string;
+  meaning: string | null;
   jlpt_level: JlptLevel;
   notes: string | null;
   created_at: string;
@@ -49,7 +50,7 @@ export type GrammarPoint = {
 export type Source = {
   id: number;
   slug: string;
-  title: string;
+  title: string | null;
   japanese_title: string | null;
   type: 'game' | 'anime' | 'movie' | 'series' | 'music';
   cover_image_url: string | null;
@@ -65,7 +66,7 @@ export type TranscriptLineGrammarPoint = {
 export type Speaker = {
   id: number;
   slug: string;
-  name_english: string;
+  name: string | null;
   name_japanese: string | null;
   description: string | null;
   image_url: string | null;

@@ -15,17 +15,17 @@ export default function GrammarPointPage() {
   const [grammarPoint, setGrammarPoint] = useState<GrammarPointWithScenes | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const { locale, showGrammarPointRomaji } = useSettings();
+
   useEffect(() => {
-    api.grammarPoints.get(slug).then((data) => {
+    api.grammarPoints.get(locale, slug).then((data) => {
       setGrammarPoint(data);
     }).catch(() => {
       setGrammarPoint(null);
     }).finally(() => {
       setLoading(false);
     });
-  }, [slug]);
-
-  const { showGrammarPointRomaji } = useSettings();
+  }, [slug, locale]);
 
   if (loading) return <PageLoader />;
   if (!grammarPoint) return <NotFound />;

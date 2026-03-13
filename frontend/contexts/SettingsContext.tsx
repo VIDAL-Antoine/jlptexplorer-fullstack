@@ -4,10 +4,12 @@ import { createContext, useContext } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
 
 interface SettingsContextValue {
-  speakerNameLang: 'english' | 'japanese';
-  setSpeakerNameLang: (v: 'english' | 'japanese') => void;
-  sourceTitleLang: 'english' | 'japanese';
-  setSourceTitleLang: (v: 'english' | 'japanese') => void;
+  locale: string;
+  setLocale: (v: string) => void;
+  speakerNameLang: 'localized' | 'japanese';
+  setSpeakerNameLang: (v: 'localized' | 'japanese') => void;
+  sourceTitleLang: 'localized' | 'japanese';
+  setSourceTitleLang: (v: 'localized' | 'japanese') => void;
   showDialogueTranslations: boolean;
   setShowDialogueTranslations: (v: boolean) => void;
   showGrammarPointRomaji: boolean;
@@ -19,13 +21,17 @@ interface SettingsContextValue {
 const SettingsContext = createContext<SettingsContextValue | null>(null);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [speakerNameLang, setSpeakerNameLang] = useLocalStorage<'english' | 'japanese'>({
+  const [locale, setLocale] = useLocalStorage<string>({
+    key: 'setting-locale',
+    defaultValue: 'en',
+  });
+  const [speakerNameLang, setSpeakerNameLang] = useLocalStorage<'localized' | 'japanese'>({
     key: 'setting-speaker-lang',
     defaultValue: 'japanese',
   });
-  const [sourceTitleLang, setSourceTitleLang] = useLocalStorage<'english' | 'japanese'>({
+  const [sourceTitleLang, setSourceTitleLang] = useLocalStorage<'localized' | 'japanese'>({
     key: 'setting-source-title-lang',
-    defaultValue: 'english',
+    defaultValue: 'localized',
   });
   const [showDialogueTranslations, setShowDialogueTranslations] = useLocalStorage({
     key: 'setting-show-dialogue-translations',
@@ -43,6 +49,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   return (
     <SettingsContext.Provider
       value={{
+        locale,
+        setLocale,
         speakerNameLang,
         setSpeakerNameLang,
         sourceTitleLang,
