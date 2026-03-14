@@ -339,3 +339,4 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
     return reply.status(204).send();
   });
 }
+
