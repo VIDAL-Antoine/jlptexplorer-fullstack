@@ -22,7 +22,7 @@ export function YoutubePlayer({ videoId, startTime, endTime }: YoutubePlayerProp
     loadYouTubeApi().then(() => {
       if (cancelled) return;
 
-      playerRef.current = new window.YT.Player(elementId, {
+      new window.YT.Player(elementId, {
         videoId,
         playerVars: {
           start: startTime,
@@ -30,6 +30,9 @@ export function YoutubePlayer({ videoId, startTime, endTime }: YoutubePlayerProp
           rel: 0,
         },
         events: {
+          onReady: (event) => {
+            if (!cancelled) playerRef.current = event.target;
+          },
           onStateChange: (event) => {
             if (event.data === window.YT.PlayerState.ENDED) {
               event.target.seekTo(startTime, true);
