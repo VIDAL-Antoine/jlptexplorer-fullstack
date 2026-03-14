@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../../lib/prisma.js";
 import { source_type } from "../../../generated/prisma/enums.js";
-import { flattenSource, flattenSpeaker, flattenTranscriptLine, flattenGrammarPoint } from "../../../lib/flatten.js";
+import { flattenSource, flattenGrammarPoint, flattenScene } from "../../../lib/flatten.js";
 
 type LocaleParams = { locale: string };
 
@@ -27,22 +27,17 @@ export async function sourcesRoutes(server: FastifyInstance) {
       include: {
         translations: { where: { locale } },
         scenes: {
-          include: {
-            sources: { include: { translations: { where: { locale } } } },
+          select: {
             transcript_lines: {
-              include: {
-                translations: { where: { locale } },
-                speakers: { include: { translations: { where: { locale } } } },
+              select: {
                 transcript_line_grammar_points: {
                   include: {
                     grammar_points: { include: { translations: { where: { locale } } } },
                   },
                 },
               },
-              orderBy: { position: "asc" },
             },
           },
-          orderBy: [{ episode_number: "asc" }, { start_time: "asc" }],
         },
       },
     });
@@ -51,20 +46,99 @@ export async function sourcesRoutes(server: FastifyInstance) {
       return reply.status(404).send({ error: "Source not found" });
     }
 
+    const grammarPoints = Array.from(
+      new Map(
+        source.scenes
+          .flatMap((s) => s.transcript_lines)
+          .flatMap((l) => l.transcript_line_grammar_points)
+          .map((tlgp) => tlgp.grammar_points)
+          .filter((gp): gp is NonNullable<typeof gp> => gp !== null)
+          .map((gp) => [gp.id, flattenGrammarPoint(gp)])
+      ).values()
+    );
+
+    const { scenes: _scenes, ...sourceData } = source;
     return {
-      ...flattenSource(source),
-      scenes: source.scenes.map((scene) => ({
-        ...scene,
-        sources: flattenSource(scene.sources),
-        transcript_lines: scene.transcript_lines.map((line) => ({
-          ...flattenTranscriptLine(line),
-          speakers: line.speakers ? flattenSpeaker(line.speakers) : null,
-          transcript_line_grammar_points: line.transcript_line_grammar_points.map((tlgp) => ({
-            ...tlgp,
-            grammar_points: flattenGrammarPoint(tlgp.grammar_points),
-          })),
-        })),
+      ...flattenSource(sourceData as any),
+      scenes_count: source.scenes.length,
+      grammar_points: grammarPoints,
+    };
+  });
+
+  server.get<{
+    Params: LocaleParams & { slug: string };
+    Querystring: { page?: string; limit?: string; grammarPointSlugs?: string };
+  }>("/:slug/scenes", async (request, reply) => {
+    const { locale, slug } = request.params;
+    const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
+    const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? "12") || 12));
+    const grammarPointSlugs = request.query.grammarPointSlugs
+      ?.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean) ?? [];
+
+    const source = await prisma.sources.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+
+    if (!source) return reply.status(404).send({ error: "Source not found" });
+
+    const sceneInclude = {
+      sources: { include: { translations: { where: { locale } } } },
+      transcript_lines: {
+        orderBy: { position: "asc" as const },
+        include: {
+          translations: { where: { locale } },
+          speakers: { include: { translations: { where: { locale } } } },
+          transcript_line_grammar_points: {
+            include: {
+              grammar_points: { include: { translations: { where: { locale } } } },
+            },
+          },
+        },
+      },
+    };
+
+    const where = {
+      source_id: source.id,
+      AND: grammarPointSlugs.map((slug) => ({
+        transcript_lines: {
+          some: {
+            transcript_line_grammar_points: {
+              some: { grammar_points: { slug } },
+            },
+          },
+        },
       })),
+    };
+
+    const [scenes, total, availableGrammarPoints] = await Promise.all([
+      prisma.scenes.findMany({
+        where,
+        include: sceneInclude,
+        orderBy: [{ episode_number: "asc" }, { start_time: "asc" }],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.scenes.count({ where }),
+      prisma.grammar_points.findMany({
+        where: {
+          transcript_line_grammar_points: {
+            some: { transcript_lines: { scenes: where } },
+          },
+        },
+        include: { translations: { where: { locale } } },
+        orderBy: { jlpt_level: "asc" },
+      }),
+    ]);
+
+    return {
+      scenes: scenes.map(flattenScene),
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      available_grammar_points: (availableGrammarPoints as any[]).map(flattenGrammarPoint),
     };
   });
 

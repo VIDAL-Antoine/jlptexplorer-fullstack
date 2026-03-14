@@ -35,6 +35,41 @@ export function flattenSpeaker(speaker: {
   return { ...rest, name: translations[0]?.name ?? null, description: translations[0]?.description ?? null };
 }
 
+export function flattenScene(scene: {
+  id: number;
+  source_id: number;
+  youtube_video_id: string;
+  start_time: number;
+  end_time: number;
+  episode_number: number;
+  notes: string | null;
+  created_at: Date;
+  sources: Parameters<typeof flattenSource>[0];
+  transcript_lines: Array<
+    Parameters<typeof flattenTranscriptLine>[0] & {
+      speakers: Parameters<typeof flattenSpeaker>[0] | null;
+      transcript_line_grammar_points: Array<{
+        transcript_line_id: number;
+        grammar_point_id: number;
+        grammar_points: Parameters<typeof flattenGrammarPoint>[0] | null;
+      }>;
+    }
+  >;
+}) {
+  return {
+    ...scene,
+    sources: flattenSource(scene.sources),
+    transcript_lines: scene.transcript_lines.map((line) => ({
+      ...flattenTranscriptLine(line),
+      speakers: line.speakers ? flattenSpeaker(line.speakers) : null,
+      transcript_line_grammar_points: line.transcript_line_grammar_points.map((tlgp) => ({
+        ...tlgp,
+        grammar_points: tlgp.grammar_points ? flattenGrammarPoint(tlgp.grammar_points) : null,
+      })),
+    })),
+  };
+}
+
 export function flattenTranscriptLine(line: {
   id: number;
   scene_id: number;
