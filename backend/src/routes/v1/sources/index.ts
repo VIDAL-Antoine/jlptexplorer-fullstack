@@ -42,7 +42,7 @@ export async function sourcesRoutes(server: FastifyInstance) {
               orderBy: { position: "asc" },
             },
           },
-          orderBy: { created_at: "desc" },
+          orderBy: [{ episode_number: "asc" }, { start_time: "asc" }],
         },
       },
     });

@@ -166,7 +166,7 @@ export async function scenesLocaleRoutes(server: FastifyInstance) {
             : {}),
         },
         include: buildSceneInclude(locale),
-        orderBy: { created_at: "desc" },
+        orderBy: [{ episode_number: "asc" }, { start_time: "asc" }],
       });
 
       return scenes.map(flattenScene);
@@ -249,11 +249,12 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
       youtube_video_id: string;
       start_time: number | string;
       end_time: number | string;
+      episode_number?: number;
       notes?: string;
       transcript_lines: TranscriptLineInput[];
     };
   }>("/", async (request, reply) => {
-    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+    const { source_slug, youtube_video_id, start_time, end_time, episode_number, notes, transcript_lines } = request.body;
 
     const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
     if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
@@ -269,6 +270,7 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
         youtube_video_id,
         start_time: parseTime(start_time),
         end_time: parseTime(end_time),
+        ...(episode_number !== undefined ? { episode_number } : {}),
         notes,
         transcript_lines: { create: buildLineData(transcript_lines, grammarSlugToId, speakerSlugToId) },
       },
@@ -285,6 +287,7 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
       youtube_video_id: string;
       start_time: number | string;
       end_time: number | string;
+      episode_number?: number;
       notes?: string;
       transcript_lines: TranscriptLineInput[];
     };
@@ -295,7 +298,7 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
       return reply.status(400).send({ error: "Invalid scene id" });
     }
 
-    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+    const { source_slug, youtube_video_id, start_time, end_time, episode_number, notes, transcript_lines } = request.body;
 
     const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
     if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
@@ -312,6 +315,7 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
         youtube_video_id,
         start_time: parseTime(start_time),
         end_time: parseTime(end_time),
+        ...(episode_number !== undefined ? { episode_number } : {}),
         notes,
         transcript_lines: {
           deleteMany: {},

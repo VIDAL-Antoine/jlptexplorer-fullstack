@@ -4,6 +4,7 @@ model scenes {
   youtube_video_id String             @db.VarChar(20)
   start_time       Int
   end_time         Int
+  episode_number   Int                @default(1)
   notes            String?
   created_at       DateTime           @default(now()) @db.Timestamp(6)
   transcript_lines transcript_lines[]
