@@ -45,6 +45,7 @@ function getTypeIcon(type: Source['type']): IconComponent {
 
 export function SourcesList() {
   const t = useTranslations('SourcesList');
+  const tTypes = useTranslations('SourceTypes');
   const [sources, setSources] = useState<Source[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
@@ -106,7 +107,7 @@ export function SourcesList() {
               <Chip key={type} value={type} size="xl">
                 <Group gap={6} wrap="nowrap">
                   <Icon size={14} />
-                  {t(`types.${type}`)}
+                  {tTypes(type)}
                 </Group>
               </Chip>
             );

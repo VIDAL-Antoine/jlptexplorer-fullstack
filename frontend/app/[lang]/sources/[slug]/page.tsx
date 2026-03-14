@@ -3,6 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import {
+  IconDeviceGamepad2,
+  IconDeviceTv,
+  IconMovie,
+  IconMusic,
+  IconTag,
+} from '@tabler/icons-react';
 import NotFound from '../../../not-found';
 import { Link } from '../../../../i18n/navigation';
 import {
@@ -20,11 +27,27 @@ import { SceneCard } from '../../../../components/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
 import { api, type GrammarPoint, type SourceWithScenes } from '../../../../lib/api';
 
+type SourceType = SourceWithScenes['type'];
+type IconComponent = React.ComponentType<{ size?: number }>;
+
+const SOURCE_TYPE_ICONS: Partial<Record<SourceType, IconComponent>> = {
+  game: IconDeviceGamepad2,
+  anime: IconDeviceTv,
+  series: IconDeviceTv,
+  movie: IconMovie,
+  music: IconMusic,
+};
+
+function getSourceTypeIcon(type: SourceType): IconComponent {
+  return SOURCE_TYPE_ICONS[type] ?? IconTag;
+}
+
 export default function SourcePage() {
   const { slug } = useParams<{ lang: string; slug: string }>();
   const [source, setSource] = useState<SourceWithScenes | null>(null);
   const [loading, setLoading] = useState(true);
   const t = useTranslations('SourcePage');
+  const tTypes = useTranslations('SourceTypes');
   const locale = useLocale();
 
   useEffect(() => {
@@ -51,6 +74,8 @@ export default function SourcePage() {
     ).values()
   );
 
+  const SourceTypeIcon = getSourceTypeIcon(source.type);
+
   return (
     <Stack mt="xl" gap="lg">
       <Group align="flex-start" gap="xl">
@@ -62,8 +87,15 @@ export default function SourcePage() {
         <Stack gap="xs">
           <Group align="center" gap="sm">
             <Title order={1}>{source.title}</Title>
-            <Badge variant="light" size="lg" tt="capitalize">
-              {source.type}
+            <Badge
+              variant="light"
+              size="lg"
+              leftSection={<SourceTypeIcon size={12} />}
+              component={Link}
+              href={`/sources?type=${source.type}`}
+              style={{ cursor: 'pointer' }}
+            >
+              {tTypes(source.type)}
             </Badge>
           </Group>
           {source.japanese_title && <Text c="dimmed">{source.japanese_title}</Text>}

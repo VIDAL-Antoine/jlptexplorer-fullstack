@@ -25,16 +25,16 @@
     "searchPlaceholder": "Rechercher...",
     "all": "Tous"
   },
+  "SourceTypes": {
+    "game": "Jeu",
+    "anime": "Animé",
+    "series": "Série",
+    "movie": "Film",
+    "music": "Musique"
+  },
   "SourcesList": {
     "searchPlaceholder": "Rechercher...",
-    "all": "Tous",
-    "types": {
-      "game": "Jeu",
-      "anime": "Animé",
-      "series": "Série",
-      "movie": "Film",
-      "music": "Musique"
-    }
+    "all": "Tous"
   },
   "SceneCard": {
     "transcript": "Transcription"
