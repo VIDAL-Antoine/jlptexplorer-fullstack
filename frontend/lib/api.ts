@@ -30,7 +30,15 @@ export const api = {
       const qs = query.toString();
       return apiFetch<Source[]>(`/api/v1/${locale}/sources${qs ? `?${qs}` : ''}`);
     },
-    get: (locale: string, slug: string) => apiFetch<SourceWithScenes>(`/api/v1/${locale}/sources/${slug}`),
+    get: (locale: string, slug: string) => apiFetch<SourceDetail>(`/api/v1/${locale}/sources/${slug}`),
+    scenes: (locale: string, slug: string, params?: { page?: number; limit?: number; grammarPointSlugs?: string[] }) => {
+      const query = new URLSearchParams();
+      if (params?.page) query.set('page', String(params.page));
+      if (params?.limit) query.set('limit', String(params.limit));
+      if (params?.grammarPointSlugs?.length) query.set('grammarPointSlugs', params.grammarPointSlugs.join(','));
+      const qs = query.toString();
+      return apiFetch<SourceScenesPage>(`/api/v1/${locale}/sources/${slug}/scenes${qs ? `?${qs}` : ''}`);
+    },
   },
   scenes: {
     list: (locale: string, params?: { sourceId?: number; level?: string }) => {
@@ -112,6 +120,15 @@ export type GrammarPointWithScenes = GrammarPoint & {
   scenes: SceneWithDetails[];
 };
 
-export type SourceWithScenes = Source & {
+export type SourceDetail = Source & {
+  scenes_count: number;
+  grammar_points: GrammarPoint[];
+};
+
+export type SourceScenesPage = {
   scenes: SceneWithDetails[];
+  total: number;
+  page: number;
+  totalPages: number;
+  available_grammar_points: GrammarPoint[];
 };

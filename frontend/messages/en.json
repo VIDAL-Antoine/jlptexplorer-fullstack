@@ -45,9 +45,9 @@
     "noScenes": "No scenes yet for this grammar point."
   },
   "SourcePage": {
-    "grammarPointsTitle": "Grammar points in this source",
     "scenesCount": "{count, plural, one {# scene} other {# scenes}}",
     "grammarPointsCount": "{count, plural, one {# grammar point} other {# grammar points}}",
+    "filterPlaceholder": "Filter by grammar point...",
     "noScenes": "No scenes yet for this source."
   },
   "NotFound": {
