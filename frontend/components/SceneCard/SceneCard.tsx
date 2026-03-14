@@ -91,9 +91,14 @@ export function SceneCard({
                 : scene.sources.title}
             </Title>
           </Anchor>
-          <Box mt={4} style={{ flexShrink: 0 }}>
+          <Anchor
+            component={Link}
+            href={`/sources?type=${scene.sources.type}`}
+            mt={4}
+            style={{ flexShrink: 0, lineHeight: 0 }}
+          >
             <SourceTypeIcon size={16} color="gray" />
-          </Box>
+          </Anchor>
         </Group>
       )}
 
