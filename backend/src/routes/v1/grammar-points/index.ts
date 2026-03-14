@@ -6,7 +6,10 @@ import { flattenGrammarPoint, flattenScene, flattenSource } from "../../../lib/f
 type LocaleParams = { locale: string };
 
 export async function grammarPointsRoutes(server: FastifyInstance) {
-  server.get<{ Params: LocaleParams; Querystring: { level?: jlpt_level } }>(
+  server.get<{
+    Params: LocaleParams;
+    Querystring: { level?: jlpt_level; search?: string; page?: string; limit?: string };
+  }>(
     "/",
     {
       schema: {
@@ -14,6 +17,9 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
           type: "object",
           properties: {
             level: { type: "string", enum: ["N5", "N4", "N3", "N2", "N1", "Other"] },
+            search: { type: "string", maxLength: 100 },
+            page: { type: "string" },
+            limit: { type: "string" },
           },
           additionalProperties: false,
         },
@@ -21,15 +27,44 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     },
     async (request) => {
       const { locale } = request.params;
-      const { level } = request.query;
+      const { level, search } = request.query;
+      const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
+      const limit = Math.max(1, Math.min(200, parseInt(request.query.limit ?? "100") || 100));
 
-      const points = await prisma.grammar_points.findMany({
-        where: level ? { jlpt_level: level } : undefined,
-        orderBy: [{ jlpt_level: "asc" }, { title: "asc" }],
-        include: { translations: { where: { locale } } },
-      });
+      const where = {
+        ...(level ? { jlpt_level: level } : {}),
+        ...(search
+          ? {
+              OR: [
+                { title: { contains: search, mode: "insensitive" as const } },
+                { romaji: { contains: search, mode: "insensitive" as const } },
+                {
+                  translations: {
+                    some: { locale, meaning: { contains: search, mode: "insensitive" as const } },
+                  },
+                },
+              ],
+            }
+          : {}),
+      };
 
-      return points.map(flattenGrammarPoint);
+      const [grammar_points, total] = await Promise.all([
+        prisma.grammar_points.findMany({
+          where,
+          orderBy: [{ jlpt_level: "asc" }, { title: "asc" }],
+          include: { translations: { where: { locale } } },
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+        prisma.grammar_points.count({ where }),
+      ]);
+
+      return {
+        grammar_points: grammar_points.map(flattenGrammarPoint),
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      };
     }
   );
 
