@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import NotFound from '../../../not-found';
+import NotFound from '../../not-found';
 import { Badge, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { PageLoader } from '../../../../components/PageLoader/PageLoader';
 import { SceneCard } from '../../../../components/SceneCard/SceneCard';

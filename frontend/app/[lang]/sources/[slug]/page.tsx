@@ -10,7 +10,7 @@ import {
   IconMusic,
   IconTag,
 } from '@tabler/icons-react';
-import NotFound from '../../../not-found';
+import NotFound from '../../not-found';
 import { Link } from '../../../../i18n/navigation';
 import {
   AspectRatio,
