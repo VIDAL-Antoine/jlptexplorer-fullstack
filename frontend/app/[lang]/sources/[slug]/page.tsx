@@ -110,9 +110,9 @@ export default function SourcePage() {
     ...selectedGrammarPoints.filter((gp) => !availableGrammarPoints.some((a) => a.id === gp.id)),
   ];
 
-  const toItem = (gp: { slug: string; title: string; romaji: string }) => ({
+  const toItem = (gp: { slug: string; title: string; romaji: string; meaning: string | null }) => ({
     value: gp.slug,
-    label: gp.romaji ? `${gp.title} (${gp.romaji})` : gp.title,
+    label: [gp.romaji ? `${gp.title} (${gp.romaji})` : gp.title, gp.meaning].filter(Boolean).join(' — '),
   });
 
   const selectData = (['N5', 'N4', 'N3', 'N2', 'N1'] as const).flatMap((level) => {
