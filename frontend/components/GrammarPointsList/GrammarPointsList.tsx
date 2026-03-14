@@ -31,7 +31,8 @@ export function GrammarPointsList() {
   const pathname = usePathname();
   const [grammarPoints, setGrammarPoints] = useState<GrammarPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [level, setLevel] = useState(searchParams.get('level') ?? 'All');
+  const rawLevel = searchParams.get('level');
+  const [level, setLevel] = useState(rawLevel && LEVELS.includes(rawLevel) ? rawLevel : 'All');
   const [search, setSearch] = useState('');
   const locale = useLocale();
   const { showGrammarPointRomaji } = useSettings();

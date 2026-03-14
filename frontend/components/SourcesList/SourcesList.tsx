@@ -51,7 +51,11 @@ export function SourcesList() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const [activeType, setActiveType] = useState<string>(searchParams.get('type') ?? 'all');
+  const VALID_SOURCE_TYPES = new Set(['game', 'anime', 'movie', 'series', 'music']);
+  const rawType = searchParams.get('type');
+  const [activeType, setActiveType] = useState<string>(
+    rawType && VALID_SOURCE_TYPES.has(rawType) ? rawType : 'all'
+  );
   const [search, setSearch] = useState('');
   const locale = useLocale();
   const { sourceTitleLang } = useSettings();
