@@ -25,6 +25,7 @@ import {
 import { PageLoader } from '../../../../components/PageLoader/PageLoader';
 import { SceneCard } from '../../../../components/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
+import { useSettings } from '../../../../contexts/SettingsContext';
 import { api, type GrammarPoint, type SourceWithScenes } from '../../../../lib/api';
 
 type SourceType = SourceWithScenes['type'];
@@ -49,6 +50,7 @@ export default function SourcePage() {
   const t = useTranslations('SourcePage');
   const tTypes = useTranslations('SourceTypes');
   const locale = useLocale();
+  const { sourceTitleLang } = useSettings();
 
   useEffect(() => {
     api.sources.get(locale, slug).then((data) => {
@@ -75,6 +77,7 @@ export default function SourcePage() {
   );
 
   const SourceTypeIcon = getSourceTypeIcon(source.type);
+  const displayTitle = sourceTitleLang === 'japanese' ? (source.japanese_title ?? source.title) : source.title;
 
   return (
     <Stack mt="xl" gap="lg">
@@ -86,7 +89,7 @@ export default function SourcePage() {
         )}
         <Stack gap="xs">
           <Group align="center" gap="sm">
-            <Title order={1}>{source.title}</Title>
+            <Title order={1}>{displayTitle}</Title>
             <Badge
               variant="light"
               size="lg"
@@ -98,7 +101,6 @@ export default function SourcePage() {
               {tTypes(source.type)}
             </Badge>
           </Group>
-          {source.japanese_title && <Text c="dimmed">{source.japanese_title}</Text>}
           <Group gap="xs">
             <Text size="sm" c="dimmed">
               {t('scenesCount', { count: source.scenes.length })}
