@@ -1,14 +1,23 @@
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../../lib/prisma.js";
 import { jlpt_level } from "../../../generated/prisma/enums.js";
-import { flattenGrammarPoint, flattenScene, flattenSource } from "../../../lib/flatten.js";
+import {
+  flattenGrammarPoint,
+  flattenScene,
+  flattenSource,
+} from "../../../lib/flatten.js";
 
 type LocaleParams = { locale: string };
 
 export async function grammarPointsRoutes(server: FastifyInstance) {
   server.get<{
     Params: LocaleParams;
-    Querystring: { level?: jlpt_level; search?: string; page?: string; limit?: string };
+    Querystring: {
+      level?: jlpt_level;
+      search?: string;
+      page?: string;
+      limit?: string;
+    };
   }>(
     "/",
     {
@@ -16,7 +25,10 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
         querystring: {
           type: "object",
           properties: {
-            level: { type: "string", enum: ["N5", "N4", "N3", "N2", "N1", "Other"] },
+            level: {
+              type: "string",
+              enum: ["N5", "N4", "N3", "N2", "N1", "Other"],
+            },
             search: { type: "string", maxLength: 100 },
             page: { type: "string" },
             limit: { type: "string" },
@@ -29,7 +41,10 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       const { locale } = request.params;
       const { level, search } = request.query;
       const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
-      const limit = Math.max(1, Math.min(200, parseInt(request.query.limit ?? "100") || 100));
+      const limit = Math.max(
+        1,
+        Math.min(500, parseInt(request.query.limit ?? "100") || 100),
+      );
 
       const where = {
         ...(level ? { jlpt_level: level } : {}),
@@ -40,7 +55,13 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
                 { romaji: { contains: search, mode: "insensitive" as const } },
                 {
                   translations: {
-                    some: { locale, meaning: { contains: search, mode: "insensitive" as const } },
+                    some: {
+                      locale,
+                      meaning: {
+                        contains: search,
+                        mode: "insensitive" as const,
+                      },
+                    },
                   },
                 },
               ],
@@ -65,7 +86,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
         page,
         totalPages: Math.ceil(total / limit),
       };
-    }
+    },
   );
 
   server.get<{ Params: LocaleParams & { slug: string } }>(
@@ -118,7 +139,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
         scenes_count: scenesCount,
         available_sources: availableSources.map(flattenSource),
       };
-    }
+    },
   );
 
   server.get<{
@@ -127,18 +148,23 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
   }>("/:slug/scenes", async (request, reply) => {
     const { locale, slug } = request.params;
     const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
-    const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? "12") || 12));
-    const sourceSlugs = request.query.sourceSlugs
-      ?.split(",")
-      .map((s) => s.trim())
-      .filter(Boolean) ?? [];
+    const limit = Math.max(
+      1,
+      Math.min(50, parseInt(request.query.limit ?? "12") || 12),
+    );
+    const sourceSlugs =
+      request.query.sourceSlugs
+        ?.split(",")
+        .map((s) => s.trim())
+        .filter(Boolean) ?? [];
 
     const grammarPoint = await prisma.grammar_points.findUnique({
       where: { slug },
       select: { id: true },
     });
 
-    if (!grammarPoint) return reply.status(404).send({ error: "Grammar point not found" });
+    if (!grammarPoint)
+      return reply.status(404).send({ error: "Grammar point not found" });
 
     const sceneInclude = {
       sources: { include: { translations: { where: { locale } } } },
@@ -149,7 +175,9 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
           speakers: { include: { translations: { where: { locale } } } },
           transcript_line_grammar_points: {
             include: {
-              grammar_points: { include: { translations: { where: { locale } } } },
+              grammar_points: {
+                include: { translations: { where: { locale } } },
+              },
             },
           },
         },
@@ -173,7 +201,11 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       prisma.scenes.findMany({
         where,
         include: sceneInclude,
-        orderBy: [{ source_id: "asc" }, { episode_number: "asc" }, { start_time: "asc" }],
+        orderBy: [
+          { source_id: "asc" },
+          { episode_number: "asc" },
+          { start_time: "asc" },
+        ],
         skip: (page - 1) * limit,
         take: limit,
       }),
@@ -252,7 +284,8 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       where: { slug: paramSlug },
       select: { id: true },
     });
-    if (!existing) return reply.status(404).send({ error: "Grammar point not found" });
+    if (!existing)
+      return reply.status(404).send({ error: "Grammar point not found" });
 
     const grammarPoint = await prisma.grammar_points.update({
       where: { slug: paramSlug },
@@ -263,7 +296,12 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
         jlpt_level,
         translations: {
           upsert: {
-            where: { grammar_point_id_locale: { grammar_point_id: existing.id, locale } },
+            where: {
+              grammar_point_id_locale: {
+                grammar_point_id: existing.id,
+                locale,
+              },
+            },
             create: { locale, meaning, notes },
             update: { meaning, notes },
           },
@@ -278,8 +316,10 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
   server.delete<{ Params: LocaleParams & { slug: string } }>(
     "/:slug",
     async (request, reply) => {
-      await prisma.grammar_points.delete({ where: { slug: request.params.slug } });
+      await prisma.grammar_points.delete({
+        where: { slug: request.params.slug },
+      });
       return reply.status(204).send();
-    }
+    },
   );
 }
