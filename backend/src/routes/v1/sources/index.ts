@@ -6,7 +6,20 @@ import { flattenSource, flattenGrammarPoint, flattenScene } from "../../../lib/f
 type LocaleParams = { locale: string };
 
 export async function sourcesRoutes(server: FastifyInstance) {
-  server.get<{ Params: LocaleParams; Querystring: { type?: source_type } }>("/", async (request) => {
+  server.get<{ Params: LocaleParams; Querystring: { type?: source_type } }>(
+    "/",
+    {
+      schema: {
+        querystring: {
+          type: "object",
+          properties: {
+            type: { type: "string", enum: ["game", "anime", "movie", "series", "music"] },
+          },
+          additionalProperties: false,
+        },
+      },
+    },
+    async (request) => {
     const { locale } = request.params;
     const { type } = request.query;
 

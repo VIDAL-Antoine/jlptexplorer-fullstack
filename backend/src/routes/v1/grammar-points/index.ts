@@ -8,6 +8,17 @@ type LocaleParams = { locale: string };
 export async function grammarPointsRoutes(server: FastifyInstance) {
   server.get<{ Params: LocaleParams; Querystring: { level?: jlpt_level } }>(
     "/",
+    {
+      schema: {
+        querystring: {
+          type: "object",
+          properties: {
+            level: { type: "string", enum: ["N5", "N4", "N3", "N2", "N1", "Other"] },
+          },
+          additionalProperties: false,
+        },
+      },
+    },
     async (request) => {
       const { locale } = request.params;
       const { level } = request.query;
