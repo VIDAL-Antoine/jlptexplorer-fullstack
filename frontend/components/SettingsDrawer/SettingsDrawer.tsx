@@ -1,13 +1,13 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter, usePathname } from '../../i18n/navigation';
-import { Divider, Drawer, Select, SegmentedControl, Stack, Switch, Text } from '@mantine/core';
+import { Divider, Drawer, SegmentedControl, Select, Stack, Switch, Text } from '@mantine/core';
 import { useSettings } from '../../contexts/SettingsContext';
+import { usePathname, useRouter } from '../../i18n/navigation';
 
 const LOCALES = [
-  { value: 'en', label: '🇬🇧 English' },
-  { value: 'fr', label: '🇫🇷 Français' },
+  { value: 'en', label: 'English' },
+  { value: 'fr', label: 'Français' },
 ];
 
 interface SettingsDrawerProps {
@@ -20,6 +20,8 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+
+  const localizedLabel = LOCALES.find((l) => l.value === locale)?.label ?? locale;
 
   const {
     speakerNameLang,
@@ -38,7 +40,9 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
     <Drawer opened={opened} onClose={onClose} title={t('title')} position="right">
       <Stack gap="lg">
         <div>
-          <Text size="sm" fw={500} mb="xs">{t('contentLanguage')}</Text>
+          <Text size="sm" fw={500} mb="xs">
+            {t('contentLanguage')}
+          </Text>
           <Select
             data={LOCALES}
             value={locale}
@@ -48,31 +52,37 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
         </div>
         <Divider />
         <div>
-          <Text size="sm" fw={500} mb="xs">{t('sourceTitles')}</Text>
+          <Text size="sm" fw={500} mb="xs">
+            {t('sourceTitles')}
+          </Text>
           <SegmentedControl
             fullWidth
             value={sourceTitleLang}
             onChange={(v) => setSourceTitleLang(v as 'localized' | 'japanese')}
             data={[
               { label: '日本語', value: 'japanese' },
-              { label: t('localized'), value: 'localized' },
+              { label: localizedLabel, value: 'localized' },
             ]}
           />
         </div>
         <div>
-          <Text size="sm" fw={500} mb="xs">{t('speakerNames')}</Text>
+          <Text size="sm" fw={500} mb="xs">
+            {t('speakerNames')}
+          </Text>
           <SegmentedControl
             fullWidth
             value={speakerNameLang}
             onChange={(v) => setSpeakerNameLang(v as 'localized' | 'japanese')}
             data={[
               { label: '日本語', value: 'japanese' },
-              { label: t('localized'), value: 'localized' },
+              { label: localizedLabel, value: 'localized' },
             ]}
           />
         </div>
         <div>
-          <Text size="sm" fw={500} mb="xs">{t('grammarBadges')}</Text>
+          <Text size="sm" fw={500} mb="xs">
+            {t('grammarBadges')}
+          </Text>
           <SegmentedControl
             fullWidth
             value={grammarPointTranscriptScript}
