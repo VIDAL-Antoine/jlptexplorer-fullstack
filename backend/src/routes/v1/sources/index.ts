@@ -1,14 +1,17 @@
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../../lib/prisma.js";
+import { source_type } from "../../../generated/prisma/enums.js";
 import { flattenSource, flattenSpeaker, flattenTranscriptLine, flattenGrammarPoint } from "../../../lib/flatten.js";
 
 type LocaleParams = { locale: string };
 
 export async function sourcesRoutes(server: FastifyInstance) {
-  server.get<{ Params: LocaleParams }>("/", async (request) => {
+  server.get<{ Params: LocaleParams; Querystring: { type?: source_type } }>("/", async (request) => {
     const { locale } = request.params;
+    const { type } = request.query;
 
     const sources = await prisma.sources.findMany({
+      where: type ? { type } : undefined,
       include: { translations: { where: { locale } } },
       orderBy: { id: "asc" },
     });
@@ -67,7 +70,7 @@ export async function sourcesRoutes(server: FastifyInstance) {
 
   server.post<{
     Params: LocaleParams;
-    Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string };
+    Body: { title: string; japanese_title?: string; type: source_type; cover_image_url?: string; slug: string };
   }>("/", async (request, reply) => {
     const { locale } = request.params;
     const { title, japanese_title, type, cover_image_url, slug } = request.body;
@@ -75,7 +78,7 @@ export async function sourcesRoutes(server: FastifyInstance) {
     const source = await prisma.sources.create({
       data: {
         japanese_title,
-        type: type as any,
+        type,
         cover_image_url,
         slug,
         translations: { create: { locale, title } },
@@ -88,7 +91,7 @@ export async function sourcesRoutes(server: FastifyInstance) {
 
   server.put<{
     Params: LocaleParams & { slug: string };
-    Body: { title: string; japanese_title?: string; type: string; cover_image_url?: string; slug: string };
+    Body: { title: string; japanese_title?: string; type: source_type; cover_image_url?: string; slug: string };
   }>("/:slug", async (request, reply) => {
     const { locale, slug: paramSlug } = request.params;
     const { title, japanese_title, type, cover_image_url, slug } = request.body;
@@ -100,7 +103,7 @@ export async function sourcesRoutes(server: FastifyInstance) {
       where: { slug: paramSlug },
       data: {
         japanese_title,
-        type: type as any,
+        type,
         cover_image_url,
         slug,
         translations: {

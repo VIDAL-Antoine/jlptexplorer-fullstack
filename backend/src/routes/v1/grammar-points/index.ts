@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../../lib/prisma.js";
+import { jlpt_level } from "../../../generated/prisma/enums.js";
 import {
   flattenGrammarPoint,
   flattenSource,
@@ -10,14 +11,14 @@ import {
 type LocaleParams = { locale: string };
 
 export async function grammarPointsRoutes(server: FastifyInstance) {
-  server.get<{ Params: LocaleParams; Querystring: { level?: string } }>(
+  server.get<{ Params: LocaleParams; Querystring: { level?: jlpt_level } }>(
     "/",
     async (request) => {
       const { locale } = request.params;
       const { level } = request.query;
 
       const points = await prisma.grammar_points.findMany({
-        where: level ? { jlpt_level: level as any } : undefined,
+        where: level ? { jlpt_level: level } : undefined,
         orderBy: [{ jlpt_level: "asc" }, { title: "asc" }],
         include: { translations: { where: { locale } } },
       });
@@ -93,7 +94,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       title: string;
       romaji: string;
       meaning: string;
-      jlpt_level: string;
+      jlpt_level: jlpt_level;
       notes?: string;
     };
   }>("/", async (request, reply) => {
@@ -105,7 +106,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
         slug,
         title,
         romaji,
-        jlpt_level: jlpt_level as any,
+        jlpt_level,
         translations: { create: { locale, meaning, notes } },
       },
       include: { translations: { where: { locale } } },
@@ -121,7 +122,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       title: string;
       romaji: string;
       meaning: string;
-      jlpt_level: string;
+      jlpt_level: jlpt_level;
       notes?: string;
     };
   }>("/:slug", async (request, reply) => {
@@ -140,7 +141,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
         slug,
         title,
         romaji,
-        jlpt_level: jlpt_level as any,
+        jlpt_level,
         translations: {
           upsert: {
             where: { grammar_point_id_locale: { grammar_point_id: existing.id, locale } },
