@@ -14,11 +14,14 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
 
 export const api = {
   grammarPoints: {
-    list: (locale: string, level?: string) => {
+    list: (locale: string, params?: { level?: string; search?: string; page?: number; limit?: number }) => {
       const query = new URLSearchParams();
-      if (level) query.set('level', level);
+      if (params?.level) query.set('level', params.level);
+      if (params?.search) query.set('search', params.search);
+      if (params?.page) query.set('page', String(params.page));
+      if (params?.limit) query.set('limit', String(params.limit));
       const qs = query.toString();
-      return apiFetch<GrammarPoint[]>(`/api/v1/${locale}/grammar-points${qs ? `?${qs}` : ''}`);
+      return apiFetch<GrammarPointsPage>(`/api/v1/${locale}/grammar-points${qs ? `?${qs}` : ''}`);
     },
     get: (locale: string, slug: string) =>
       apiFetch<GrammarPointDetail>(`/api/v1/${locale}/grammar-points/${slug}`),
@@ -122,6 +125,13 @@ export type Scene = {
 export type SceneWithDetails = Scene & {
   sources: Source;
   transcript_lines: TranscriptLine[];
+};
+
+export type GrammarPointsPage = {
+  grammar_points: GrammarPoint[];
+  total: number;
+  page: number;
+  totalPages: number;
 };
 
 export type GrammarPointDetail = GrammarPoint & {
