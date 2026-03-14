@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '../../i18n/navigation';
 import { IconSearch } from '@tabler/icons-react';
@@ -25,12 +26,27 @@ import { PageLoader } from '../PageLoader/PageLoader';
 
 export function GrammarPointsList() {
   const t = useTranslations('GrammarPointsList');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const [grammarPoints, setGrammarPoints] = useState<GrammarPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [level, setLevel] = useState('All');
+  const [level, setLevel] = useState(searchParams.get('level') ?? 'All');
   const [search, setSearch] = useState('');
   const locale = useLocale();
   const { showGrammarPointRomaji } = useSettings();
+
+  const handleLevelChange = (newLevel: string) => {
+    setLevel(newLevel);
+    const params = new URLSearchParams(searchParams.toString());
+    if (newLevel === 'All') {
+      params.delete('level');
+    } else {
+      params.set('level', newLevel);
+    }
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
+  };
 
   const levelFilterData = [
     { label: t('all'), value: 'All' },
@@ -59,12 +75,12 @@ export function GrammarPointsList() {
       <Select
         data={levelFilterData}
         value={level}
-        onChange={(v) => setLevel(v ?? 'All')}
+        onChange={(v) => handleLevelChange(v ?? 'All')}
         size="lg"
         hiddenFrom="xs"
         allowDeselect={false}
       />
-      <SegmentedControl data={levelFilterData} value={level} onChange={setLevel} size="xl" fullWidth visibleFrom="xs" />
+      <SegmentedControl data={levelFilterData} value={level} onChange={handleLevelChange} size="xl" fullWidth visibleFrom="xs" />
       <TextInput
         placeholder={t('searchPlaceholder')}
         leftSection={<IconSearch size={16} />}

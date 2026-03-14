@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   IconDeviceGamepad2,
   IconDeviceTv,
@@ -46,10 +47,25 @@ export function SourcesList() {
   const t = useTranslations('SourcesList');
   const [sources, setSources] = useState<Source[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [activeType, setActiveType] = useState<string>('all');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [activeType, setActiveType] = useState<string>(searchParams.get('type') ?? 'all');
   const [search, setSearch] = useState('');
   const locale = useLocale();
   const { sourceTitleLang } = useSettings();
+
+  const handleTypeChange = (v: string) => {
+    setActiveType(v);
+    const params = new URLSearchParams(searchParams.toString());
+    if (v === 'all') {
+      params.delete('type');
+    } else {
+      params.set('type', v);
+    }
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
+  };
 
   useEffect(() => {
     api.sources.list(locale).then((data) => {
@@ -79,7 +95,7 @@ export function SourcesList() {
         size="lg"
         onChange={(e) => setSearch(e.currentTarget.value)}
       />
-      <Chip.Group value={activeType} onChange={(v) => setActiveType(v as string)}>
+      <Chip.Group value={activeType} onChange={(v) => handleTypeChange(v as string)}>
         <Group gap="xs">
           <Chip value="all" size="xl">
             {t('all')}
