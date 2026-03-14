@@ -42,6 +42,8 @@
     "description": "Learn Japanese grammar in context — JLPT N5 to N1, illustrated by real scenes from video games and anime."
   },
   "GrammarPointPage": {
+    "scenesCount": "{count, plural, one {# scene} other {# scenes}}",
+    "filterPlaceholder": "Filter by source...",
     "noScenes": "No scenes yet for this grammar point."
   },
   "SourcePage": {
