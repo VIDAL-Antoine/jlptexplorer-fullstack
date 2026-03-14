@@ -98,6 +98,7 @@ export type Scene = {
   youtube_video_id: string;
   start_time: number;
   end_time: number;
+  episode_number: number;
   notes: string | null;
   created_at: string;
 };
