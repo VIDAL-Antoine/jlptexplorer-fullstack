@@ -4,7 +4,7 @@ import { registerCors } from "./plugins/cors.js";
 import { scenesLocaleRoutes, scenesAdminRoutes } from "./routes/v1/scenes/index.js";
 import { grammarPointsRoutes } from "./routes/v1/grammar-points/index.js";
 import { sourcesRoutes } from "./routes/v1/sources/index.js";
-import { speakersRoutes } from "./routes/v1/speakers/index.js";
+import { speakersLocaleRoutes, speakersAdminRoutes } from "./routes/v1/speakers/index.js";
 
 async function start() {
   const server = fastify({ logger: true });
@@ -21,9 +21,10 @@ async function start() {
         localeApi.register(sourcesRoutes, { prefix: "/sources" });
         localeApi.register(scenesLocaleRoutes, { prefix: "/scenes" });
         localeApi.register(grammarPointsRoutes, { prefix: "/grammar-points" });
-        localeApi.register(speakersRoutes, { prefix: "/speakers" });
+        localeApi.register(speakersLocaleRoutes, { prefix: "/speakers" });
       }, { prefix: "/:locale" });
       api.register(scenesAdminRoutes, { prefix: "/scenes" });
+      api.register(speakersAdminRoutes, { prefix: "/speakers" });
     },
     { prefix: "/api/v1" }
   );

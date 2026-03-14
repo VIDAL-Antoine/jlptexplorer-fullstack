@@ -4,7 +4,7 @@ import { flattenSpeaker, flattenSource, flattenGrammarPoint } from "../../../lib
 
 type LocaleParams = { locale: string };
 
-export async function speakersRoutes(server: FastifyInstance) {
+export async function speakersLocaleRoutes(server: FastifyInstance) {
   server.get<{ Params: LocaleParams }>("/", async (request) => {
     const { locale } = request.params;
 
@@ -58,35 +58,61 @@ export async function speakersRoutes(server: FastifyInstance) {
       })),
     };
   });
+}
 
+export async function speakersAdminRoutes(server: FastifyInstance) {
   server.post<{
-    Params: LocaleParams;
-    Body: { slug: string; name: string; name_japanese?: string; description?: string; image_url?: string };
+    Body: {
+      slug: string;
+      name_japanese?: string;
+      image_url?: string;
+      translations: Record<string, string>;
+      descriptions?: Record<string, string>;
+    };
   }>("/", async (request, reply) => {
-    const { locale } = request.params;
-    const { slug, name, name_japanese, description, image_url } = request.body;
+    const { slug, name_japanese, image_url, translations, descriptions } = request.body;
 
     const speaker = await prisma.speakers.create({
       data: {
         slug,
         name_japanese,
         image_url,
-        translations: { create: { locale, name, description } },
+        translations: {
+          create: Object.entries(translations).map(([locale, name]) => ({
+            locale,
+            name,
+            description: descriptions?.[locale] ?? null,
+          })),
+        },
       },
-      include: { translations: { where: { locale } } },
+      include: { translations: true },
     });
 
-    return reply.status(201).send(flattenSpeaker(speaker));
+    return reply.status(201).send({
+      ...speaker,
+      translations: Object.fromEntries(
+        speaker.translations.map((t) => [t.locale, { name: t.name, description: t.description }])
+      ),
+    });
   });
 
   server.put<{
-    Params: LocaleParams & { slug: string };
-    Body: { slug: string; name: string; name_japanese?: string; description?: string; image_url?: string };
+    Params: { slug: string };
+    Body: {
+      slug: string;
+      name_japanese?: string;
+      image_url?: string;
+      translations: Record<string, string>;
+      descriptions?: Record<string, string>;
+    };
   }>("/:slug", async (request, reply) => {
-    const { locale, slug: paramSlug } = request.params;
-    const { slug, name, name_japanese, description, image_url } = request.body;
+    const { slug: paramSlug } = request.params;
+    const { slug, name_japanese, image_url, translations, descriptions } = request.body;
 
-    const existing = await prisma.speakers.findUnique({ where: { slug: paramSlug }, select: { id: true } });
+    const existing = await prisma.speakers.findUnique({
+      where: { slug: paramSlug },
+      select: { id: true },
+    });
     if (!existing) return reply.status(404).send({ error: "Speaker not found" });
 
     const speaker = await prisma.speakers.update({
@@ -96,20 +122,25 @@ export async function speakersRoutes(server: FastifyInstance) {
         name_japanese,
         image_url,
         translations: {
-          upsert: {
+          upsert: Object.entries(translations).map(([locale, name]) => ({
             where: { speaker_id_locale: { speaker_id: existing.id, locale } },
-            create: { locale, name, description },
-            update: { name, description },
-          },
+            create: { locale, name, description: descriptions?.[locale] ?? null },
+            update: { name, description: descriptions?.[locale] ?? null },
+          })),
         },
       },
-      include: { translations: { where: { locale } } },
+      include: { translations: true },
     });
 
-    return reply.status(200).send(flattenSpeaker(speaker));
+    return {
+      ...speaker,
+      translations: Object.fromEntries(
+        speaker.translations.map((t) => [t.locale, { name: t.name, description: t.description }])
+      ),
+    };
   });
 
-  server.delete<{ Params: LocaleParams & { slug: string } }>("/:slug", async (request, reply) => {
+  server.delete<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
     await prisma.speakers.delete({ where: { slug: request.params.slug } });
     return reply.status(204).send();
   });
