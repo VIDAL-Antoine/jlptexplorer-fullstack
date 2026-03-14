@@ -1,7 +1,7 @@
 import "dotenv/config";
 import fastify from "fastify";
 import { registerCors } from "./plugins/cors.js";
-import { scenesRoutes } from "./routes/v1/scenes/index.js";
+import { scenesLocaleRoutes, scenesAdminRoutes } from "./routes/v1/scenes/index.js";
 import { grammarPointsRoutes } from "./routes/v1/grammar-points/index.js";
 import { sourcesRoutes } from "./routes/v1/sources/index.js";
 import { speakersRoutes } from "./routes/v1/speakers/index.js";
@@ -19,10 +19,11 @@ async function start() {
     async (api) => {
       api.register(async (localeApi) => {
         localeApi.register(sourcesRoutes, { prefix: "/sources" });
-        localeApi.register(scenesRoutes, { prefix: "/scenes" });
+        localeApi.register(scenesLocaleRoutes, { prefix: "/scenes" });
         localeApi.register(grammarPointsRoutes, { prefix: "/grammar-points" });
         localeApi.register(speakersRoutes, { prefix: "/speakers" });
       }, { prefix: "/:locale" });
+      api.register(scenesAdminRoutes, { prefix: "/scenes" });
     },
     { prefix: "/api/v1" }
   );

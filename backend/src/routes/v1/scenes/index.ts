@@ -8,7 +8,7 @@ type TranscriptLineInput = {
   position: number;
   speaker_slug?: string;
   text: string;
-  translation?: string;
+  translations?: Record<string, string>;
   grammar_point_slugs?: string[];
 };
 
@@ -57,14 +57,15 @@ async function resolveSpeakerSlugs(lines: TranscriptLineInput[]): Promise<Map<st
 
 function buildLineData(
   lines: TranscriptLineInput[],
-  locale: string,
   grammarSlugToId: Map<string, number>,
   speakerSlugToId: Map<string, number>
 ) {
-  return lines.map(({ grammar_point_slugs, speaker_slug, translation, ...line }) => ({
+  return lines.map(({ grammar_point_slugs, speaker_slug, translations, ...line }) => ({
     ...line,
     ...(speaker_slug ? { speaker_id: speakerSlugToId.get(speaker_slug)! } : {}),
-    ...(translation ? { translations: { create: [{ locale, translation }] } } : {}),
+    ...(translations && Object.keys(translations).length
+      ? { translations: { create: Object.entries(translations).map(([locale, translation]) => ({ locale, translation })) } }
+      : {}),
     ...(grammar_point_slugs?.length
       ? {
           transcript_line_grammar_points: {
@@ -75,6 +76,7 @@ function buildLineData(
   }));
 }
 
+// Locale-filtered include + flatten — used by GET routes
 function buildSceneInclude(locale: string) {
   return {
     sources: { include: { translations: { where: { locale } } } },
@@ -108,7 +110,40 @@ function flattenScene(scene: any) {
   };
 }
 
-export async function scenesRoutes(server: FastifyInstance) {
+// All-translations include + flatten — used by POST, PUT, PATCH responses
+function buildSceneIncludeAll() {
+  return {
+    sources: true,
+    transcript_lines: {
+      orderBy: { position: "asc" } as const,
+      include: {
+        translations: true,
+        speakers: true,
+        transcript_line_grammar_points: {
+          include: { grammar_points: true },
+        },
+      },
+    },
+  };
+}
+
+function flattenSceneAll(scene: any) {
+  return {
+    ...scene,
+    transcript_lines: scene.transcript_lines.map((line: any) => {
+      const { translations, ...rest } = line;
+      return {
+        ...rest,
+        translations: Object.fromEntries(
+          translations.map((t: any) => [t.locale, t.translation])
+        ),
+      };
+    }),
+  };
+}
+
+// GET + PATCH — require locale in URL
+export async function scenesLocaleRoutes(server: FastifyInstance) {
   server.get<{ Params: LocaleParams; Querystring: { sourceId?: string; level?: string } }>(
     "/",
     async (request) => {
@@ -158,90 +193,6 @@ export async function scenesRoutes(server: FastifyInstance) {
     return flattenScene(scene);
   });
 
-  server.post<{
-    Params: LocaleParams;
-    Body: {
-      source_slug: string;
-      youtube_video_id: string;
-      start_time: number | string;
-      end_time: number | string;
-      notes?: string;
-      transcript_lines: TranscriptLineInput[];
-    };
-  }>("/", async (request, reply) => {
-    const { locale } = request.params;
-    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
-
-    const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
-    if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
-
-    const [grammarSlugToId, speakerSlugToId] = await Promise.all([
-      resolveGrammarPointSlugs(transcript_lines),
-      resolveSpeakerSlugs(transcript_lines),
-    ]);
-
-    const scene = await prisma.scenes.create({
-      data: {
-        source_id: source.id,
-        youtube_video_id,
-        start_time: parseTime(start_time),
-        end_time: parseTime(end_time),
-        notes,
-        transcript_lines: { create: buildLineData(transcript_lines, locale, grammarSlugToId, speakerSlugToId) },
-      },
-      include: buildSceneInclude(locale),
-    });
-
-    return reply.status(201).send(flattenScene(scene));
-  });
-
-  server.put<{
-    Params: LocaleParams & { id: string };
-    Body: {
-      source_slug: string;
-      youtube_video_id: string;
-      start_time: number | string;
-      end_time: number | string;
-      notes?: string;
-      transcript_lines: TranscriptLineInput[];
-    };
-  }>("/:id", async (request, reply) => {
-    const { locale } = request.params;
-    const id = parseInt(request.params.id);
-
-    if (isNaN(id)) {
-      return reply.status(400).send({ error: "Invalid scene id" });
-    }
-
-    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
-
-    const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
-    if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
-
-    const [grammarSlugToId, speakerSlugToId] = await Promise.all([
-      resolveGrammarPointSlugs(transcript_lines),
-      resolveSpeakerSlugs(transcript_lines),
-    ]);
-
-    const scene = await prisma.scenes.update({
-      where: { id },
-      data: {
-        source_id: source.id,
-        youtube_video_id,
-        start_time: parseTime(start_time),
-        end_time: parseTime(end_time),
-        notes,
-        transcript_lines: {
-          deleteMany: {},
-          create: buildLineData(transcript_lines, locale, grammarSlugToId, speakerSlugToId),
-        },
-      },
-      include: buildSceneInclude(locale),
-    });
-
-    return flattenScene(scene);
-  });
-
   server.patch<{
     Params: LocaleParams & { id: string };
     Body: { transcript_lines: { position: number; translation: string }[] };
@@ -283,13 +234,97 @@ export async function scenesRoutes(server: FastifyInstance) {
 
     const scene = await prisma.scenes.findUnique({
       where: { id },
-      include: buildSceneInclude(locale),
+      include: buildSceneIncludeAll(),
     });
 
-    return flattenScene(scene);
+    return flattenSceneAll(scene);
+  });
+}
+
+// POST, PUT, DELETE — no locale in URL
+export async function scenesAdminRoutes(server: FastifyInstance) {
+  server.post<{
+    Body: {
+      source_slug: string;
+      youtube_video_id: string;
+      start_time: number | string;
+      end_time: number | string;
+      notes?: string;
+      transcript_lines: TranscriptLineInput[];
+    };
+  }>("/", async (request, reply) => {
+    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+
+    const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
+    if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
+
+    const [grammarSlugToId, speakerSlugToId] = await Promise.all([
+      resolveGrammarPointSlugs(transcript_lines),
+      resolveSpeakerSlugs(transcript_lines),
+    ]);
+
+    const scene = await prisma.scenes.create({
+      data: {
+        source_id: source.id,
+        youtube_video_id,
+        start_time: parseTime(start_time),
+        end_time: parseTime(end_time),
+        notes,
+        transcript_lines: { create: buildLineData(transcript_lines, grammarSlugToId, speakerSlugToId) },
+      },
+      include: buildSceneIncludeAll(),
+    });
+
+    return reply.status(201).send(flattenSceneAll(scene));
   });
 
-  server.delete<{ Params: LocaleParams & { id: string } }>("/:id", async (request, reply) => {
+  server.put<{
+    Params: { id: string };
+    Body: {
+      source_slug: string;
+      youtube_video_id: string;
+      start_time: number | string;
+      end_time: number | string;
+      notes?: string;
+      transcript_lines: TranscriptLineInput[];
+    };
+  }>("/:id", async (request, reply) => {
+    const id = parseInt(request.params.id);
+
+    if (isNaN(id)) {
+      return reply.status(400).send({ error: "Invalid scene id" });
+    }
+
+    const { source_slug, youtube_video_id, start_time, end_time, notes, transcript_lines } = request.body;
+
+    const source = await prisma.sources.findUnique({ where: { slug: source_slug }, select: { id: true } });
+    if (!source) return reply.status(400).send({ error: `Unknown source slug: ${source_slug}` });
+
+    const [grammarSlugToId, speakerSlugToId] = await Promise.all([
+      resolveGrammarPointSlugs(transcript_lines),
+      resolveSpeakerSlugs(transcript_lines),
+    ]);
+
+    const scene = await prisma.scenes.update({
+      where: { id },
+      data: {
+        source_id: source.id,
+        youtube_video_id,
+        start_time: parseTime(start_time),
+        end_time: parseTime(end_time),
+        notes,
+        transcript_lines: {
+          deleteMany: {},
+          create: buildLineData(transcript_lines, grammarSlugToId, speakerSlugToId),
+        },
+      },
+      include: buildSceneIncludeAll(),
+    });
+
+    return flattenSceneAll(scene);
+  });
+
+  server.delete<{ Params: { id: string } }>("/:id", async (request, reply) => {
     const id = parseInt(request.params.id);
 
     if (isNaN(id)) {
