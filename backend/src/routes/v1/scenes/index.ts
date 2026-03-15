@@ -1,28 +1,28 @@
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../../lib/prisma.js";
 import { flattenSource, flattenSpeaker, flattenTranscriptLine, flattenGrammarPoint } from "../../../lib/flatten.js";
+import { parseTime } from "../../../lib/parse-time.js";
 
 type LocaleParams = { locale: string };
 
+type GrammarPointAnnotation = {
+  slug: string;
+  start_index?: number;
+  end_index?: number;
+  matched_form?: string;
+};
+
 type TranscriptLineInput = {
-  position: number;
+  start_time?: number | string;
   speaker_slug?: string;
   text: string;
   translations?: Record<string, string>;
-  grammar_point_slugs?: string[];
+  grammar_points?: GrammarPointAnnotation[];
 };
 
-function parseTime(value: number | string): number {
-  if (typeof value === "number") return value;
-  const parts = value.split(":").map(Number);
-  if (parts.some(isNaN)) throw Object.assign(new Error(`Invalid time format: "${value}"`), { statusCode: 400 });
-  if (parts.length === 2) return parts[0] * 60 + parts[1];
-  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  throw Object.assign(new Error(`Invalid time format: "${value}"`), { statusCode: 400 });
-}
 
 async function resolveGrammarPointSlugs(lines: TranscriptLineInput[]): Promise<Map<string, number>> {
-  const allSlugs = [...new Set(lines.flatMap((l) => l.grammar_point_slugs ?? []))];
+  const allSlugs = [...new Set(lines.flatMap((l) => l.grammar_points?.map((gp) => gp.slug) ?? []))];
   if (!allSlugs.length) return new Map();
 
   const points = await prisma.grammar_points.findMany({
@@ -60,16 +60,22 @@ function buildLineData(
   grammarSlugToId: Map<string, number>,
   speakerSlugToId: Map<string, number>
 ) {
-  return lines.map(({ grammar_point_slugs, speaker_slug, translations, ...line }) => ({
+  return lines.map(({ grammar_points, speaker_slug, translations, start_time, ...line }) => ({
     ...line,
+    ...(start_time !== undefined ? { start_time: parseTime(start_time) } : {}),
     ...(speaker_slug ? { speaker_id: speakerSlugToId.get(speaker_slug)! } : {}),
     ...(translations && Object.keys(translations).length
       ? { translations: { create: Object.entries(translations).map(([locale, translation]) => ({ locale, translation })) } }
       : {}),
-    ...(grammar_point_slugs?.length
+    ...(grammar_points?.length
       ? {
           transcript_line_grammar_points: {
-            create: grammar_point_slugs.map((slug) => ({ grammar_point_id: grammarSlugToId.get(slug)! })),
+            create: grammar_points.map(({ slug, start_index, end_index, matched_form }) => ({
+              grammar_point_id: grammarSlugToId.get(slug)!,
+              ...(start_index !== undefined ? { start_index } : {}),
+              ...(end_index !== undefined ? { end_index } : {}),
+              ...(matched_form !== undefined ? { matched_form } : {}),
+            })),
           },
         }
       : {}),
@@ -81,7 +87,7 @@ function buildSceneInclude(locale: string) {
   return {
     sources: { include: { translations: { where: { locale } } } },
     transcript_lines: {
-      orderBy: { position: "asc" } as const,
+      orderBy: { start_time: "asc" } as const,
       include: {
         translations: { where: { locale } },
         speakers: { include: { translations: { where: { locale } } } },
@@ -115,7 +121,7 @@ function buildSceneIncludeAll() {
   return {
     sources: true,
     transcript_lines: {
-      orderBy: { position: "asc" } as const,
+      orderBy: { start_time: "asc" } as const,
       include: {
         translations: true,
         speakers: true,
@@ -195,7 +201,7 @@ export async function scenesLocaleRoutes(server: FastifyInstance) {
 
   server.patch<{
     Params: LocaleParams & { id: string };
-    Body: { transcript_lines: { position: number; translation: string }[] };
+    Body: { transcript_lines: { id: number; translation: string }[] };
   }>("/:id/translations", async (request, reply) => {
     const { locale } = request.params;
     const id = parseInt(request.params.id);
@@ -208,25 +214,25 @@ export async function scenesLocaleRoutes(server: FastifyInstance) {
 
     const lines = await prisma.transcript_lines.findMany({
       where: { scene_id: id },
-      select: { id: true, position: true },
+      select: { id: true },
     });
 
     if (!lines.length) {
       return reply.status(404).send({ error: "Scene not found or has no transcript lines" });
     }
 
-    const positionToId = new Map(lines.map((l) => [l.position, l.id]));
+    const validIds = new Set(lines.map((l) => l.id));
 
-    const missing = transcript_lines.filter((l) => !positionToId.has(l.position)).map((l) => l.position);
+    const missing = transcript_lines.filter((l) => !validIds.has(l.id)).map((l) => l.id);
     if (missing.length) {
-      return reply.status(400).send({ error: `Unknown positions: ${missing.join(", ")}` });
+      return reply.status(400).send({ error: `Unknown transcript line ids: ${missing.join(", ")}` });
     }
 
     await prisma.$transaction(
-      transcript_lines.map(({ position, translation }) =>
+      transcript_lines.map(({ id: transcript_line_id, translation }) =>
         prisma.transcript_line_translations.upsert({
-          where: { transcript_line_id_locale: { transcript_line_id: positionToId.get(position)!, locale } },
-          create: { transcript_line_id: positionToId.get(position)!, locale, translation },
+          where: { transcript_line_id_locale: { transcript_line_id, locale } },
+          create: { transcript_line_id, locale, translation },
           update: { translation },
         })
       )

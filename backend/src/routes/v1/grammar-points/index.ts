@@ -169,7 +169,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     const sceneInclude = {
       sources: { include: { translations: { where: { locale } } } },
       transcript_lines: {
-        orderBy: { position: "asc" as const },
+        orderBy: { start_time: "asc" as const },
         include: {
           translations: { where: { locale } },
           speakers: { include: { translations: { where: { locale } } } },

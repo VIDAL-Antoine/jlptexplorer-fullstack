@@ -49,8 +49,12 @@ export function flattenScene(scene: {
     Parameters<typeof flattenTranscriptLine>[0] & {
       speakers: Parameters<typeof flattenSpeaker>[0] | null;
       transcript_line_grammar_points: Array<{
+        id: number;
         transcript_line_id: number;
         grammar_point_id: number;
+        start_index: number | null;
+        end_index: number | null;
+        matched_form: string | null;
         grammar_points: Parameters<typeof flattenGrammarPoint>[0] | null;
       }>;
     }
@@ -73,7 +77,7 @@ export function flattenScene(scene: {
 export function flattenTranscriptLine(line: {
   id: number;
   scene_id: number;
-  position: number;
+  start_time: number | null;
   speaker_id: number | null;
   text: string;
   translations: { translation: string | null }[];
