@@ -455,6 +455,12 @@ matched_form = verb te-form + も: 食べても、行っても、なくても.
 
 **Do NOT use `temo` for でも after a noun** — use `demo-or-something` instead (see below).
 
+**When the verb in `temo` is itself in potential form**, also add `rareru-potential` on the same span. Example: 壊せても (壊す → 壊せる potential → 壊せて te-form → 壊せても) → two entries sharing the same span and matched_form:
+```json
+{ "slug": "rareru-potential", "start_index": X, "end_index": Y, "matched_form": "壊せても" },
+{ "slug": "te-mo", "start_index": X, "end_index": Y, "matched_form": "壊せても" }
+```
+
 #### `demo-or-something` — でも after a noun
 
 matched_form = `でも`. Use when でも follows a **noun or pronoun** meaning "even [noun]". Example: 人造人間でも → matched_form = `でも` (copula て-form + も, not a verbal て-form).
