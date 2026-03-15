@@ -26,27 +26,36 @@ function buildSegments(text: string, annotations: TranscriptLineGrammarPoint[]):
     spanMap.get(key)!.push(annotation);
   }
 
-  // Collect unique spans sorted by start_index
+  // Collect unique spans sorted by start_index, largest span first for same start
   const spans = Array.from(spanMap.entries())
     .map(([key, anns]) => {
       const [start, end] = key.split(':').map(Number);
       return { start, end, annotations: anns };
     })
-    .sort((a, b) => a.start - b.start);
+    .sort((a, b) => a.start - b.start || b.end - a.end);
 
   const segments: Segment[] = [];
   let cursor = 0;
 
   for (const span of spans) {
-    if (span.start > cursor) {
-      segments.push({ type: 'plain', text: text.slice(cursor, span.start) });
+    if (span.start >= cursor) {
+      if (span.start > cursor) {
+        segments.push({ type: 'plain', text: text.slice(cursor, span.start) });
+      }
+      segments.push({
+        type: 'annotated',
+        text: text.slice(span.start, span.end),
+        annotations: span.annotations,
+      });
+      cursor = span.end;
+    } else {
+      // Overlapping span: merge its annotations into the last annotated segment
+      const last = segments[segments.length - 1];
+      if (last?.type === 'annotated') {
+        last.annotations.push(...span.annotations);
+      }
+      if (span.end > cursor) cursor = span.end;
     }
-    segments.push({
-      type: 'annotated',
-      text: text.slice(span.start, span.end),
-      annotations: span.annotations,
-    });
-    cursor = span.end;
   }
 
   if (cursor < text.length) {
