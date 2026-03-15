@@ -40,7 +40,17 @@
     "seekTo": "Aller à {time}"
   },
   "HomePage": {
-    "description": "Apprenez la grammaire japonaise en contexte — JLPT N5 à N1, illustrée par des scènes réelles de jeux vidéo et d'animés."
+    "tagline": "La grammaire japonaise en contexte — JLPT N5 à N1",
+    "ctaGrammar": "Parcourir les points de grammaire",
+    "ctaSources": "Explorer les sources",
+    "feature1Title": "Contexte réel",
+    "feature1Desc": "Chaque point de grammaire est illustré par des dialogues réels de sources réelles — pas d'exemples de manuel.",
+    "feature2Title": "Couverture complète du JLPT",
+    "feature2Desc": "Du N5 (débutant) au N1 (avancé), organisé par niveau.",
+    "feature3Title": "Jeux & animés",
+    "feature3Desc": "Parcourez vos univers favoris — Dragon Ball, Sonic, et bien d'autres.",
+    "browseLevels": "Parcourir par niveau",
+    "levelLabel": "points de grammaire"
   },
   "GrammarPointPage": {
     "scenesCount": "{count, plural, one {# scène} other {# scènes}}",
