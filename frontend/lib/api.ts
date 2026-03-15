@@ -73,6 +73,7 @@ export type GrammarPoint = {
   jlpt_level: JlptLevel;
   notes: string | null;
   created_at: string;
+  has_scenes: boolean;
 };
 
 export type Source = {

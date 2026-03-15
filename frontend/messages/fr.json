@@ -22,7 +22,8 @@
   },
   "GrammarPointsList": {
     "searchPlaceholder": "Rechercher...",
-    "all": "Tous"
+    "all": "Tous",
+    "noScenes": "Bientôt disponible"
   },
   "SourceTypes": {
     "game": "Jeu",

@@ -116,33 +116,62 @@ export function GrammarPointsList() {
       ) : (
         <Stack>
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }}>
-            {grammarPoints.map((gp) => (
-              <Card
-                key={gp.id}
-                shadow="sm"
-                padding="md"
-                radius="md"
-                withBorder
-                component={Link}
-                href={`/grammar-points/${gp.slug}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <Group justify="space-between" wrap="nowrap" align="flex-start">
-                  <Title order={1} flex={1}>
-                    {gp.title}
-                  </Title>
-                  <Badge color={JLPT_LEVEL_COLORS[gp.jlpt_level]}>{gp.jlpt_level}</Badge>
-                </Group>
-                {showGrammarPointRomaji && (
-                  <Text size="md" c="dimmed">
-                    {gp.romaji}
+            {grammarPoints.map((gp) =>
+              gp.has_scenes ? (
+                <Card
+                  key={gp.id}
+                  shadow="sm"
+                  padding="md"
+                  radius="md"
+                  withBorder
+                  component={Link}
+                  href={`/grammar-points/${gp.slug}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Group justify="space-between" wrap="nowrap" align="flex-start">
+                    <Title order={1} flex={1}>
+                      {gp.title}
+                    </Title>
+                    <Badge color={JLPT_LEVEL_COLORS[gp.jlpt_level]}>{gp.jlpt_level}</Badge>
+                  </Group>
+                  {showGrammarPointRomaji && (
+                    <Text size="md" c="dimmed">
+                      {gp.romaji}
+                    </Text>
+                  )}
+                  <Text size="md" mt="xs">
+                    {gp.meaning}
                   </Text>
-                )}
-                <Text size="md" mt="xs">
-                  {gp.meaning}
-                </Text>
-              </Card>
-            ))}
+                </Card>
+              ) : (
+                <Card
+                  key={gp.id}
+                  shadow="sm"
+                  padding="md"
+                  radius="md"
+                  withBorder
+                  style={{ opacity: 0.45, cursor: 'default' }}
+                >
+                  <Group justify="space-between" wrap="nowrap" align="flex-start">
+                    <Title order={1} flex={1}>
+                      {gp.title}
+                    </Title>
+                    <Badge color={JLPT_LEVEL_COLORS[gp.jlpt_level]}>{gp.jlpt_level}</Badge>
+                  </Group>
+                  {showGrammarPointRomaji && (
+                    <Text size="md" c="dimmed">
+                      {gp.romaji}
+                    </Text>
+                  )}
+                  <Text size="md" mt="xs">
+                    {gp.meaning}
+                  </Text>
+                  <Badge mt="xs" color="gray" variant="light">
+                    {t('noScenes')}
+                  </Badge>
+                </Card>
+              ),
+            )}
           </SimpleGrid>
           {totalPages > 1 && (
             <Center>

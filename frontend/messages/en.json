@@ -22,7 +22,8 @@
   },
   "GrammarPointsList": {
     "searchPlaceholder": "Search...",
-    "all": "All"
+    "all": "All",
+    "noScenes": "Coming soon"
   },
   "SourceTypes": {
     "game": "Game",
