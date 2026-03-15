@@ -56,12 +56,14 @@ interface SceneCardProps {
   scene: SceneWithDetails;
   currentGrammarPointIds?: number[];
   hideSourceInfo?: boolean;
+  onGrammarPointClick?: (slug: string) => void;
 }
 
 export function SceneCard({
   scene,
   currentGrammarPointIds,
   hideSourceInfo = false,
+  onGrammarPointClick,
 }: SceneCardProps) {
   const t = useTranslations('SceneCard');
   const [opened, { toggle }] = useDisclosure(false);
@@ -201,6 +203,10 @@ export function SceneCard({
                             component={Link}
                             href={`/grammar-points/${tlgp.grammar_points.slug}`}
                             style={{ cursor: 'pointer' }}
+                            onClick={onGrammarPointClick ? (e: React.MouseEvent) => {
+                              e.preventDefault();
+                              onGrammarPointClick(tlgp.grammar_points!.slug);
+                            } : undefined}
                           >
                             {grammarPointTranscriptScript === 'romaji'
                               ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)

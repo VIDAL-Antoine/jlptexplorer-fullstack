@@ -199,6 +199,12 @@ export default function SourcePage() {
                         .map((gp) => gp.id)
                     : undefined
                 }
+                onGrammarPointClick={(slug) => {
+                  const next = grammarFilter.includes(slug)
+                    ? grammarFilter.filter((s) => s !== slug)
+                    : [...grammarFilter, slug];
+                  updateParams(next, 1);
+                }}
               />
             ))}
           </SimpleGrid>
