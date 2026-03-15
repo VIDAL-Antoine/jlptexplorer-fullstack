@@ -80,14 +80,20 @@ export function AnnotatedText({
         const level = primary.grammar_points?.jlpt_level ?? 'N5';
         const color = `var(--mantine-color-${JLPT_LEVEL_COLORS[level]}-6)`;
 
-        const label = segment.annotations
+        const lines = segment.annotations
           .map((a) =>
             script === 'romaji'
               ? (a.grammar_points?.romaji ?? a.grammar_points?.title)
               : a.grammar_points?.title
           )
-          .filter(Boolean)
-          .join(' · ');
+          .filter(Boolean);
+
+        const label =
+          lines.length > 1 ? (
+            <span style={{ whiteSpace: 'pre-line' }}>{lines.join('\n')}</span>
+          ) : (
+            lines[0]
+          );
 
         return (
           <Tooltip key={i} label={label} withArrow>
