@@ -121,11 +121,11 @@ Use git switch and never git checkout. `git switch -C` allows you to create a br
 
 ## Scene payload grammar point resolution
 
-When given a scene payload in **simplified input format**, convert it to **full format** by resolving each grammar point slug to its `matched_form` in the Japanese text, and automatically adding translations.
+When given a scene payload in **simplified input format**, convert it to **full format** by identifying grammar points in each Japanese transcript line, resolving them to their `matched_form`, and automatically adding translations.
 
 ### Input vs output format
 
-**Input** (what the user provides — `grammar_points` as a flat array of slug strings):
+**Input** (what the user provides — no `grammar_points` field, no `translations` field):
 
 ```json
 {
@@ -138,8 +138,7 @@ When given a scene payload in **simplified input format**, convert it to **full 
     {
       "start_time": "2:02",
       "speaker_slug": "krillin",
-      "text": "超サイヤ人は穏やかな心を持っていないとなれなかったんじゃないのか？",
-      "grammar_points": ["te-iru", "nai-negative", "to-conditional", "naru", "rareru-potential", "ta-past"]
+      "text": "超サイヤ人は穏やかな心を持っていないとなれなかったんじゃないのか？"
     }
   ]
 }
@@ -271,7 +270,9 @@ Do NOT tag に inside: になる (if `naru` is the listed slug, the に is inclu
 - **Copula て-form で**: the て-form of だ used to connect clauses (穏やかで = "calm and..."). This is NOT a particle.
   - Slug: `de-te-form` (matched_form = `で` at end of na-adjective/noun)
 
-Always distinguish based on what precedes で: if it follows a na-adjective or noun as a clause connector, it is the copula て-form. If it follows a noun marking location/means, it is the particle.
+Always distinguish based on what precedes で: if it follows a na-adjective or noun as a clause connector, it is the copula て-form. If it follows a noun marking location/means/duration, it is the particle.
+
+**Copula て-form で (clause connector after na-adj/noun) has no slug — always ignore it** (e.g. 穏やかで、静かで). Only applies to this specific case. The particle で (means, location, duration) uses `de-means-of`, `de-location` etc. and must NOT be ignored. Likewise, で inside ても、ている、てから etc. is part of those grammar points and is not affected by this rule.
 
 #### の — possessive vs nominalizer vs other
 
@@ -400,15 +401,17 @@ matched_form = full causative form:
 
 matched_form = full inflected form from the start of the relevant unit:
 
-| Form                | matched_form                                   |
-| ------------------- | ---------------------------------------------- |
-| Plain               | なる                                           |
-| Past                | なった                                         |
-| Negative            | ならない                                       |
-| Potential           | なれる                                         |
-| Potential neg. past | なれなかった                                   |
-| With に             | になる、になった — span includes preceding に  |
-| With く (i-adj)     | 高くなる — span includes adjective + く + なる |
+matched_form = **just the conjugated なる form** — do NOT include preceding particles (に) or adjectives (〜く):
+
+| Form                | matched_form   |
+| ------------------- | -------------- |
+| Plain               | `なる`         |
+| Past                | `なった`       |
+| Negative            | `ならない`     |
+| Potential           | `なれる`       |
+| Potential neg. past | `なれなかった` |
+| With に (になる)    | `なる` / `なった` — span starts at な, NOT at に |
+| With く (i-adj)     | `なる` / `なった` — span starts at な, NOT at the adjective |
 
 #### `tara-conditional` — たら conditional
 
@@ -496,6 +499,7 @@ matched_form = adjective stem + さ: 大きさ、強さ、美しさ. Do NOT conf
 
 1. For each transcript line:
    a. Auto-generate `translations.en` and `translations.fr` based on the Japanese text and context
-   b. For each slug string in `grammar_points`, use grammatical context to locate the correct occurrence(s) in `text`, compute start_index/end_index, and produce one `{ slug, start_index, end_index, matched_form }` object per occurrence
-   c. Verify: `text.slice(start_index, end_index) === matched_form` for every entry
+   b. Analyze the Japanese `text` and identify all grammar constructions present, matching them against the slug list at `~/Desktop/slug-list.txt`. Be conservative — only tag constructions you are grammatically confident about.
+   c. For each identified grammar point, use grammatical context to locate the correct occurrence(s) in `text`, compute start_index/end_index, and produce one `{ slug, start_index, end_index, matched_form }` object per occurrence
+   d. Verify: `text.slice(start_index, end_index) === matched_form` for every entry
 2. Output `grammar_points` entries sorted by start_index; entries sharing the same span are grouped consecutively
