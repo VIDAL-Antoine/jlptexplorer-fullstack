@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef } from 'react';
+import { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react';
 import { loadYouTubeApi, type YTPlayer } from '../../lib/youtube';
 
 const YT_PLAYING = 1;
@@ -11,10 +11,22 @@ interface YoutubePlayerProps {
   endTime: number;
 }
 
-export function YoutubePlayer({ videoId, startTime, endTime }: YoutubePlayerProps) {
+export interface YoutubePlayerHandle {
+  seekTo: (time: number) => void;
+}
+
+export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>(
+function YoutubePlayer({ videoId, startTime, endTime }, ref) {
   const uid = useId().replace(/:/g, '');
   const elementId = `yt-player-${uid}`;
   const playerRef = useRef<YTPlayer | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    seekTo: (time: number) => {
+      playerRef.current?.seekTo(time, true);
+      playerRef.current?.playVideo();
+    },
+  }));
 
   useEffect(() => {
     let cancelled = false;
@@ -65,4 +77,4 @@ export function YoutubePlayer({ videoId, startTime, endTime }: YoutubePlayerProp
   }, [videoId, startTime, endTime]);
 
   return <div id={elementId} style={{ width: '100%', height: '100%' }} />;
-}
+});

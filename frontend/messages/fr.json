@@ -36,7 +36,8 @@
     "all": "Tous"
   },
   "SceneCard": {
-    "transcript": "Transcription"
+    "transcript": "Transcription",
+    "seekTo": "Aller à {time}"
   },
   "HomePage": {
     "description": "Apprenez la grammaire japonaise en contexte — JLPT N5 à N1, illustrée par des scènes réelles de jeux vidéo et d'animés."

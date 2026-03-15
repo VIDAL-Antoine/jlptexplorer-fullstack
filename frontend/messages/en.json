@@ -36,7 +36,8 @@
     "all": "All"
   },
   "SceneCard": {
-    "transcript": "Transcript"
+    "transcript": "Transcript",
+    "seekTo": "Seek to {time}"
   },
   "HomePage": {
     "description": "Learn Japanese grammar in context — JLPT N5 to N1, illustrated by real scenes from video games and anime."
