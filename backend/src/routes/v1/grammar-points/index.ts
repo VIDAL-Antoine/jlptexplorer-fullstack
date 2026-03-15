@@ -72,8 +72,15 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       const [grammar_points, total] = await Promise.all([
         prisma.grammar_points.findMany({
           where,
-          orderBy: [{ jlpt_level: "asc" }, { title: "asc" }],
-          include: { translations: { where: { locale } } },
+          orderBy: [
+            { transcript_line_grammar_points: { _count: "desc" } },
+            { jlpt_level: "asc" },
+            { title: "asc" },
+          ],
+          include: {
+            translations: { where: { locale } },
+            _count: { select: { transcript_line_grammar_points: true } },
+          },
           skip: (page - 1) * limit,
           take: limit,
         }),
@@ -81,7 +88,10 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       ]);
 
       return {
-        grammar_points: grammar_points.map(flattenGrammarPoint),
+        grammar_points: grammar_points.map((gp) => ({
+          ...flattenGrammarPoint(gp),
+          has_scenes: gp._count.transcript_line_grammar_points > 0,
+        })),
         total,
         page,
         totalPages: Math.ceil(total / limit),
