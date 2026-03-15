@@ -141,7 +141,7 @@ export default function GrammarPointPage() {
         >
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
             {scenesPage.scenes.map((scene) => (
-              <SceneCard key={scene.id} scene={scene} currentGrammarPointId={grammarPoint.id} />
+              <SceneCard key={scene.id} scene={scene} currentGrammarPointIds={[grammarPoint.id]} />
             ))}
           </SimpleGrid>
           {scenesPage.totalPages > 1 && (

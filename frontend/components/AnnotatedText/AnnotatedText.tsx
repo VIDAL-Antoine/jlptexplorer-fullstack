@@ -5,7 +5,7 @@ import { type TranscriptLineGrammarPoint } from '../../lib/api';
 interface AnnotatedTextProps {
   text: string;
   annotations: TranscriptLineGrammarPoint[];
-  currentGrammarPointId?: number;
+  currentGrammarPointIds?: number[];
   script?: 'romaji' | 'kana';
 }
 
@@ -13,9 +13,12 @@ type Segment =
   | { type: 'plain'; text: string }
   | { type: 'annotated'; text: string; annotations: TranscriptLineGrammarPoint[] };
 
-function buildSegments(text: string, annotations: TranscriptLineGrammarPoint[]): Segment[] {
+function buildSegments(text: string, annotations: TranscriptLineGrammarPoint[], currentGrammarPointIds?: number[]): Segment[] {
   const withSpans = annotations.filter(
-    (a) => a.start_index !== null && a.end_index !== null
+    (a) =>
+      a.start_index !== null &&
+      a.end_index !== null &&
+      (currentGrammarPointIds === undefined || currentGrammarPointIds.includes(a.grammar_point_id))
   );
 
   if (!withSpans.length) return [{ type: 'plain', text }];
@@ -61,10 +64,10 @@ function buildSegments(text: string, annotations: TranscriptLineGrammarPoint[]):
 export function AnnotatedText({
   text,
   annotations,
-  currentGrammarPointId,
+  currentGrammarPointIds,
   script = 'kana',
 }: AnnotatedTextProps) {
-  const segments = buildSegments(text, annotations);
+  const segments = buildSegments(text, annotations, currentGrammarPointIds);
 
   return (
     <>
@@ -73,10 +76,7 @@ export function AnnotatedText({
           return <span key={i}>{segment.text}</span>;
         }
 
-        const active = segment.annotations.find(
-          (a) => a.grammar_point_id === currentGrammarPointId
-        );
-        const primary = active ?? segment.annotations[0];
+        const primary = segment.annotations[0];
         const level = primary.grammar_points?.jlpt_level ?? 'N5';
         const color = `var(--mantine-color-${JLPT_LEVEL_COLORS[level]}-6)`;
 

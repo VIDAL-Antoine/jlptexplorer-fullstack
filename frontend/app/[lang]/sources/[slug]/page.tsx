@@ -188,7 +188,18 @@ export default function SourcePage() {
         >
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
             {scenesPage.scenes.map((scene) => (
-              <SceneCard key={scene.id} scene={scene} hideSourceInfo />
+              <SceneCard
+                key={scene.id}
+                scene={scene}
+                hideSourceInfo
+                currentGrammarPointIds={
+                  grammarFilter.length > 0
+                    ? mergedGrammarPoints
+                        .filter((gp) => grammarFilter.includes(gp.slug))
+                        .map((gp) => gp.id)
+                    : undefined
+                }
+              />
             ))}
           </SimpleGrid>
           {scenesPage.totalPages > 1 && (

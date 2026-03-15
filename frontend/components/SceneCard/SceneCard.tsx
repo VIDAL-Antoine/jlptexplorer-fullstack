@@ -54,13 +54,13 @@ function formatTime(seconds: number): string {
 
 interface SceneCardProps {
   scene: SceneWithDetails;
-  currentGrammarPointId?: number;
+  currentGrammarPointIds?: number[];
   hideSourceInfo?: boolean;
 }
 
 export function SceneCard({
   scene,
-  currentGrammarPointId,
+  currentGrammarPointIds,
   hideSourceInfo = false,
 }: SceneCardProps) {
   const t = useTranslations('SceneCard');
@@ -127,8 +127,8 @@ export function SceneCard({
         <Stack gap="xs">
           {scene.transcript_lines.map((line) => {
             const grammarPoints = line.transcript_line_grammar_points;
-            const hasGrammar = currentGrammarPointId
-              ? grammarPoints.some((tlgp) => tlgp.grammar_point_id === currentGrammarPointId)
+            const hasGrammar = currentGrammarPointIds
+              ? grammarPoints.some((tlgp) => currentGrammarPointIds.includes(tlgp.grammar_point_id))
               : grammarPoints.length > 0;
 
             return (
@@ -170,7 +170,7 @@ export function SceneCard({
                   <AnnotatedText
                     text={line.text}
                     annotations={line.transcript_line_grammar_points}
-                    currentGrammarPointId={currentGrammarPointId}
+                    currentGrammarPointIds={currentGrammarPointIds}
                     script={grammarPointTranscriptScript}
                   />
                 </Text>
@@ -195,7 +195,7 @@ export function SceneCard({
                             size="xs"
                             color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
                             variant={
-                              tlgp.grammar_point_id === currentGrammarPointId ? 'filled' : 'light'
+                              currentGrammarPointIds?.includes(tlgp.grammar_point_id) ? 'filled' : 'light'
                             }
                             tt="lowercase"
                             component={Link}
