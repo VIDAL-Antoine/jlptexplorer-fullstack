@@ -10,8 +10,6 @@ interface SettingsContextValue {
   setSourceTitleLang: (v: 'localized' | 'japanese') => void;
   showDialogueTranslations: boolean;
   setShowDialogueTranslations: (v: boolean) => void;
-  showGrammarPointRomaji: boolean;
-  setShowGrammarPointRomaji: (v: boolean) => void;
   grammarPointTranscriptScript: 'romaji' | 'kana';
   setGrammarPointTranscriptScript: (v: 'romaji' | 'kana') => void;
 }
@@ -31,10 +29,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     key: 'setting-show-dialogue-translations',
     defaultValue: true,
   });
-  const [showGrammarPointRomaji, setShowGrammarPointRomaji] = useLocalStorage({
-    key: 'setting-show-grammar-point-romaji',
-    defaultValue: true,
-  });
   const [grammarPointTranscriptScript, setGrammarPointTranscriptScript] = useLocalStorage<'romaji' | 'kana'>({
     key: 'setting-grammar-point-script',
     defaultValue: 'kana',
@@ -49,8 +43,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         setSourceTitleLang,
         showDialogueTranslations,
         setShowDialogueTranslations,
-        showGrammarPointRomaji,
-        setShowGrammarPointRomaji,
         grammarPointTranscriptScript,
         setGrammarPointTranscriptScript,
       }}

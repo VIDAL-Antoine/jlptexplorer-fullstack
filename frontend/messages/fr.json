@@ -17,8 +17,7 @@
     "sourceTitles": "Titres des sources",
     "speakerNames": "Noms des personnages",
     "grammarBadges": "Badges de transcription",
-    "showDialogueTranslations": "Afficher les traductions des dialogues",
-    "showGrammarPointRomaji": "Afficher le romaji des points de grammaire"
+    "showDialogueTranslations": "Afficher les traductions des dialogues"
   },
   "GrammarPointsList": {
     "searchPlaceholder": "Rechercher...",

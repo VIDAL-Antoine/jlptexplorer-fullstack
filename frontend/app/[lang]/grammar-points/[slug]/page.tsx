@@ -34,7 +34,7 @@ export default function GrammarPointPage() {
   const searchParams = useSearchParams();
   const t = useTranslations('GrammarPointPage');
   const tTypes = useTranslations('SourceTypes');
-  const { showGrammarPointRomaji, sourceTitleLang } = useSettings();
+  const { sourceTitleLang } = useSettings();
 
   const sourceFilterRaw = searchParams.get('source') ?? '';
   const sourceFilter = sourceFilterRaw ? sourceFilterRaw.split(',') : [];
@@ -108,7 +108,7 @@ export default function GrammarPointPage() {
             {grammarPoint.jlpt_level}
           </Badge>
         </Group>
-        {showGrammarPointRomaji && <Text c="dimmed">{grammarPoint.romaji}</Text>}
+        <Text c="dimmed">{grammarPoint.romaji}</Text>
         <Text mt="xs">{grammarPoint.meaning}</Text>
         {grammarPoint.notes && (
           <Text size="sm" c="dimmed" mt="xs">

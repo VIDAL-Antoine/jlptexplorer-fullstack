@@ -19,7 +19,6 @@ import {
   Title,
 } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
-import { useSettings } from '../../contexts/SettingsContext';
 import { Link } from '../../i18n/navigation';
 import { api, type GrammarPoint } from '../../lib/api';
 import { PageLoader } from '../PageLoader/PageLoader';
@@ -41,7 +40,6 @@ export function GrammarPointsList() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const locale = useLocale();
-  const { showGrammarPointRomaji } = useSettings();
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -134,11 +132,9 @@ export function GrammarPointsList() {
                     </Title>
                     <Badge color={JLPT_LEVEL_COLORS[gp.jlpt_level]}>{gp.jlpt_level}</Badge>
                   </Group>
-                  {showGrammarPointRomaji && (
-                    <Text size="md" c="dimmed">
-                      {gp.romaji}
-                    </Text>
-                  )}
+                  <Text size="md" c="dimmed">
+                    {gp.romaji}
+                  </Text>
                   <Text size="md" mt="xs">
                     {gp.meaning}
                   </Text>
@@ -158,11 +154,9 @@ export function GrammarPointsList() {
                     </Title>
                     <Badge color={JLPT_LEVEL_COLORS[gp.jlpt_level]}>{gp.jlpt_level}</Badge>
                   </Group>
-                  {showGrammarPointRomaji && (
-                    <Text size="md" c="dimmed">
-                      {gp.romaji}
-                    </Text>
-                  )}
+                  <Text size="md" c="dimmed">
+                    {gp.romaji}
+                  </Text>
                   <Text size="md" mt="xs">
                     {gp.meaning}
                   </Text>

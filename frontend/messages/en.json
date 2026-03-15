@@ -17,8 +17,7 @@
     "sourceTitles": "Source titles",
     "speakerNames": "Speaker names",
     "grammarBadges": "Grammar point transcript badges",
-    "showDialogueTranslations": "Show dialogue translations",
-    "showGrammarPointRomaji": "Show grammar point romaji"
+    "showDialogueTranslations": "Show dialogue translations"
   },
   "GrammarPointsList": {
     "searchPlaceholder": "Search...",

@@ -30,8 +30,6 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
     setSourceTitleLang,
     showDialogueTranslations,
     setShowDialogueTranslations,
-    showGrammarPointRomaji,
-    setShowGrammarPointRomaji,
     grammarPointTranscriptScript,
     setGrammarPointTranscriptScript,
   } = useSettings();
@@ -97,11 +95,6 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
           label={t('showDialogueTranslations')}
           checked={showDialogueTranslations}
           onChange={(e) => setShowDialogueTranslations(e.currentTarget.checked)}
-        />
-        <Switch
-          label={t('showGrammarPointRomaji')}
-          checked={showGrammarPointRomaji}
-          onChange={(e) => setShowGrammarPointRomaji(e.currentTarget.checked)}
         />
       </Stack>
     </Drawer>
