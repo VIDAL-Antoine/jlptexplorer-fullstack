@@ -86,8 +86,12 @@ export type Source = {
 };
 
 export type TranscriptLineGrammarPoint = {
+  id: number;
   transcript_line_id: number;
   grammar_point_id: number;
+  start_index: number | null;
+  end_index: number | null;
+  matched_form: string | null;
   grammar_points: GrammarPoint;
 };
 
@@ -103,7 +107,7 @@ export type Speaker = {
 export type TranscriptLine = {
   id: number;
   scene_id: number;
-  position: number;
+  start_time: number | null;
   speaker_id: number | null;
   speakers: Speaker | null;
   text: string;

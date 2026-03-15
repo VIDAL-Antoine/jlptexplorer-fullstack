@@ -20,13 +20,16 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { useRef } from 'react';
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
 import { useSettings } from '../../contexts/SettingsContext';
 import { Link } from '../../i18n/navigation';
 import { type SceneWithDetails } from '../../lib/api';
-import { YoutubePlayer } from '../YoutubePlayer/YoutubePlayer';
+import { AnnotatedText } from '../AnnotatedText/AnnotatedText';
+import { YoutubePlayer, type YoutubePlayerHandle } from '../YoutubePlayer/YoutubePlayer';
 
 type SourceType = SceneWithDetails['sources']['type'];
 type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
@@ -41,6 +44,12 @@ const SOURCE_TYPE_ICONS: Partial<Record<SourceType, IconComponent>> = {
 
 function getSourceTypeIcon(type: SourceType): IconComponent {
   return SOURCE_TYPE_ICONS[type] ?? IconTag;
+}
+
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
 }
 
 interface SceneCardProps {
@@ -64,12 +73,14 @@ export function SceneCard({
   } = useSettings();
 
   const SourceTypeIcon = getSourceTypeIcon(scene.sources.type);
+  const playerRef = useRef<YoutubePlayerHandle>(null);
 
   return (
     <Card shadow="sm" padding="md" radius="md" withBorder>
       <Card.Section mb="md">
         <AspectRatio ratio={16 / 9}>
           <YoutubePlayer
+            ref={playerRef}
             videoId={scene.youtube_video_id}
             startTime={scene.start_time}
             endTime={scene.end_time}
@@ -133,15 +144,35 @@ export function SceneCard({
                   }),
                 }}
               >
-                {line.speakers && (
-                  <Text size="xs" fw={700} c="dimmed" mb={2}>
-                    {speakerNameLang === 'japanese'
-                      ? (line.speakers.name_japanese ?? line.speakers.name)
-                      : line.speakers.name}
-                  </Text>
-                )}
+                <Group gap="xs" align="baseline" mb={2}>
+                  {line.start_time !== null && line.start_time !== undefined && (
+                    <Tooltip label={t('seekTo', { time: formatTime(line.start_time) })} withArrow>
+                      <Text
+                        size="xs"
+                        c="dimmed"
+                        ff="monospace"
+                        style={{ cursor: 'pointer', flexShrink: 0 }}
+                        onClick={() => playerRef.current?.seekTo(line.start_time!)}
+                      >
+                        {formatTime(line.start_time)}
+                      </Text>
+                    </Tooltip>
+                  )}
+                  {line.speakers && (
+                    <Text size="xs" fw={700} c="dimmed">
+                      {speakerNameLang === 'japanese'
+                        ? (line.speakers.name_japanese ?? line.speakers.name)
+                        : line.speakers.name}
+                    </Text>
+                  )}
+                </Group>
                 <Text size="md" fw={hasGrammar ? 600 : 400} lang="ja">
-                  {line.text}
+                  <AnnotatedText
+                    text={line.text}
+                    annotations={line.transcript_line_grammar_points}
+                    currentGrammarPointId={currentGrammarPointId}
+                    script={grammarPointTranscriptScript}
+                  />
                 </Text>
                 {showDialogueTranslations && line.translation && (
                   <Text size="sm" c="dimmed" mt={2}>
@@ -151,6 +182,7 @@ export function SceneCard({
                 {grammarPoints.length > 0 && (
                   <Group gap="xs" mt="xs">
                     {[...grammarPoints]
+                      .filter((tlgp, i, arr) => arr.findIndex((x) => x.grammar_point_id === tlgp.grammar_point_id) === i)
                       .sort((a, b) =>
                         (b.grammar_points?.jlpt_level ?? 'N5').localeCompare(
                           a.grammar_points?.jlpt_level ?? 'N5'
@@ -159,7 +191,7 @@ export function SceneCard({
                       .map((tlgp) =>
                         tlgp.grammar_points ? (
                           <Badge
-                            key={tlgp.grammar_point_id}
+                            key={tlgp.id}
                             size="xs"
                             color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
                             variant={
