@@ -1,4 +1,4 @@
-import { Tooltip } from '@mantine/core';
+import { Box, Tooltip } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
 import { type TranscriptLineGrammarPoint } from '../../lib/api';
 
@@ -13,13 +13,8 @@ type Segment =
   | { type: 'plain'; text: string }
   | { type: 'annotated'; text: string; annotations: TranscriptLineGrammarPoint[] };
 
-function buildSegments(text: string, annotations: TranscriptLineGrammarPoint[], currentGrammarPointIds?: number[]): Segment[] {
-  const withSpans = annotations.filter(
-    (a) =>
-      a.start_index !== null &&
-      a.end_index !== null &&
-      (currentGrammarPointIds === undefined || currentGrammarPointIds.includes(a.grammar_point_id))
-  );
+function buildSegments(text: string, annotations: TranscriptLineGrammarPoint[]): Segment[] {
+  const withSpans = annotations.filter((a) => a.start_index !== null && a.end_index !== null);
 
   if (!withSpans.length) return [{ type: 'plain', text }];
 
@@ -67,7 +62,7 @@ export function AnnotatedText({
   currentGrammarPointIds,
   script = 'kana',
 }: AnnotatedTextProps) {
-  const segments = buildSegments(text, annotations, currentGrammarPointIds);
+  const segments = buildSegments(text, annotations);
 
   return (
     <>
@@ -76,11 +71,20 @@ export function AnnotatedText({
           return <span key={i}>{segment.text}</span>;
         }
 
-        const primary = segment.annotations[0];
+        const activeAnnotations =
+          currentGrammarPointIds !== undefined
+            ? segment.annotations.filter((a) => currentGrammarPointIds.includes(a.grammar_point_id))
+            : [];
+
+        if (activeAnnotations.length === 0) {
+          return <span key={i}>{segment.text}</span>;
+        }
+
+        const primary = activeAnnotations[0];
         const level = primary.grammar_points?.jlpt_level ?? 'N5';
         const color = `var(--mantine-color-${JLPT_LEVEL_COLORS[level]}-6)`;
 
-        const lines = segment.annotations
+        const lines = activeAnnotations
           .map((a) =>
             script === 'romaji'
               ? (a.grammar_points?.romaji ?? a.grammar_points?.title)
@@ -97,15 +101,18 @@ export function AnnotatedText({
 
         return (
           <Tooltip key={i} label={label} withArrow>
-            <span
+            <Box
+              component="span"
               style={{
-                borderBottom: `2px solid ${color}`,
-                paddingBottom: 1,
+                textDecoration: 'underline',
+                textDecorationColor: color,
+                textDecorationThickness: '1.5px',
+                textUnderlineOffset: '3px',
                 cursor: 'default',
               }}
             >
               {segment.text}
-            </span>
+            </Box>
           </Tooltip>
         );
       })}
