@@ -18,6 +18,7 @@ import { PageLoader } from '../../../../components/PageLoader/PageLoader';
 import { SceneCard } from '../../../../components/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
 import { useSettings } from '../../../../contexts/SettingsContext';
+import { Link } from '../../../../i18n/navigation';
 import { api, type GrammarPointDetail, type GrammarPointScenesPage } from '../../../../lib/api';
 import NotFound from '../../not-found';
 
@@ -97,7 +98,13 @@ export default function GrammarPointPage() {
       <div>
         <Group align="center" gap="sm">
           <Title order={1}>{grammarPoint.title}</Title>
-          <Badge color={JLPT_LEVEL_COLORS[grammarPoint.jlpt_level]} size="lg">
+          <Badge
+            color={JLPT_LEVEL_COLORS[grammarPoint.jlpt_level]}
+            size="lg"
+            component={Link}
+            href={`/grammar-points?level=${grammarPoint.jlpt_level}`}
+            style={{ cursor: 'pointer' }}
+          >
             {grammarPoint.jlpt_level}
           </Badge>
         </Group>
