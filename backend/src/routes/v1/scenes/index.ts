@@ -150,21 +150,21 @@ function flattenSceneAll(scene: any) {
 
 // GET + PATCH — require locale in URL
 export async function scenesLocaleRoutes(server: FastifyInstance) {
-  server.get<{ Params: LocaleParams; Querystring: { sourceId?: string; level?: string } }>(
+  server.get<{ Params: LocaleParams; Querystring: { source_id?: string; jlpt_level?: string } }>(
     "/",
     async (request) => {
       const { locale } = request.params;
-      const { sourceId, level } = request.query;
+      const { source_id: sourceId, jlpt_level: jlptLevel } = request.query;
 
       const scenes = await prisma.scenes.findMany({
         where: {
           ...(sourceId ? { source_id: parseInt(sourceId) } : {}),
-          ...(level
+          ...(jlptLevel
             ? {
                 transcript_lines: {
                   some: {
                     transcript_line_grammar_points: {
-                      some: { grammar_points: { jlpt_level: level as any } },
+                      some: { grammar_points: { jlpt_level: jlptLevel as any } },
                     },
                   },
                 },

@@ -57,7 +57,7 @@ export default function GrammarPointPage() {
   useEffect(() => {
     setScenesLoading(true);
     api.grammarPoints
-      .scenes(locale, slug, { page, limit: PAGE_SIZE, sourceSlugs: sourceFilter })
+      .scenes(locale, slug, { page, limit: PAGE_SIZE, sources: sourceFilter })
       .then(setScenesPage)
       .catch(() => setScenesPage(null))
       .finally(() => setScenesLoading(false));
@@ -102,7 +102,7 @@ export default function GrammarPointPage() {
             color={JLPT_LEVEL_COLORS[grammarPoint.jlpt_level]}
             size="lg"
             component={Link}
-            href={`/grammar-points?level=${grammarPoint.jlpt_level}`}
+            href={`/grammar-points?jlpt_level=${grammarPoint.jlpt_level}`}
             style={{ cursor: 'pointer' }}
           >
             {grammarPoint.jlpt_level}

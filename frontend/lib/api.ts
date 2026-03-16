@@ -14,9 +14,9 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
 
 export const api = {
   grammarPoints: {
-    list: (locale: string, params?: { level?: string; search?: string; page?: number; limit?: number }) => {
+    list: (locale: string, params?: { jlptLevel?: string; search?: string; page?: number; limit?: number }) => {
       const query = new URLSearchParams();
-      if (params?.level) query.set('level', params.level);
+      if (params?.jlptLevel) query.set('jlpt_level', params.jlptLevel);
       if (params?.search) query.set('search', params.search);
       if (params?.page) query.set('page', String(params.page));
       if (params?.limit) query.set('limit', String(params.limit));
@@ -25,11 +25,11 @@ export const api = {
     },
     get: (locale: string, slug: string) =>
       apiFetch<GrammarPointDetail>(`/api/v1/${locale}/grammar-points/${slug}`),
-    scenes: (locale: string, slug: string, params?: { page?: number; limit?: number; sourceSlugs?: string[] }) => {
+    scenes: (locale: string, slug: string, params?: { page?: number; limit?: number; sources?: string[] }) => {
       const query = new URLSearchParams();
       if (params?.page) query.set('page', String(params.page));
       if (params?.limit) query.set('limit', String(params.limit));
-      if (params?.sourceSlugs?.length) query.set('sourceSlugs', params.sourceSlugs.join(','));
+      if (params?.sources?.length) query.set('sources', params.sources.join(','));
       const qs = query.toString();
       return apiFetch<GrammarPointScenesPage>(`/api/v1/${locale}/grammar-points/${slug}/scenes${qs ? `?${qs}` : ''}`);
     },
@@ -42,20 +42,20 @@ export const api = {
       return apiFetch<Source[]>(`/api/v1/${locale}/sources${qs ? `?${qs}` : ''}`);
     },
     get: (locale: string, slug: string) => apiFetch<SourceDetail>(`/api/v1/${locale}/sources/${slug}`),
-    scenes: (locale: string, slug: string, params?: { page?: number; limit?: number; grammarPointSlugs?: string[] }) => {
+    scenes: (locale: string, slug: string, params?: { page?: number; limit?: number; grammarPoints?: string[] }) => {
       const query = new URLSearchParams();
       if (params?.page) query.set('page', String(params.page));
       if (params?.limit) query.set('limit', String(params.limit));
-      if (params?.grammarPointSlugs?.length) query.set('grammarPointSlugs', params.grammarPointSlugs.join(','));
+      if (params?.grammarPoints?.length) query.set('grammar_points', params.grammarPoints.join(','));
       const qs = query.toString();
       return apiFetch<SourceScenesPage>(`/api/v1/${locale}/sources/${slug}/scenes${qs ? `?${qs}` : ''}`);
     },
   },
   scenes: {
-    list: (locale: string, params?: { sourceId?: number; level?: string }) => {
+    list: (locale: string, params?: { sourceId?: number; jlptLevel?: string }) => {
       const query = new URLSearchParams();
-      if (params?.sourceId) query.set('sourceId', String(params.sourceId));
-      if (params?.level) query.set('level', params.level);
+      if (params?.sourceId) query.set('source_id', String(params.sourceId));
+      if (params?.jlptLevel) query.set('jlpt_level', params.jlptLevel);
       const qs = query.toString();
       return apiFetch<Scene[]>(`/api/v1/${locale}/scenes${qs ? `?${qs}` : ''}`);
     },

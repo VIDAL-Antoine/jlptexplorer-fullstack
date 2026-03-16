@@ -57,7 +57,7 @@ export default function SourcePage() {
   const tTypes = useTranslations('SourceTypes');
   const { sourceTitleLang } = useSettings();
 
-  const grammarFilterRaw = searchParams.get('grammar') ?? '';
+  const grammarFilterRaw = searchParams.get('grammar_points') ?? '';
   const grammarFilter = grammarFilterRaw ? grammarFilterRaw.split(',') : [];
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1') || 1);
 
@@ -78,7 +78,7 @@ export default function SourcePage() {
   useEffect(() => {
     setScenesLoading(true);
     api.sources
-      .scenes(locale, slug, { page, limit: PAGE_SIZE, grammarPointSlugs: grammarFilter })
+      .scenes(locale, slug, { page, limit: PAGE_SIZE, grammarPoints: grammarFilter })
       .then(setScenesPage)
       .catch(() => setScenesPage(null))
       .finally(() => setScenesLoading(false));
@@ -86,7 +86,7 @@ export default function SourcePage() {
 
   function updateParams(grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (grammar.length > 0) params.set('grammar', grammar.join(','));
+    if (grammar.length > 0) params.set('grammar_points', grammar.join(','));
     if (newPage > 1) params.set('page', String(newPage));
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);

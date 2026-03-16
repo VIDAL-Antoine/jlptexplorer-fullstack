@@ -34,7 +34,7 @@ export function GrammarPointsList() {
   const [grammarPoints, setGrammarPoints] = useState<GrammarPoint[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState<boolean>(true);
-  const rawLevel = searchParams.get('level');
+  const rawLevel = searchParams.get('jlpt_level');
   const [level, setLevel] = useState(rawLevel && LEVELS.includes(rawLevel) ? rawLevel : 'All');
   const [inputValue, setInputValue] = useState('');
   const [search, setSearch] = useState('');
@@ -54,9 +54,9 @@ export function GrammarPointsList() {
     setPage(1);
     const params = new URLSearchParams(searchParams.toString());
     if (newLevel === 'All') {
-      params.delete('level');
+      params.delete('jlpt_level');
     } else {
-      params.set('level', newLevel);
+      params.set('jlpt_level', newLevel);
     }
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
@@ -71,7 +71,7 @@ export function GrammarPointsList() {
     setLoading(true);
     api.grammarPoints
       .list(locale, {
-        level: level === 'All' ? undefined : level,
+        jlptLevel: level === 'All' ? undefined : level,
         search: search || undefined,
         page,
         limit: PAGE_SIZE,

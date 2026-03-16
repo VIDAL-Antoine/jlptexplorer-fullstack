@@ -13,7 +13,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
   server.get<{
     Params: LocaleParams;
     Querystring: {
-      level?: jlpt_level;
+      jlpt_level?: jlpt_level;
       search?: string;
       page?: string;
       limit?: string;
@@ -25,7 +25,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
         querystring: {
           type: "object",
           properties: {
-            level: {
+            jlpt_level: {
               type: "string",
               enum: ["N5", "N4", "N3", "N2", "N1", "Other"],
             },
@@ -39,7 +39,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     },
     async (request) => {
       const { locale } = request.params;
-      const { level, search } = request.query;
+      const { jlpt_level: jlptLevel, search } = request.query;
       const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
       const limit = Math.max(
         1,
@@ -47,7 +47,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       );
 
       const where = {
-        ...(level ? { jlpt_level: level } : {}),
+        ...(jlptLevel ? { jlpt_level: jlptLevel } : {}),
         ...(search
           ? {
               OR: [
@@ -158,7 +158,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
 
   server.get<{
     Params: LocaleParams & { slug: string };
-    Querystring: { page?: string; limit?: string; sourceSlugs?: string };
+    Querystring: { page?: string; limit?: string; sources?: string };
   }>("/:slug/scenes", async (request, reply) => {
     const { locale, slug } = request.params;
     const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
@@ -167,7 +167,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
       Math.min(50, parseInt(request.query.limit ?? "12") || 12),
     );
     const sourceSlugs =
-      request.query.sourceSlugs
+      request.query.sources
         ?.split(",")
         .map((s) => s.trim())
         .filter(Boolean) ?? [];

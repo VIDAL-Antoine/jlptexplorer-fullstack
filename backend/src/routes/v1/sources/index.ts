@@ -80,12 +80,12 @@ export async function sourcesRoutes(server: FastifyInstance) {
 
   server.get<{
     Params: LocaleParams & { slug: string };
-    Querystring: { page?: string; limit?: string; grammarPointSlugs?: string };
+    Querystring: { page?: string; limit?: string; grammar_points?: string };
   }>("/:slug/scenes", async (request, reply) => {
     const { locale, slug } = request.params;
     const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
     const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? "12") || 12));
-    const grammarPointSlugs = request.query.grammarPointSlugs
+    const grammarPointSlugs = request.query.grammar_points
       ?.split(",")
       .map((s) => s.trim())
       .filter(Boolean) ?? [];
