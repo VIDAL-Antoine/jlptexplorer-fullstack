@@ -6,7 +6,7 @@ const config: StorybookConfig = {
     disableTelemetry: true,
     enableCrashReports: false,
   },
-  stories: ['../components/**/*.(stories|story).@(js|jsx|ts|tsx)'],
+  stories: ['../src/components/**/*.(stories|story).@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-themes'],
   framework: {
     name: '@storybook/nextjs',

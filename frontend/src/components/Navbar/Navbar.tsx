@@ -1,13 +1,13 @@
 'use client';
 
+import { IconApps, IconVocabulary } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '../../i18n/navigation';
 import { NavLink, Stack, Text } from '@mantine/core';
-import { IconBook, IconMovie } from '@tabler/icons-react';
+import { Link, usePathname } from '../../i18n/navigation';
 
 const LINKS = [
-  { href: '/grammar-points' as const, labelKey: 'grammarPoints' as const, icon: IconBook },
-  { href: '/sources' as const, labelKey: 'sources' as const, icon: IconMovie },
+  { href: '/grammar-points' as const, labelKey: 'grammarPoints' as const, icon: IconVocabulary },
+  { href: '/sources' as const, labelKey: 'sources' as const, icon: IconApps },
 ];
 
 export function Navbar() {

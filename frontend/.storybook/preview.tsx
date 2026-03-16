@@ -3,7 +3,7 @@ import '@mantine/core/styles.css';
 import { useEffect } from 'react';
 import { useGlobals } from 'storybook/preview-api';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { theme } from '../theme';
+import { theme } from '../src/theme';
 
 export const parameters = {
   layout: 'fullscreen',
