@@ -35,6 +35,18 @@ export function flattenSpeaker(speaker: {
   return { ...rest, name: translations[0]?.name ?? null, description: translations[0]?.description ?? null };
 }
 
+export function flattenTranscriptLine(line: {
+  id: number;
+  scene_id: number;
+  start_time: number | null;
+  speaker_id: number | null;
+  text: string;
+  translations: { translation: string | null }[];
+}) {
+  const { translations, ...rest } = line;
+  return { ...rest, translation: translations[0]?.translation ?? null };
+}
+
 export function flattenScene(scene: {
   id: number;
   source_id: number;
@@ -74,14 +86,19 @@ export function flattenScene(scene: {
   };
 }
 
-export function flattenTranscriptLine(line: {
-  id: number;
-  scene_id: number;
-  start_time: number | null;
-  speaker_id: number | null;
-  text: string;
-  translations: { translation: string | null }[];
-}) {
-  const { translations, ...rest } = line;
-  return { ...rest, translation: translations[0]?.translation ?? null };
+export function flattenSceneAll<T extends {
+  transcript_lines: Array<{
+    translations: Array<{ locale: string; translation: string | null }>;
+  }>;
+}>(scene: T) {
+  return {
+    ...scene,
+    transcript_lines: scene.transcript_lines.map((line) => {
+      const { translations, ...rest } = line;
+      return {
+        ...rest,
+        translations: Object.fromEntries(translations.map((t) => [t.locale, t.translation])),
+      };
+    }),
+  };
 }
