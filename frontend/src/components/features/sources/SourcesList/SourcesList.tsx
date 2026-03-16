@@ -24,10 +24,10 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { useSettings } from '../../contexts/SettingsContext';
-import { Link } from '../../i18n/navigation';
-import { api, type Source } from '../../lib/api';
-import { PageLoader } from '../PageLoader/PageLoader';
+import { useSettings } from '../../../../contexts/SettingsContext';
+import { Link } from '../../../../i18n/navigation';
+import { api, type Source } from '../../../../lib/api';
+import { PageLoader } from '../../../ui/PageLoader/PageLoader';
 
 type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
 

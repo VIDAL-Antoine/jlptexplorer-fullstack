@@ -4,7 +4,7 @@ import React from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { Layout } from '../../components/Layout/Layout';
+import { Layout } from '../../components/layout/Layout/Layout';
 import { SettingsProvider } from '../../contexts/SettingsContext';
 import { theme } from '../../theme';
 

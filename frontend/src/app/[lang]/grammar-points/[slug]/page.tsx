@@ -14,8 +14,8 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { PageLoader } from '../../../../components/PageLoader/PageLoader';
-import { SceneCard } from '../../../../components/SceneCard/SceneCard';
+import { PageLoader } from '../../../../components/ui/PageLoader/PageLoader';
+import { SceneCard } from '../../../../components/features/scenes/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
 import { useSettings } from '../../../../contexts/SettingsContext';
 import { Link } from '../../../../i18n/navigation';

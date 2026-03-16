@@ -1,6 +1,6 @@
 import { Box, Tooltip } from '@mantine/core';
-import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
-import { type TranscriptLineGrammarPoint } from '../../lib/api';
+import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
+import { type TranscriptLineGrammarPoint } from '../../../../lib/api';
 
 interface AnnotatedTextProps {
   text: string;

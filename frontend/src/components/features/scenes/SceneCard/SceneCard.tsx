@@ -24,11 +24,11 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useRef } from 'react';
-import { JLPT_LEVEL_COLORS } from '../../constants/jlpt';
-import { useSettings } from '../../contexts/SettingsContext';
-import { Link } from '../../i18n/navigation';
-import { type SceneWithDetails } from '../../lib/api';
-import { AnnotatedText } from '../AnnotatedText/AnnotatedText';
+import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
+import { useSettings } from '../../../../contexts/SettingsContext';
+import { Link } from '../../../../i18n/navigation';
+import { type SceneWithDetails } from '../../../../lib/api';
+import { AnnotatedText } from '../../grammar/AnnotatedText/AnnotatedText';
 import { YoutubePlayer, type YoutubePlayerHandle } from '../YoutubePlayer/YoutubePlayer';
 
 type SourceType = SceneWithDetails['sources']['type'];

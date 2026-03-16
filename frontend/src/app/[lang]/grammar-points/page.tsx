@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { GrammarPointsList } from '../../../components/GrammarPointsList/GrammarPointsList';
-import { PageLoader } from '../../../components/PageLoader/PageLoader';
+import { GrammarPointsList } from '../../../components/features/grammar/GrammarPointsList/GrammarPointsList';
+import { PageLoader } from '../../../components/ui/PageLoader/PageLoader';
 
 export const metadata = {
   title: 'Grammar Points — JLPTExplorer',
