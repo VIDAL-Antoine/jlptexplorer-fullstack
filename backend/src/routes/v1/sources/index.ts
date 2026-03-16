@@ -3,6 +3,83 @@ import { prisma } from "../../../lib/prisma.js";
 import { source_type } from "../../../generated/prisma/enums.js";
 import { flattenSource, flattenGrammarPoint, flattenScene } from "../../../lib/flatten.js";
 
+export async function sourcesAdminRoutes(server: FastifyInstance) {
+  server.post<{
+    Body: {
+      slug: string;
+      japanese_title?: string;
+      type: source_type;
+      cover_image_url?: string;
+      translations: Record<string, string>;
+    };
+  }>("/", async (request, reply) => {
+    const { slug, japanese_title, type, cover_image_url, translations } = request.body;
+
+    const source = await prisma.sources.create({
+      data: {
+        slug,
+        japanese_title,
+        type,
+        cover_image_url,
+        translations: {
+          create: Object.entries(translations).map(([locale, title]) => ({ locale, title })),
+        },
+      },
+      include: { translations: true },
+    });
+
+    return reply.status(201).send({
+      ...source,
+      translations: Object.fromEntries(source.translations.map((t) => [t.locale, t.title])),
+    });
+  });
+
+  server.put<{
+    Params: { slug: string };
+    Body: {
+      slug: string;
+      japanese_title?: string;
+      type: source_type;
+      cover_image_url?: string;
+      translations: Record<string, string>;
+    };
+  }>("/:slug", async (request, reply) => {
+    const { slug: paramSlug } = request.params;
+    const { slug, japanese_title, type, cover_image_url, translations } = request.body;
+
+    const existing = await prisma.sources.findUnique({ where: { slug: paramSlug }, select: { id: true } });
+    if (!existing) return reply.status(404).send({ error: "Source not found" });
+
+    const source = await prisma.sources.update({
+      where: { slug: paramSlug },
+      data: {
+        slug,
+        japanese_title,
+        type,
+        cover_image_url,
+        translations: {
+          upsert: Object.entries(translations).map(([locale, title]) => ({
+            where: { source_id_locale: { source_id: existing.id, locale } },
+            create: { locale, title },
+            update: { title },
+          })),
+        },
+      },
+      include: { translations: true },
+    });
+
+    return {
+      ...source,
+      translations: Object.fromEntries(source.translations.map((t) => [t.locale, t.title])),
+    };
+  });
+
+  server.delete<{ Params: { slug: string } }>("/:slug", async (request, reply) => {
+    await prisma.sources.delete({ where: { slug: request.params.slug } });
+    return reply.status(204).send();
+  });
+}
+
 type LocaleParams = { locale: string };
 
 export async function sourcesRoutes(server: FastifyInstance) {
@@ -155,60 +232,4 @@ export async function sourcesRoutes(server: FastifyInstance) {
     };
   });
 
-  server.post<{
-    Params: LocaleParams;
-    Body: { title: string; japanese_title?: string; type: source_type; cover_image_url?: string; slug: string };
-  }>("/", async (request, reply) => {
-    const { locale } = request.params;
-    const { title, japanese_title, type, cover_image_url, slug } = request.body;
-
-    const source = await prisma.sources.create({
-      data: {
-        japanese_title,
-        type,
-        cover_image_url,
-        slug,
-        translations: { create: { locale, title } },
-      },
-      include: { translations: { where: { locale } } },
-    });
-
-    return reply.status(201).send(flattenSource(source));
-  });
-
-  server.put<{
-    Params: LocaleParams & { slug: string };
-    Body: { title: string; japanese_title?: string; type: source_type; cover_image_url?: string; slug: string };
-  }>("/:slug", async (request, reply) => {
-    const { locale, slug: paramSlug } = request.params;
-    const { title, japanese_title, type, cover_image_url, slug } = request.body;
-
-    const existing = await prisma.sources.findUnique({ where: { slug: paramSlug }, select: { id: true } });
-    if (!existing) return reply.status(404).send({ error: "Source not found" });
-
-    const source = await prisma.sources.update({
-      where: { slug: paramSlug },
-      data: {
-        japanese_title,
-        type,
-        cover_image_url,
-        slug,
-        translations: {
-          upsert: {
-            where: { source_id_locale: { source_id: existing.id, locale } },
-            create: { locale, title },
-            update: { title },
-          },
-        },
-      },
-      include: { translations: { where: { locale } } },
-    });
-
-    return flattenSource(source);
-  });
-
-  server.delete<{ Params: LocaleParams & { slug: string } }>("/:slug", async (request, reply) => {
-    await prisma.sources.delete({ where: { slug: request.params.slug } });
-    return reply.status(204).send();
-  });
 }

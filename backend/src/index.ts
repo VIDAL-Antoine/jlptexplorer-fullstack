@@ -3,7 +3,7 @@ import fastify from "fastify";
 import { registerCors } from "./plugins/cors.js";
 import { scenesLocaleRoutes, scenesAdminRoutes } from "./routes/v1/scenes/index.js";
 import { grammarPointsRoutes } from "./routes/v1/grammar-points/index.js";
-import { sourcesRoutes } from "./routes/v1/sources/index.js";
+import { sourcesRoutes, sourcesAdminRoutes } from "./routes/v1/sources/index.js";
 import { speakersLocaleRoutes, speakersAdminRoutes } from "./routes/v1/speakers/index.js";
 
 async function start() {
@@ -25,6 +25,7 @@ async function start() {
       }, { prefix: "/:locale" });
       api.register(scenesAdminRoutes, { prefix: "/scenes" });
       api.register(speakersAdminRoutes, { prefix: "/speakers" });
+      api.register(sourcesAdminRoutes, { prefix: "/sources" });
     },
     { prefix: "/api/v1" }
   );
