@@ -101,7 +101,7 @@ export async function sourcesRoutes(server: FastifyInstance) {
     const { type } = request.query;
 
     const sources = await prisma.sources.findMany({
-      where: type ? { type } : undefined,
+      where: { ...(type ? { type } : {}), scenes: { some: {} } },
       include: { translations: { where: { locale } } },
       orderBy: { id: "asc" },
     });
