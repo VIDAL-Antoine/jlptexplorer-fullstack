@@ -11,16 +11,17 @@ import {
   deleteSource,
 } from "@/controllers/sources.controller";
 
+const TAGS = ["sources"];
 const localeSlugParams = localeParams.extend({ slug: z.string() });
 
 export async function sourcesPublicRoutes(server: FastifyInstance) {
-  server.get("/", { schema: { params: localeParams, querystring: listSourcesQuery } }, listSources);
-  server.get("/:slug", { schema: { params: localeSlugParams } }, getSource);
-  server.get("/:slug/scenes", { schema: { params: localeSlugParams, querystring: sourceSceneQuery } }, getSourceScenes);
+  server.get("/", { schema: { tags: TAGS, params: localeParams, querystring: listSourcesQuery } }, listSources);
+  server.get("/:slug", { schema: { tags: TAGS, params: localeSlugParams } }, getSource);
+  server.get("/:slug/scenes", { schema: { tags: TAGS, params: localeSlugParams, querystring: sourceSceneQuery } }, getSourceScenes);
 }
 
 export async function sourcesAdminRoutes(server: FastifyInstance) {
-  server.post("/", { schema: { body: sourceBody } }, createSource);
-  server.put("/:slug", { schema: { params: slugParams, body: sourceBody } }, updateSource);
-  server.delete("/:slug", { schema: { params: slugParams } }, deleteSource);
+  server.post("/", { schema: { tags: TAGS, body: sourceBody } }, createSource);
+  server.put("/:slug", { schema: { tags: TAGS, params: slugParams, body: sourceBody } }, updateSource);
+  server.delete("/:slug", { schema: { tags: TAGS, params: slugParams } }, deleteSource);
 }

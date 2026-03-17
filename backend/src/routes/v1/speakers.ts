@@ -10,15 +10,16 @@ import {
   deleteSpeaker,
 } from "@/controllers/speakers.controller";
 
+const TAGS = ["speakers"];
 const localeSlugParams = localeParams.extend({ slug: z.string() });
 
 export async function speakersPublicRoutes(server: FastifyInstance) {
-  server.get("/", { schema: { params: localeParams } }, listSpeakers);
-  server.get("/:slug", { schema: { params: localeSlugParams } }, getSpeaker);
+  server.get("/", { schema: { tags: TAGS, params: localeParams } }, listSpeakers);
+  server.get("/:slug", { schema: { tags: TAGS, params: localeSlugParams } }, getSpeaker);
 }
 
 export async function speakersAdminRoutes(server: FastifyInstance) {
-  server.post("/", { schema: { body: speakerBody } }, createSpeaker);
-  server.put("/:slug", { schema: { params: slugParams, body: speakerBody } }, updateSpeaker);
-  server.delete("/:slug", { schema: { params: slugParams } }, deleteSpeaker);
+  server.post("/", { schema: { tags: TAGS, body: speakerBody } }, createSpeaker);
+  server.put("/:slug", { schema: { tags: TAGS, params: slugParams, body: speakerBody } }, updateSpeaker);
+  server.delete("/:slug", { schema: { tags: TAGS, params: slugParams } }, deleteSpeaker);
 }
