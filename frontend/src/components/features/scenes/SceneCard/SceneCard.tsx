@@ -79,7 +79,8 @@ export function SceneCard({
             component={Link}
             href={`/sources?type=${scene.sources.type}`}
             mt={4}
-            style={{ flexShrink: 0, lineHeight: 0 }}
+            lh={0}
+            style={{ flexShrink: 0 }}
           >
             <SourceTypeIcon size={16} color="gray" />
           </Anchor>
@@ -108,14 +109,9 @@ export function SceneCard({
               <Box
                 key={line.id}
                 p="xs"
-                style={{
-                  borderRadius: 'var(--mantine-radius-sm)',
-                  ...(hasGrammar && {
-                    backgroundColor:
-                      'light-dark(var(--mantine-color-yellow-0), rgba(255, 212, 59, 0.08))',
-                    borderLeft: '3px solid var(--mantine-color-yellow-5)',
-                  }),
-                }}
+                bdrs="var(--mantine-radius-sm)"
+                bg={hasGrammar ? 'light-dark(var(--mantine-color-yellow-0), rgba(255, 212, 59, 0.08))' : undefined}
+                style={hasGrammar ? { borderLeft: '3px solid var(--mantine-color-yellow-5)' } : undefined}
               >
                 <Group gap="xs" align="baseline" mb={2}>
                   {line.start_time !== null && line.start_time !== undefined && (

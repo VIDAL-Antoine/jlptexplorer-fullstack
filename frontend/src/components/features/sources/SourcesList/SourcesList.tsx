@@ -99,7 +99,7 @@ export function SourcesList() {
               component={Link}
               href={`/sources/${source.slug}`}
             >
-              <Card.Section style={{ position: 'relative' }}>
+              <Card.Section pos="relative">
                 <AspectRatio ratio={2 / 3}>
                   <Image
                     src={source.cover_image_url}

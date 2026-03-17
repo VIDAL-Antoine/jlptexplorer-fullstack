@@ -38,7 +38,7 @@ export default function GrammarPointPage() {
 
   const sourceFilterRaw = searchParams.get('source') ?? '';
   const sourceFilter = sourceFilterRaw ? sourceFilterRaw.split(',') : [];
-  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1') || 1);
+  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const [grammarPoint, setGrammarPoint] = useState<GrammarPointDetail | null>(null);
   const [grammarPointLoading, setGrammarPointLoading] = useState(true);
@@ -61,18 +61,18 @@ export default function GrammarPointPage() {
       .then(setScenesPage)
       .catch(() => setScenesPage(null))
       .finally(() => setScenesLoading(false));
-  }, [slug, locale, page, sourceFilterRaw]);
+  }, [slug, locale, page, sourceFilterRaw]); // eslint-disable-line react-hooks/exhaustive-deps -- sourceFilter is a new array each render; sourceFilterRaw is the stable string dep
 
   function updateParams(sources: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (sources.length > 0) params.set('source', sources.join(','));
-    if (newPage > 1) params.set('page', String(newPage));
+    if (sources.length > 0) {params.set('source', sources.join(','));}
+    if (newPage > 1) {params.set('page', String(newPage));}
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
 
-  if (grammarPointLoading) return <PageLoader />;
-  if (!grammarPoint) return <NotFound />;
+  if (grammarPointLoading) {return <PageLoader />;}
+  if (!grammarPoint) {return <NotFound />;}
 
   const selectedSources = grammarPoint.available_sources.filter((s) =>
     sourceFilter.includes(s.slug)
@@ -144,7 +144,8 @@ export default function GrammarPointPage() {
       ) : (
         <Stack
           gap="lg"
-          style={{ opacity: scenesLoading ? 0.5 : 1, transition: 'opacity 0.15s ease' }}
+          opacity={scenesLoading ? 0.5 : 1}
+          style={{ transition: 'opacity 0.15s ease' }}
         >
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
             {scenesPage.scenes.map((scene) => (

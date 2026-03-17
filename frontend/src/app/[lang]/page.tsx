@@ -1,7 +1,7 @@
-import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { Box, Button, Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconBook, IconDeviceGamepad2, IconPlayerPlay, IconSparkles } from '@tabler/icons-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { Box, Button, Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { JLPT_LEVEL_COLORS, type JlptLevel } from '@/constants/jlpt';
 
 const JLPT_LEVELS = Object.keys(JLPT_LEVEL_COLORS) as JlptLevel[];
@@ -21,7 +21,8 @@ export default function HomePage() {
           mb="md"
           style={{
             fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-            background: 'linear-gradient(135deg, var(--mantine-color-indigo-6), var(--mantine-color-violet-5))',
+            background:
+              'linear-gradient(135deg, var(--mantine-color-indigo-6), var(--mantine-color-violet-5))',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',

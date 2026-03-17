@@ -2,13 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import {
-  IconDeviceGamepad2,
-  IconDeviceTv,
-  IconMovie,
-  IconMusic,
-  IconTag,
-} from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   AspectRatio,
@@ -28,22 +21,8 @@ import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { api, type SourceDetail, type SourceScenesPage } from '@/lib/api';
+import { getSourceTypeIcon } from '@/utils/icons';
 import NotFound from '@/app/[lang]/not-found';
-
-type SourceType = SourceDetail['type'];
-type IconComponent = React.ComponentType<{ size?: number }>;
-
-const SOURCE_TYPE_ICONS: Partial<Record<SourceType, IconComponent>> = {
-  game: IconDeviceGamepad2,
-  anime: IconDeviceTv,
-  series: IconDeviceTv,
-  movie: IconMovie,
-  music: IconMusic,
-};
-
-function getSourceTypeIcon(type: SourceType): IconComponent {
-  return SOURCE_TYPE_ICONS[type] ?? IconTag;
-}
 
 const PAGE_SIZE = 12;
 
@@ -59,7 +38,7 @@ export default function SourcePage() {
 
   const grammarFilterRaw = searchParams.get('grammar_points') ?? '';
   const grammarFilter = grammarFilterRaw ? grammarFilterRaw.split(',') : [];
-  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1') || 1);
+  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const [source, setSource] = useState<SourceDetail | null>(null);
   const [sourceLoading, setSourceLoading] = useState(true);
@@ -82,18 +61,18 @@ export default function SourcePage() {
       .then(setScenesPage)
       .catch(() => setScenesPage(null))
       .finally(() => setScenesLoading(false));
-  }, [slug, locale, page, grammarFilterRaw]); // grammarFilterRaw is a stable string, not a new array each render
+  }, [slug, locale, page, grammarFilterRaw]); // eslint-disable-line react-hooks/exhaustive-deps -- grammarFilter is a new array each render; grammarFilterRaw is the stable string dep
 
   function updateParams(grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (grammar.length > 0) params.set('grammar_points', grammar.join(','));
-    if (newPage > 1) params.set('page', String(newPage));
+    if (grammar.length > 0) {params.set('grammar_points', grammar.join(','));}
+    if (newPage > 1) {params.set('page', String(newPage));}
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
 
-  if (sourceLoading) return <PageLoader />;
-  if (!source) return <NotFound />;
+  if (sourceLoading) {return <PageLoader />;}
+  if (!source) {return <NotFound />;}
 
   const SourceTypeIcon = getSourceTypeIcon(source.type);
   const displayTitle =
@@ -184,7 +163,8 @@ export default function SourcePage() {
       ) : (
         <Stack
           gap="lg"
-          style={{ opacity: scenesLoading ? 0.5 : 1, transition: 'opacity 0.15s ease' }}
+          opacity={scenesLoading ? 0.5 : 1}
+          style={{ transition: 'opacity 0.15s ease' }}
         >
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
             {scenesPage.scenes.map((scene) => (

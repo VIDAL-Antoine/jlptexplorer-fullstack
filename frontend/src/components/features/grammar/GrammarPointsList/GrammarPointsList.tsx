@@ -108,7 +108,7 @@ export function GrammarPointsList() {
                   withBorder
                   component={Link}
                   href={`/grammar-points/${gp.slug}`}
-                  style={{ textDecoration: 'none' }}
+                  td="none"
                 >
                   <Group justify="space-between" wrap="nowrap" align="flex-start">
                     <Title order={1} flex={1}>
@@ -130,7 +130,8 @@ export function GrammarPointsList() {
                   padding="md"
                   radius="md"
                   withBorder
-                  style={{ opacity: 0.45, cursor: 'default' }}
+                  opacity={0.45}
+                  style={{ cursor: 'default' }}
                 >
                   <Group justify="space-between" wrap="nowrap" align="flex-start">
                     <Title order={1} flex={1}>
