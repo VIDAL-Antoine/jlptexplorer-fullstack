@@ -1,12 +1,4 @@
-import {
-  IconChevronDown,
-  IconChevronUp,
-  IconDeviceGamepad2,
-  IconDeviceTv,
-  IconMovie,
-  IconMusic,
-  IconTag,
-} from '@tabler/icons-react';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import {
   Anchor,
@@ -25,32 +17,13 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { useRef } from 'react';
 import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
-import { useSettings } from '../../../../contexts/SettingsContext';
+import { useSettings } from '../../../../hooks/useSettings';
 import { Link } from '../../../../i18n/navigation';
 import { type SceneWithDetails } from '../../../../lib/api';
+import { formatTime } from '../../../../utils/time';
+import { getSourceTypeIcon } from '../../../../utils/icons';
 import { AnnotatedText } from '../../grammar/AnnotatedText/AnnotatedText';
 import { YoutubePlayer, type YoutubePlayerHandle } from '../YoutubePlayer/YoutubePlayer';
-
-type SourceType = SceneWithDetails['sources']['type'];
-type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
-
-const SOURCE_TYPE_ICONS: Partial<Record<SourceType, IconComponent>> = {
-  game: IconDeviceGamepad2,
-  anime: IconDeviceTv,
-  series: IconDeviceTv,
-  movie: IconMovie,
-  music: IconMusic,
-};
-
-function getSourceTypeIcon(type: SourceType): IconComponent {
-  return SOURCE_TYPE_ICONS[type] ?? IconTag;
-}
-
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${m}:${String(s).padStart(2, '0')}`;
-}
 
 interface SceneCardProps {
   scene: SceneWithDetails;

@@ -2,14 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import {
-  IconDeviceGamepad2,
-  IconDeviceTv,
-  IconMovie,
-  IconMusic,
-  IconSearch,
-  IconTag,
-} from '@tabler/icons-react';
+import { IconSearch } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   AspectRatio,
@@ -24,24 +17,11 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { useSettings } from '../../../../contexts/SettingsContext';
+import { useSettings } from '../../../../hooks/useSettings';
 import { Link } from '../../../../i18n/navigation';
 import { api, type Source } from '../../../../lib/api';
+import { getSourceTypeIcon } from '../../../../utils/icons';
 import { PageLoader } from '../../../ui/PageLoader/PageLoader';
-
-type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
-
-const TYPE_ICONS: Partial<Record<Source['type'], IconComponent>> = {
-  game: IconDeviceGamepad2,
-  anime: IconDeviceTv,
-  series: IconDeviceTv,
-  movie: IconMovie,
-  music: IconMusic,
-};
-
-function getTypeIcon(type: Source['type']): IconComponent {
-  return TYPE_ICONS[type] ?? IconTag;
-}
 
 export function SourcesList() {
   const t = useTranslations('SourcesList');
@@ -106,7 +86,7 @@ export function SourcesList() {
             {t('all')}
           </Chip>
           {availableTypes.map((type) => {
-            const Icon = getTypeIcon(type);
+            const Icon = getSourceTypeIcon(type);
             return (
               <Chip key={type} value={type} size="xl">
                 <Group gap={6} wrap="nowrap">
@@ -121,7 +101,7 @@ export function SourcesList() {
 
       <SimpleGrid cols={{ base: 3, sm: 3, md: 4, lg: 8 }}>
         {filtered.map((source) => {
-          const TypeIcon = getTypeIcon(source.type);
+          const TypeIcon = getSourceTypeIcon(source.type);
           return (
             <Card
               key={source.id}
