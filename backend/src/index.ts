@@ -1,5 +1,6 @@
 import "dotenv/config";
 import fastify from "fastify";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import { registerCors } from "@/plugins/cors";
 import { sourcesPublicRoutes, sourcesAdminRoutes } from "@/routes/v1/sources";
 import { scenesPublicRoutes, scenesAdminRoutes } from "@/routes/v1/scenes";
@@ -8,6 +9,8 @@ import { speakersPublicRoutes, speakersAdminRoutes } from "@/routes/v1/speakers"
 
 async function start() {
   const server = fastify({ logger: true });
+  server.setValidatorCompiler(validatorCompiler);
+  server.setSerializerCompiler(serializerCompiler);
 
   await registerCors(server);
 

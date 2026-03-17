@@ -1,6 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import * as speakersService from "@/services/speakers.service";
-import type { LocaleParams } from "@/types/common";
+import type { LocaleParams } from "@/schemas/common.schema";
+import type { SpeakerBody } from "@/schemas/speakers.schema";
 
 export async function listSpeakers(
   request: FastifyRequest<{ Params: LocaleParams }>,
@@ -19,15 +20,7 @@ export async function getSpeaker(
 }
 
 export async function createSpeaker(
-  request: FastifyRequest<{
-    Body: {
-      slug: string;
-      name_japanese?: string;
-      image_url?: string;
-      translations: Record<string, string>;
-      descriptions?: Record<string, string>;
-    };
-  }>,
+  request: FastifyRequest<{ Body: SpeakerBody }>,
   reply: FastifyReply
 ) {
   const speaker = await speakersService.createSpeaker(request.body);
@@ -35,16 +28,7 @@ export async function createSpeaker(
 }
 
 export async function updateSpeaker(
-  request: FastifyRequest<{
-    Params: { slug: string };
-    Body: {
-      slug: string;
-      name_japanese?: string;
-      image_url?: string;
-      translations: Record<string, string>;
-      descriptions?: Record<string, string>;
-    };
-  }>,
+  request: FastifyRequest<{ Params: { slug: string }; Body: SpeakerBody }>,
   reply: FastifyReply
 ) {
   const result = await speakersService.updateSpeaker(request.params.slug, request.body);

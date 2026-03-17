@@ -1,13 +1,15 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import * as grammarPointsService from "@/services/grammar-points.service";
-import type { jlpt_level } from "@/generated/prisma/enums";
-import type { LocaleParams } from "@/types/common";
+import type { LocaleParams } from "@/schemas/common.schema";
+import type {
+  GrammarPointBody,
+  GrammarPointParams,
+  ListGrammarPointsQuery,
+  GrammarPointScenesQuery,
+} from "@/schemas/grammar-points.schema";
 
 export async function listGrammarPoints(
-  request: FastifyRequest<{
-    Params: LocaleParams;
-    Querystring: { jlpt_level?: jlpt_level; search?: string; page?: string; limit?: string };
-  }>,
+  request: FastifyRequest<{ Params: LocaleParams; Querystring: ListGrammarPointsQuery }>,
   _reply: FastifyReply
 ) {
   const { locale } = request.params;
@@ -19,7 +21,7 @@ export async function listGrammarPoints(
 }
 
 export async function getGrammarPoint(
-  request: FastifyRequest<{ Params: LocaleParams & { slug: string } }>,
+  request: FastifyRequest<{ Params: GrammarPointParams }>,
   reply: FastifyReply
 ) {
   const result = await grammarPointsService.getGrammarPoint(
@@ -31,10 +33,7 @@ export async function getGrammarPoint(
 }
 
 export async function getGrammarPointScenes(
-  request: FastifyRequest<{
-    Params: LocaleParams & { slug: string };
-    Querystring: { page?: string; limit?: string; sources?: string };
-  }>,
+  request: FastifyRequest<{ Params: GrammarPointParams; Querystring: GrammarPointScenesQuery }>,
   reply: FastifyReply
 ) {
   const { locale, slug } = request.params;
@@ -53,17 +52,7 @@ export async function getGrammarPointScenes(
 }
 
 export async function createGrammarPoint(
-  request: FastifyRequest<{
-    Params: LocaleParams;
-    Body: {
-      slug: string;
-      title: string;
-      romaji: string;
-      meaning: string;
-      jlpt_level: jlpt_level;
-      notes?: string;
-    };
-  }>,
+  request: FastifyRequest<{ Params: LocaleParams; Body: GrammarPointBody }>,
   reply: FastifyReply
 ) {
   const grammarPoint = await grammarPointsService.createGrammarPoint(
@@ -74,17 +63,7 @@ export async function createGrammarPoint(
 }
 
 export async function updateGrammarPoint(
-  request: FastifyRequest<{
-    Params: LocaleParams & { slug: string };
-    Body: {
-      slug: string;
-      title: string;
-      romaji: string;
-      meaning: string;
-      jlpt_level: jlpt_level;
-      notes?: string;
-    };
-  }>,
+  request: FastifyRequest<{ Params: GrammarPointParams; Body: GrammarPointBody }>,
   reply: FastifyReply
 ) {
   const result = await grammarPointsService.updateGrammarPoint(
@@ -97,7 +76,7 @@ export async function updateGrammarPoint(
 }
 
 export async function deleteGrammarPoint(
-  request: FastifyRequest<{ Params: LocaleParams & { slug: string } }>,
+  request: FastifyRequest<{ Params: GrammarPointParams }>,
   reply: FastifyReply
 ) {
   await grammarPointsService.deleteGrammarPoint(request.params.slug);

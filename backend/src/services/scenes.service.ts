@@ -4,7 +4,7 @@ import * as scenesRepository from "@/repositories/scenes.repository";
 import * as sourcesRepository from "@/repositories/sources.repository";
 import { findGrammarPointsBySlugIn } from "@/repositories/grammar-points.repository";
 import { findSpeakersBySlugIn } from "@/repositories/speakers.repository";
-import type { TranscriptLineInput } from "@/types/common";
+import type { TranscriptLineInput } from "@/schemas/scenes.schema";
 import type { jlpt_level } from "@/generated/prisma/enums";
 
 async function resolveGrammarPointSlugs(lines: TranscriptLineInput[]): Promise<Map<string, number>> {

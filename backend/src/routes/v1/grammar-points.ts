@@ -1,5 +1,11 @@
 import type { FastifyInstance } from "fastify";
-import { listGrammarPointsSchema } from "@/schemas/grammar-points.schema";
+import {
+  listGrammarPointsQuery,
+  grammarPointBody,
+  grammarPointParams,
+  grammarPointScenesQuery,
+} from "@/schemas/grammar-points.schema";
+import { localeParams } from "@/schemas/common.schema";
 import {
   listGrammarPoints,
   getGrammarPoint,
@@ -10,10 +16,10 @@ import {
 } from "@/controllers/grammar-points.controller";
 
 export async function grammarPointsRoutes(server: FastifyInstance) {
-  server.get("/", { schema: listGrammarPointsSchema }, listGrammarPoints);
-  server.get("/:slug", getGrammarPoint);
-  server.get("/:slug/scenes", getGrammarPointScenes);
-  server.post("/", createGrammarPoint);
-  server.put("/:slug", updateGrammarPoint);
-  server.delete("/:slug", deleteGrammarPoint);
+  server.get("/", { schema: { params: localeParams, querystring: listGrammarPointsQuery } }, listGrammarPoints);
+  server.get("/:slug", { schema: { params: grammarPointParams } }, getGrammarPoint);
+  server.get("/:slug/scenes", { schema: { params: grammarPointParams, querystring: grammarPointScenesQuery } }, getGrammarPointScenes);
+  server.post("/", { schema: { params: localeParams, body: grammarPointBody } }, createGrammarPoint);
+  server.put("/:slug", { schema: { params: grammarPointParams, body: grammarPointBody } }, updateGrammarPoint);
+  server.delete("/:slug", { schema: { params: grammarPointParams } }, deleteGrammarPoint);
 }

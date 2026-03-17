@@ -1,10 +1,10 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import * as sourcesService from "@/services/sources.service";
-import type { source_type } from "@/generated/prisma/enums";
-import type { LocaleParams } from "@/types/common";
+import type { LocaleParams } from "@/schemas/common.schema";
+import type { SourceBody, ListSourcesQuery, SourceSceneQuery } from "@/schemas/sources.schema";
 
 export async function listSources(
-  request: FastifyRequest<{ Params: LocaleParams; Querystring: { type?: source_type } }>,
+  request: FastifyRequest<{ Params: LocaleParams; Querystring: ListSourcesQuery }>,
   _reply: FastifyReply
 ) {
   return sourcesService.listSources(request.params.locale, request.query.type);
@@ -20,10 +20,7 @@ export async function getSource(
 }
 
 export async function getSourceScenes(
-  request: FastifyRequest<{
-    Params: LocaleParams & { slug: string };
-    Querystring: { page?: string; limit?: string; grammar_points?: string };
-  }>,
+  request: FastifyRequest<{ Params: LocaleParams & { slug: string }; Querystring: SourceSceneQuery }>,
   reply: FastifyReply
 ) {
   const { locale, slug } = request.params;
@@ -38,15 +35,7 @@ export async function getSourceScenes(
 }
 
 export async function createSource(
-  request: FastifyRequest<{
-    Body: {
-      slug: string;
-      japanese_title?: string;
-      type: source_type;
-      cover_image_url?: string;
-      translations: Record<string, string>;
-    };
-  }>,
+  request: FastifyRequest<{ Body: SourceBody }>,
   reply: FastifyReply
 ) {
   const source = await sourcesService.createSource(request.body);
@@ -54,16 +43,7 @@ export async function createSource(
 }
 
 export async function updateSource(
-  request: FastifyRequest<{
-    Params: { slug: string };
-    Body: {
-      slug: string;
-      japanese_title?: string;
-      type: source_type;
-      cover_image_url?: string;
-      translations: Record<string, string>;
-    };
-  }>,
+  request: FastifyRequest<{ Params: { slug: string }; Body: SourceBody }>,
   reply: FastifyReply
 ) {
   const result = await sourcesService.updateSource(request.params.slug, request.body);
