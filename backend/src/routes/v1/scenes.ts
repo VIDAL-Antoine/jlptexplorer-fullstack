@@ -6,7 +6,7 @@ import {
   updateScene,
   deleteScene,
   updateTranslations,
-} from "../../controllers/scenes.controller.js";
+} from "@/controllers/scenes.controller";
 
 export async function scenesPublicRoutes(server: FastifyInstance) {
   server.get("/", listScenes);

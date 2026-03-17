@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { listSourcesSchema } from "../../schemas/sources.schema.js";
+import { listSourcesSchema } from "@/schemas/sources.schema";
 import {
   listSources,
   getSource,
@@ -7,7 +7,7 @@ import {
   createSource,
   updateSource,
   deleteSource,
-} from "../../controllers/sources.controller.js";
+} from "@/controllers/sources.controller";
 
 export async function sourcesPublicRoutes(server: FastifyInstance) {
   server.get("/", { schema: listSourcesSchema }, listSources);

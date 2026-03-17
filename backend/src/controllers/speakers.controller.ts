@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import * as speakersService from "../services/speakers.service.js";
-import type { LocaleParams } from "../types/common.js";
+import * as speakersService from "@/services/speakers.service";
+import type { LocaleParams } from "@/types/common";
 
 export async function listSpeakers(
   request: FastifyRequest<{ Params: LocaleParams }>,

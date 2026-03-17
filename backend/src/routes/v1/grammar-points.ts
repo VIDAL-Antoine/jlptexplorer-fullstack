@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { listGrammarPointsSchema } from "../../schemas/grammar-points.schema.js";
+import { listGrammarPointsSchema } from "@/schemas/grammar-points.schema";
 import {
   listGrammarPoints,
   getGrammarPoint,
@@ -7,7 +7,7 @@ import {
   createGrammarPoint,
   updateGrammarPoint,
   deleteGrammarPoint,
-} from "../../controllers/grammar-points.controller.js";
+} from "@/controllers/grammar-points.controller";
 
 export async function grammarPointsRoutes(server: FastifyInstance) {
   server.get("/", { schema: listGrammarPointsSchema }, listGrammarPoints);

@@ -1,10 +1,10 @@
 import "dotenv/config";
 import fastify from "fastify";
-import { registerCors } from "./plugins/cors.js";
-import { sourcesPublicRoutes, sourcesAdminRoutes } from "./routes/v1/sources.js";
-import { scenesPublicRoutes, scenesAdminRoutes } from "./routes/v1/scenes.js";
-import { grammarPointsRoutes } from "./routes/v1/grammar-points.js";
-import { speakersPublicRoutes, speakersAdminRoutes } from "./routes/v1/speakers.js";
+import { registerCors } from "@/plugins/cors";
+import { sourcesPublicRoutes, sourcesAdminRoutes } from "@/routes/v1/sources";
+import { scenesPublicRoutes, scenesAdminRoutes } from "@/routes/v1/scenes";
+import { grammarPointsRoutes } from "@/routes/v1/grammar-points";
+import { speakersPublicRoutes, speakersAdminRoutes } from "@/routes/v1/speakers";
 
 async function start() {
   const server = fastify({ logger: true });

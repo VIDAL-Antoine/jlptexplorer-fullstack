@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import * as scenesService from "../services/scenes.service.js";
-import type { LocaleParams, TranscriptLineInput } from "../types/common.js";
-import type { jlpt_level } from "../generated/prisma/enums.js";
+import * as scenesService from "@/services/scenes.service";
+import type { LocaleParams, TranscriptLineInput } from "@/types/common";
+import type { jlpt_level } from "@/generated/prisma/enums";
 
 export async function listScenes(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: { source_id?: string; jlpt_level?: jlpt_level } }>,

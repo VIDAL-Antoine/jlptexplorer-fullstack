@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import * as sourcesService from "../services/sources.service.js";
-import type { source_type } from "../generated/prisma/enums.js";
-import type { LocaleParams } from "../types/common.js";
+import * as sourcesService from "@/services/sources.service";
+import type { source_type } from "@/generated/prisma/enums";
+import type { LocaleParams } from "@/types/common";
 
 export async function listSources(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: { type?: source_type } }>,

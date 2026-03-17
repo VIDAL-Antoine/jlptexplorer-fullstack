@@ -1,6 +1,6 @@
-import { prisma } from "../config/prisma.js";
-import type { Prisma } from "../generated/prisma/client.js";
-import type { jlpt_level } from "../generated/prisma/enums.js";
+import { prisma } from "@/config/prisma";
+import type { Prisma } from "@/generated/prisma/client";
+import type { jlpt_level } from "@/generated/prisma/enums";
 
 export function buildSceneInclude(locale: string) {
   return {

@@ -5,7 +5,7 @@ import {
   createSpeaker,
   updateSpeaker,
   deleteSpeaker,
-} from "../../controllers/speakers.controller.js";
+} from "@/controllers/speakers.controller";
 
 export async function speakersPublicRoutes(server: FastifyInstance) {
   server.get("/", listSpeakers);

@@ -1,6 +1,6 @@
-import { flattenSource, flattenGrammarPoint, flattenScene } from "../utils/flatten.js";
-import * as sourcesRepository from "../repositories/sources.repository.js";
-import type { source_type } from "../generated/prisma/enums.js";
+import { flattenSource, flattenGrammarPoint, flattenScene } from "@/utils/flatten";
+import * as sourcesRepository from "@/repositories/sources.repository";
+import type { source_type } from "@/generated/prisma/enums";
 
 export async function listSources(locale: string, type?: source_type) {
   const sources = await sourcesRepository.findSources(locale, type);

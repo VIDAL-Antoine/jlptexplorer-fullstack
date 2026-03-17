@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import * as grammarPointsService from "../services/grammar-points.service.js";
-import type { jlpt_level } from "../generated/prisma/enums.js";
-import type { LocaleParams } from "../types/common.js";
+import * as grammarPointsService from "@/services/grammar-points.service";
+import type { jlpt_level } from "@/generated/prisma/enums";
+import type { LocaleParams } from "@/types/common";
 
 export async function listGrammarPoints(
   request: FastifyRequest<{

@@ -1,11 +1,11 @@
-import { parseTime } from "../utils/parse-time.js";
-import { flattenScene, flattenSceneAll } from "../utils/flatten.js";
-import * as scenesRepository from "../repositories/scenes.repository.js";
-import * as sourcesRepository from "../repositories/sources.repository.js";
-import { findGrammarPointsBySlugIn } from "../repositories/grammar-points.repository.js";
-import { findSpeakersBySlugIn } from "../repositories/speakers.repository.js";
-import type { TranscriptLineInput } from "../types/common.js";
-import type { jlpt_level } from "../generated/prisma/enums.js";
+import { parseTime } from "@/utils/parse-time";
+import { flattenScene, flattenSceneAll } from "@/utils/flatten";
+import * as scenesRepository from "@/repositories/scenes.repository";
+import * as sourcesRepository from "@/repositories/sources.repository";
+import { findGrammarPointsBySlugIn } from "@/repositories/grammar-points.repository";
+import { findSpeakersBySlugIn } from "@/repositories/speakers.repository";
+import type { TranscriptLineInput } from "@/types/common";
+import type { jlpt_level } from "@/generated/prisma/enums";
 
 async function resolveGrammarPointSlugs(lines: TranscriptLineInput[]): Promise<Map<string, number>> {
   const allSlugs = [...new Set(lines.flatMap((l) => l.grammar_points?.map((gp) => gp.slug) ?? []))];
