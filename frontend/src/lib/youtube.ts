@@ -37,9 +37,15 @@ declare global {
 let apiReady: Promise<void> | null = null;
 
 export function loadYouTubeApi(): Promise<void> {
-  if (typeof window === 'undefined') {return Promise.resolve();}
-  if (window.YT?.Player) {return Promise.resolve();}
-  if (apiReady) {return apiReady;}
+  if (typeof window === 'undefined') {
+    return Promise.resolve();
+  }
+  if (window.YT?.Player) {
+    return Promise.resolve();
+  }
+  if (apiReady) {
+    return apiReady;
+  }
 
   apiReady = new Promise((resolve) => {
     const prev = window.onYouTubeIframeAPIReady;

@@ -1,11 +1,11 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
 import { IconMoon, IconSettings, IconSun } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import { ActionIcon, Anchor, Burger, Group, Text, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { SettingsDrawer } from '@/components/ui/SettingsDrawer/SettingsDrawer';
+import { Link } from '@/i18n/navigation';
 import classes from './Header.module.css';
 
 interface HeaderProps {
@@ -39,7 +39,12 @@ export function Header({ opened, toggle }: HeaderProps) {
             <IconSun size={18} className={classes.iconLight} />
             <IconMoon size={18} className={classes.iconDark} />
           </ActionIcon>
-          <ActionIcon variant="default" size="lg" onClick={openSettings} aria-label={t('openSettings')}>
+          <ActionIcon
+            variant="default"
+            size="lg"
+            onClick={openSettings}
+            aria-label={t('openSettings')}
+          >
             <IconSettings size={18} />
           </ActionIcon>
         </Group>

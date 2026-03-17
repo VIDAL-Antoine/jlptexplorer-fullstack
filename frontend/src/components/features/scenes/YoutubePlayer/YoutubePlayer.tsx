@@ -32,7 +32,9 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
       let cancelled = false;
 
       loadYouTubeApi().then(() => {
-        if (cancelled) {return;}
+        if (cancelled) {
+          return;
+        }
 
         new window.YT.Player(elementId, {
           videoId,
@@ -43,7 +45,9 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
           },
           events: {
             onReady: (event) => {
-              if (!cancelled) {playerRef.current = event.target;}
+              if (!cancelled) {
+                playerRef.current = event.target;
+              }
             },
             onStateChange: (event) => {
               if (event.data === window.YT.PlayerState.ENDED) {
@@ -58,8 +62,12 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
       // Poll every 500ms to block seeks outside [startTime, endTime]
       const interval = setInterval(() => {
         const player = playerRef.current;
-        if (!player) {return;}
-        if (player.getPlayerState() !== YT_PLAYING) {return;}
+        if (!player) {
+          return;
+        }
+        if (player.getPlayerState() !== YT_PLAYING) {
+          return;
+        }
 
         const t = player.getCurrentTime();
         if (t < startTime || t > endTime) {

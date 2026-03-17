@@ -14,13 +14,13 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
+import NotFound from '@/app/[lang]/not-found';
 import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { api, type GrammarPointDetail, type GrammarPointScenesPage } from '@/lib/api';
-import NotFound from '@/app/[lang]/not-found';
 
 const PAGE_SIZE = 12;
 
@@ -65,14 +65,22 @@ export default function GrammarPointPage() {
 
   function updateParams(sources: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (sources.length > 0) {params.set('source', sources.join(','));}
-    if (newPage > 1) {params.set('page', String(newPage));}
+    if (sources.length > 0) {
+      params.set('source', sources.join(','));
+    }
+    if (newPage > 1) {
+      params.set('page', String(newPage));
+    }
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
 
-  if (grammarPointLoading) {return <PageLoader />;}
-  if (!grammarPoint) {return <NotFound />;}
+  if (grammarPointLoading) {
+    return <PageLoader />;
+  }
+  if (!grammarPoint) {
+    return <NotFound />;
+  }
 
   const selectedSources = grammarPoint.available_sources.filter((s) =>
     sourceFilter.includes(s.slug)

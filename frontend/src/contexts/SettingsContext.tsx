@@ -29,7 +29,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     key: 'setting-show-dialogue-translations',
     defaultValue: true,
   });
-  const [grammarPointTranscriptScript, setGrammarPointTranscriptScript] = useLocalStorage<'romaji' | 'kana'>({
+  const [grammarPointTranscriptScript, setGrammarPointTranscriptScript] = useLocalStorage<
+    'romaji' | 'kana'
+  >({
     key: 'setting-grammar-point-script',
     defaultValue: 'kana',
   });
@@ -54,6 +56,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
 export function useSettings() {
   const ctx = useContext(SettingsContext);
-  if (!ctx) {throw new Error('useSettings must be used within SettingsProvider');}
+  if (!ctx) {
+    throw new Error('useSettings must be used within SettingsProvider');
+  }
   return ctx;
 }

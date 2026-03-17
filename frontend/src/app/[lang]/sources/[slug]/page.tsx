@@ -16,13 +16,13 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
+import NotFound from '@/app/[lang]/not-found';
 import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { api, type SourceDetail, type SourceScenesPage } from '@/lib/api';
 import { getSourceTypeIcon } from '@/utils/icons';
-import NotFound from '@/app/[lang]/not-found';
 
 const PAGE_SIZE = 12;
 
@@ -65,14 +65,22 @@ export default function SourcePage() {
 
   function updateParams(grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (grammar.length > 0) {params.set('grammar_points', grammar.join(','));}
-    if (newPage > 1) {params.set('page', String(newPage));}
+    if (grammar.length > 0) {
+      params.set('grammar_points', grammar.join(','));
+    }
+    if (newPage > 1) {
+      params.set('page', String(newPage));
+    }
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
 
-  if (sourceLoading) {return <PageLoader />;}
-  if (!source) {return <NotFound />;}
+  if (sourceLoading) {
+    return <PageLoader />;
+  }
+  if (!source) {
+    return <NotFound />;
+  }
 
   const SourceTypeIcon = getSourceTypeIcon(source.type);
   const displayTitle =
@@ -91,7 +99,9 @@ export default function SourcePage() {
 
   const toItem = (gp: { slug: string; title: string; romaji: string; meaning: string | null }) => ({
     value: gp.slug,
-    label: [gp.romaji ? `${gp.title} (${gp.romaji})` : gp.title, gp.meaning].filter(Boolean).join(' — '),
+    label: [gp.romaji ? `${gp.title} (${gp.romaji})` : gp.title, gp.meaning]
+      .filter(Boolean)
+      .join(' — '),
   });
 
   const selectData = (['N5', 'N4', 'N3', 'N2', 'N1'] as const).flatMap((level) => {

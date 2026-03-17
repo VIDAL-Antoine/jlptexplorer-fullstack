@@ -16,6 +16,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
 import { useSettings } from '@/hooks/useSettings';
@@ -23,7 +24,6 @@ import { Link } from '@/i18n/navigation';
 import { api, type Source } from '@/lib/api';
 import { getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
-import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 
 const VALID_SOURCE_TYPES = new Set(['game', 'anime', 'movie', 'series', 'music']);
 
@@ -46,7 +46,9 @@ export function SourcesList() {
     setParam('type', v === 'all' ? null : v);
   };
 
-  if (loading || !sources) { return <PageLoader />; }
+  if (loading || !sources) {
+    return <PageLoader />;
+  }
 
   const availableTypes = Array.from(new Set(sources.map((s) => s.type))) as Source['type'][];
   const filtered = sources.filter((s) => {

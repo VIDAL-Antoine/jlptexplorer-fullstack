@@ -17,12 +17,12 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
 import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
-import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 
 const LEVELS = Object.keys(JLPT_LEVEL_COLORS);
 const PAGE_SIZE = 100;
@@ -149,7 +149,7 @@ export function GrammarPointsList() {
                     {t('noScenes')}
                   </Badge>
                 </Card>
-              ),
+              )
             )}
           </SimpleGrid>
           {data.totalPages > 1 && (

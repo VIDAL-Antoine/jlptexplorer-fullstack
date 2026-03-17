@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import {
@@ -15,17 +16,19 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useRef } from 'react';
+import { AnnotatedText } from '@/components/features/grammar/AnnotatedText/AnnotatedText';
+import {
+  YoutubePlayer,
+  type YoutubePlayerHandle,
+} from '@/components/features/scenes/YoutubePlayer/YoutubePlayer';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { useSettings } from '@/hooks/useSettings';
 import { Link } from '@/i18n/navigation';
 import { type SceneWithDetails } from '@/lib/api';
-import { formatTime } from '@/utils/time';
-import { getSourceTypeIcon } from '@/utils/icons';
-import { getLocalizedTitle, getLocalizedName } from '@/utils/i18n';
 import { deduplicateAndSortGrammarPoints } from '@/utils/grammarPoints';
-import { AnnotatedText } from '@/components/features/grammar/AnnotatedText/AnnotatedText';
-import { YoutubePlayer, type YoutubePlayerHandle } from '@/components/features/scenes/YoutubePlayer/YoutubePlayer';
+import { getLocalizedName, getLocalizedTitle } from '@/utils/i18n';
+import { getSourceTypeIcon } from '@/utils/icons';
+import { formatTime } from '@/utils/time';
 
 interface SceneCardProps {
   scene: SceneWithDetails;
@@ -71,9 +74,7 @@ export function SceneCard({
             underline="never"
             c="inherit"
           >
-            <Title order={4}>
-              {getLocalizedTitle(scene.sources, sourceTitleLang)}
-            </Title>
+            <Title order={4}>{getLocalizedTitle(scene.sources, sourceTitleLang)}</Title>
           </Anchor>
           <Anchor
             component={Link}
@@ -110,8 +111,14 @@ export function SceneCard({
                 key={line.id}
                 p="xs"
                 bdrs="var(--mantine-radius-sm)"
-                bg={hasGrammar ? 'light-dark(var(--mantine-color-yellow-0), rgba(255, 212, 59, 0.08))' : undefined}
-                style={hasGrammar ? { borderLeft: '3px solid var(--mantine-color-yellow-5)' } : undefined}
+                bg={
+                  hasGrammar
+                    ? 'light-dark(var(--mantine-color-yellow-0), rgba(255, 212, 59, 0.08))'
+                    : undefined
+                }
+                style={
+                  hasGrammar ? { borderLeft: '3px solid var(--mantine-color-yellow-5)' } : undefined
+                }
               >
                 <Group gap="xs" align="baseline" mb={2}>
                   {line.start_time !== null && line.start_time !== undefined && (
@@ -149,25 +156,27 @@ export function SceneCard({
                 {grammarPoints.length > 0 && (
                   <Group gap="xs" mt="xs">
                     {deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) =>
-                        tlgp.grammar_points ? (
-                          <Badge
-                            key={tlgp.id}
-                            size="xs"
-                            color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
-                            variant={
-                              currentGrammarPointIds?.includes(tlgp.grammar_point_id) ? 'filled' : 'light'
-                            }
-                            tt="lowercase"
-                            component={Link}
-                            href={`/grammar-points/${tlgp.grammar_points.slug}`}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            {grammarPointTranscriptScript === 'romaji'
-                              ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
-                              : tlgp.grammar_points.title}
-                          </Badge>
-                        ) : null
-                      )}
+                      tlgp.grammar_points ? (
+                        <Badge
+                          key={tlgp.id}
+                          size="xs"
+                          color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
+                          variant={
+                            currentGrammarPointIds?.includes(tlgp.grammar_point_id)
+                              ? 'filled'
+                              : 'light'
+                          }
+                          tt="lowercase"
+                          component={Link}
+                          href={`/grammar-points/${tlgp.grammar_points.slug}`}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          {grammarPointTranscriptScript === 'romaji'
+                            ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
+                            : tlgp.grammar_points.title}
+                        </Badge>
+                      ) : null
+                    )}
                   </Group>
                 )}
               </Box>

@@ -7,13 +7,17 @@ export type Segment =
 export function buildSegments(text: string, annotations: TranscriptLineGrammarPoint[]): Segment[] {
   const withSpans = annotations.filter((a) => a.start_index !== null && a.end_index !== null);
 
-  if (!withSpans.length) { return [{ type: 'plain', text }]; }
+  if (!withSpans.length) {
+    return [{ type: 'plain', text }];
+  }
 
   // Group overlapping annotations by their span
   const spanMap = new Map<string, TranscriptLineGrammarPoint[]>();
   for (const annotation of withSpans) {
     const key = `${annotation.start_index}:${annotation.end_index}`;
-    if (!spanMap.has(key)) { spanMap.set(key, []); }
+    if (!spanMap.has(key)) {
+      spanMap.set(key, []);
+    }
     spanMap.get(key)!.push(annotation);
   }
 
@@ -45,7 +49,9 @@ export function buildSegments(text: string, annotations: TranscriptLineGrammarPo
       if (last?.type === 'annotated') {
         last.annotations.push(...span.annotations);
       }
-      if (span.end > cursor) { cursor = span.end; }
+      if (span.end > cursor) {
+        cursor = span.end;
+      }
     }
   }
 
