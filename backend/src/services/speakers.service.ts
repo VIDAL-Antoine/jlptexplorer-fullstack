@@ -1,5 +1,5 @@
-import { flattenSpeaker, flattenSource, flattenGrammarPoint } from "@/utils/flatten";
-import * as speakersRepository from "@/repositories/speakers.repository";
+import { flattenSpeaker, flattenSource, flattenGrammarPoint } from '@/utils/flatten';
+import * as speakersRepository from '@/repositories/speakers.repository';
 
 export async function listSpeakers(locale: string) {
   const speakers = await speakersRepository.findSpeakers(locale);
@@ -8,7 +8,9 @@ export async function listSpeakers(locale: string) {
 
 export async function getSpeaker(slug: string, locale: string) {
   const speaker = await speakersRepository.findSpeakerBySlug(slug, locale);
-  if (!speaker) {return null;}
+  if (!speaker) {
+    return null;
+  }
 
   return {
     ...flattenSpeaker(speaker),
@@ -37,7 +39,7 @@ export async function createSpeaker(data: {
   return {
     ...speaker,
     translations: Object.fromEntries(
-      speaker.translations.map((t) => [t.locale, { name: t.name, description: t.description }])
+      speaker.translations.map((t) => [t.locale, { name: t.name, description: t.description }]),
     ),
   };
 }
@@ -50,16 +52,18 @@ export async function updateSpeaker(
     image_url?: string;
     translations: Record<string, string>;
     descriptions?: Record<string, string>;
-  }
+  },
 ) {
   const existing = await speakersRepository.findSpeakerIdBySlug(paramSlug);
-  if (!existing) {return null;}
+  if (!existing) {
+    return null;
+  }
 
   const speaker = await speakersRepository.updateSpeaker(paramSlug, existing.id, data);
   return {
     ...speaker,
     translations: Object.fromEntries(
-      speaker.translations.map((t) => [t.locale, { name: t.name, description: t.description }])
+      speaker.translations.map((t) => [t.locale, { name: t.name, description: t.description }]),
     ),
   };
 }

@@ -8,7 +8,11 @@ export function flattenGrammarPoint(gp: {
   translations: { meaning: string; notes: string | null }[];
 }) {
   const { translations, ...rest } = gp;
-  return { ...rest, meaning: translations[0]?.meaning ?? null, notes: translations[0]?.notes ?? null };
+  return {
+    ...rest,
+    meaning: translations[0]?.meaning ?? null,
+    notes: translations[0]?.notes ?? null,
+  };
 }
 
 export function flattenSource(source: {
@@ -32,7 +36,11 @@ export function flattenSpeaker(speaker: {
   translations: { name: string; description: string | null }[];
 }) {
   const { translations, ...rest } = speaker;
-  return { ...rest, name: translations[0]?.name ?? null, description: translations[0]?.description ?? null };
+  return {
+    ...rest,
+    name: translations[0]?.name ?? null,
+    description: translations[0]?.description ?? null,
+  };
 }
 
 export function flattenTranscriptLine(line: {
@@ -86,11 +94,13 @@ export function flattenScene(scene: {
   };
 }
 
-export function flattenSceneAll<T extends {
-  transcript_lines: Array<{
-    translations: Array<{ locale: string; translation: string | null }>;
-  }>;
-}>(scene: T) {
+export function flattenSceneAll<
+  T extends {
+    transcript_lines: Array<{
+      translations: Array<{ locale: string; translation: string | null }>;
+    }>;
+  },
+>(scene: T) {
   return {
     ...scene,
     transcript_lines: scene.transcript_lines.map((line) => {

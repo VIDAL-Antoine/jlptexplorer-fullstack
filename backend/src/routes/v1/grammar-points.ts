@@ -39,5 +39,9 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     { schema: { tags: TAGS, params: grammarPointParams, body: grammarPointBody } },
     updateGrammarPoint,
   );
-  server.delete('/:slug', { schema: { tags: TAGS, params: grammarPointParams } }, deleteGrammarPoint);
+  server.delete(
+    '/:slug',
+    { schema: { tags: TAGS, params: grammarPointParams } },
+    deleteGrammarPoint,
+  );
 }

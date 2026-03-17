@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { localeParams, paginationQuery } from "./common.schema";
+import { z } from 'zod';
+import { localeParams, paginationQuery } from './common.schema';
 
-export const jlptLevel = z.enum(["N5", "N4", "N3", "N2", "N1", "Other"]);
+export const jlptLevel = z.enum(['N5', 'N4', 'N3', 'N2', 'N1', 'Other']);
 
 export const listGrammarPointsQuery = z.object({
   jlpt_level: jlptLevel.optional(),

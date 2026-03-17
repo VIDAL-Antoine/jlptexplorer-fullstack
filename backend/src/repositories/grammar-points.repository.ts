@@ -1,10 +1,10 @@
-import { prisma } from "@/config/prisma";
-import { buildSceneInclude } from "@/repositories/scenes.repository";
-import type { jlpt_level } from "@/generated/prisma/enums";
+import { prisma } from '@/config/prisma';
+import { buildSceneInclude } from '@/repositories/scenes.repository';
+import type { jlpt_level } from '@/generated/prisma/enums';
 
 export async function findGrammarPoints(
   locale: string,
-  filters: { jlpt_level?: jlpt_level; search?: string }
+  filters: { jlpt_level?: jlpt_level; search?: string },
 ) {
   const { jlpt_level: jlptLevel, search } = filters;
   const where = {
@@ -12,13 +12,13 @@ export async function findGrammarPoints(
     ...(search
       ? {
           OR: [
-            { title: { contains: search, mode: "insensitive" as const } },
-            { romaji: { contains: search, mode: "insensitive" as const } },
+            { title: { contains: search, mode: 'insensitive' as const } },
+            { romaji: { contains: search, mode: 'insensitive' as const } },
             {
               translations: {
                 some: {
                   locale,
-                  meaning: { contains: search, mode: "insensitive" as const },
+                  meaning: { contains: search, mode: 'insensitive' as const },
                 },
               },
             },
@@ -29,7 +29,7 @@ export async function findGrammarPoints(
 
   return prisma.grammar_points.findMany({
     where,
-    orderBy: [{ jlpt_level: "asc" }, { title: "asc" }],
+    orderBy: [{ jlpt_level: 'asc' }, { title: 'asc' }],
     include: {
       translations: { where: { locale } },
       _count: { select: { transcript_line_grammar_points: true } },
@@ -83,7 +83,7 @@ export async function findGrammarPointMeta(grammarPointId: number, locale: strin
         },
       },
       include: { translations: { where: { locale } } },
-      orderBy: { id: "asc" },
+      orderBy: { id: 'asc' },
     }),
   ]);
 
@@ -93,7 +93,7 @@ export async function findGrammarPointMeta(grammarPointId: number, locale: strin
 export async function findGrammarPointScenes(
   grammarPointId: number,
   locale: string,
-  options: { sourceSlugs: string[]; page: number; limit: number }
+  options: { sourceSlugs: string[]; page: number; limit: number },
 ) {
   const { sourceSlugs, page, limit } = options;
   const where = {
@@ -111,7 +111,7 @@ export async function findGrammarPointScenes(
     prisma.scenes.findMany({
       where,
       include: buildSceneInclude(locale),
-      orderBy: [{ source_id: "asc" }, { episode_number: "asc" }, { start_time: "asc" }],
+      orderBy: [{ source_id: 'asc' }, { episode_number: 'asc' }, { start_time: 'asc' }],
       skip: (page - 1) * limit,
       take: limit,
     }),
@@ -131,7 +131,7 @@ export async function findGrammarPointScenes(
         },
       },
       include: { translations: { where: { locale } } },
-      orderBy: { id: "asc" },
+      orderBy: { id: 'asc' },
     }),
   ]);
 
@@ -170,7 +170,7 @@ export async function updateGrammarPoint(
     locale: string;
     meaning: string;
     notes?: string;
-  }
+  },
 ) {
   return prisma.grammar_points.update({
     where: { slug: paramSlug },

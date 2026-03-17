@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { localeParams, idParams } from "./common.schema";
-import { jlptLevel } from "./grammar-points.schema";
+import { z } from 'zod';
+import { localeParams, idParams } from './common.schema';
+import { jlptLevel } from './grammar-points.schema';
 
 export const listScenesQuery = z.object({
   source_id: z.string().optional(),
@@ -41,7 +41,7 @@ export const updateTranslationsBody = z.object({
     z.object({
       id: z.number().int().positive(),
       translation: z.string(),
-    })
+    }),
   ),
 });
 

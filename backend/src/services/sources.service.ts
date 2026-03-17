@@ -1,6 +1,6 @@
-import { flattenSource, flattenGrammarPoint, flattenScene } from "@/utils/flatten";
-import * as sourcesRepository from "@/repositories/sources.repository";
-import type { source_type } from "@/generated/prisma/enums";
+import { flattenSource, flattenGrammarPoint, flattenScene } from '@/utils/flatten';
+import * as sourcesRepository from '@/repositories/sources.repository';
+import type { source_type } from '@/generated/prisma/enums';
 
 export async function listSources(locale: string, type?: source_type) {
   const sources = await sourcesRepository.findSources(locale, type);
@@ -9,7 +9,9 @@ export async function listSources(locale: string, type?: source_type) {
 
 export async function getSource(slug: string, locale: string) {
   const source = await sourcesRepository.findSourceBySlug(slug, locale);
-  if (!source) {return null;}
+  if (!source) {
+    return null;
+  }
 
   const grammarPoints = Array.from(
     new Map(
@@ -18,8 +20,8 @@ export async function getSource(slug: string, locale: string) {
         .flatMap((l) => l.transcript_line_grammar_points)
         .map((tlgp) => tlgp.grammar_points)
         .filter((gp): gp is NonNullable<typeof gp> => gp !== null)
-        .map((gp) => [gp.id, flattenGrammarPoint(gp)])
-    ).values()
+        .map((gp) => [gp.id, flattenGrammarPoint(gp)]),
+    ).values(),
   );
 
   return {
@@ -40,15 +42,17 @@ export async function getSource(slug: string, locale: string) {
 export async function getSourceScenes(
   slug: string,
   locale: string,
-  options: { grammarPointSlugs: string[]; page: number; limit: number }
+  options: { grammarPointSlugs: string[]; page: number; limit: number },
 ) {
   const source = await sourcesRepository.findSourceIdBySlug(slug);
-  if (!source) {return null;}
+  if (!source) {
+    return null;
+  }
 
   const { scenes, total, availableGrammarPoints } = await sourcesRepository.findSourceScenes(
     source.id,
     locale,
-    options
+    options,
   );
 
   return {
@@ -82,10 +86,12 @@ export async function updateSource(
     type: source_type;
     cover_image_url?: string;
     translations: Record<string, string>;
-  }
+  },
 ) {
   const existing = await sourcesRepository.findSourceIdBySlug(paramSlug);
-  if (!existing) {return null;}
+  if (!existing) {
+    return null;
+  }
 
   const source = await sourcesRepository.updateSource(paramSlug, existing.id, data);
   return {

@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { paginationQuery } from "./common.schema";
+import { z } from 'zod';
+import { paginationQuery } from './common.schema';
 
-export const sourceType = z.enum(["game", "anime", "movie", "series", "music"]);
+export const sourceType = z.enum(['game', 'anime', 'movie', 'series', 'music']);
 
 export const listSourcesQuery = z.object({
   type: sourceType.optional(),

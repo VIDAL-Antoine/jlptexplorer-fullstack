@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const speakerBody = z.object({
   slug: z.string().max(100),

@@ -1,9 +1,9 @@
-import { prisma } from "@/config/prisma";
+import { prisma } from '@/config/prisma';
 
 export async function findSpeakers(locale: string) {
   return prisma.speakers.findMany({
     include: { translations: { where: { locale } } },
-    orderBy: { id: "asc" },
+    orderBy: { id: 'asc' },
   });
 }
 
@@ -23,7 +23,7 @@ export async function findSpeakerBySlug(slug: string, locale: string) {
             },
           },
         },
-        orderBy: { id: "asc" },
+        orderBy: { id: 'asc' },
       },
     },
   });
@@ -73,7 +73,7 @@ export async function updateSpeaker(
     image_url?: string;
     translations: Record<string, string>;
     descriptions?: Record<string, string>;
-  }
+  },
 ) {
   return prisma.speakers.update({
     where: { slug: paramSlug },

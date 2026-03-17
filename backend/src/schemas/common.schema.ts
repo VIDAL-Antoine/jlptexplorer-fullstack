@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const localeParams = z.object({ locale: z.string().min(2).max(10) });
 export const slugParams = z.object({ slug: z.string() });

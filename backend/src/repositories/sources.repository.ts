@@ -1,12 +1,12 @@
-import { prisma } from "@/config/prisma";
-import { buildSceneInclude } from "@/repositories/scenes.repository";
-import type { source_type } from "@/generated/prisma/enums";
+import { prisma } from '@/config/prisma';
+import { buildSceneInclude } from '@/repositories/scenes.repository';
+import type { source_type } from '@/generated/prisma/enums';
 
 export async function findSources(locale: string, type?: source_type) {
   return prisma.sources.findMany({
     where: { ...(type ? { type } : {}), scenes: { some: {} } },
     include: { translations: { where: { locale } } },
-    orderBy: { id: "asc" },
+    orderBy: { id: 'asc' },
   });
 }
 
@@ -39,7 +39,7 @@ export async function findSourceIdBySlug(slug: string) {
 export async function findSourceScenes(
   sourceId: number,
   locale: string,
-  options: { grammarPointSlugs: string[]; page: number; limit: number }
+  options: { grammarPointSlugs: string[]; page: number; limit: number },
 ) {
   const { grammarPointSlugs, page, limit } = options;
   const where = {
@@ -59,7 +59,7 @@ export async function findSourceScenes(
     prisma.scenes.findMany({
       where,
       include: buildSceneInclude(locale),
-      orderBy: [{ episode_number: "asc" }, { start_time: "asc" }],
+      orderBy: [{ episode_number: 'asc' }, { start_time: 'asc' }],
       skip: (page - 1) * limit,
       take: limit,
     }),
@@ -71,7 +71,7 @@ export async function findSourceScenes(
         },
       },
       include: { translations: { where: { locale } } },
-      orderBy: { jlpt_level: "asc" },
+      orderBy: { jlpt_level: 'asc' },
     }),
   ]);
 
@@ -108,7 +108,7 @@ export async function updateSource(
     type: source_type;
     cover_image_url?: string;
     translations: Record<string, string>;
-  }
+  },
 ) {
   return prisma.sources.update({
     where: { slug: paramSlug },

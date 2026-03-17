@@ -1,12 +1,12 @@
-import { prisma } from "@/config/prisma";
-import type { Prisma } from "@/generated/prisma/client";
-import type { jlpt_level } from "@/generated/prisma/enums";
+import { prisma } from '@/config/prisma';
+import type { Prisma } from '@/generated/prisma/client';
+import type { jlpt_level } from '@/generated/prisma/enums';
 
 export function buildSceneInclude(locale: string) {
   return {
     sources: { include: { translations: { where: { locale } } } },
     transcript_lines: {
-      orderBy: { start_time: "asc" } as const,
+      orderBy: { start_time: 'asc' } as const,
       include: {
         translations: { where: { locale } },
         speakers: { include: { translations: { where: { locale } } } },
@@ -24,7 +24,7 @@ export function buildSceneIncludeAll() {
   return {
     sources: true,
     transcript_lines: {
-      orderBy: { start_time: "asc" } as const,
+      orderBy: { start_time: 'asc' } as const,
       include: {
         translations: true,
         speakers: true,
@@ -36,7 +36,10 @@ export function buildSceneIncludeAll() {
   };
 }
 
-export async function findScenes(locale: string, filters: { source_id?: number; jlpt_level?: jlpt_level }) {
+export async function findScenes(
+  locale: string,
+  filters: { source_id?: number; jlpt_level?: jlpt_level },
+) {
   return prisma.scenes.findMany({
     where: {
       ...(filters.source_id ? { source_id: filters.source_id } : {}),
@@ -53,7 +56,7 @@ export async function findScenes(locale: string, filters: { source_id?: number; 
         : {}),
     },
     include: buildSceneInclude(locale),
-    orderBy: [{ episode_number: "asc" }, { start_time: "asc" }],
+    orderBy: [{ episode_number: 'asc' }, { start_time: 'asc' }],
   });
 }
 
@@ -92,7 +95,7 @@ export async function deleteScene(id: number) {
 
 export async function upsertTranscriptLineTranslations(
   locale: string,
-  lines: { id: number; translation: string }[]
+  lines: { id: number; translation: string }[],
 ) {
   return prisma.$transaction(
     lines.map(({ id: transcript_line_id, translation }) =>
@@ -100,7 +103,7 @@ export async function upsertTranscriptLineTranslations(
         where: { transcript_line_id_locale: { transcript_line_id, locale } },
         create: { transcript_line_id, locale, translation },
         update: { translation },
-      })
-    )
+      }),
+    ),
   );
 }
