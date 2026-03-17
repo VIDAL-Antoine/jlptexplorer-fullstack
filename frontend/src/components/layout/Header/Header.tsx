@@ -1,11 +1,11 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Link } from '../../../i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { IconMoon, IconSettings, IconSun } from '@tabler/icons-react';
 import { ActionIcon, Anchor, Burger, Group, Text, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { SettingsDrawer } from '../../ui/SettingsDrawer/SettingsDrawer';
+import { SettingsDrawer } from '@/components/ui/SettingsDrawer/SettingsDrawer';
 import classes from './Header.module.css';
 
 interface HeaderProps {

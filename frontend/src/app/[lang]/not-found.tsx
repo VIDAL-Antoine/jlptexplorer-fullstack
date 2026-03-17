@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Link } from '../../i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { Button, Stack, Text, Title } from '@mantine/core';
 
 export default function NotFound() {

@@ -2,7 +2,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Box, Button, Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconBook, IconDeviceGamepad2, IconPlayerPlay, IconSparkles } from '@tabler/icons-react';
-import { JLPT_LEVEL_COLORS, type JlptLevel } from '../../constants/jlpt';
+import { JLPT_LEVEL_COLORS, type JlptLevel } from '@/constants/jlpt';
 
 const JLPT_LEVELS = Object.keys(JLPT_LEVEL_COLORS) as JlptLevel[];
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react';
-import { loadYouTubeApi, type YTPlayer } from '../../../../lib/youtube';
+import { loadYouTubeApi, type YTPlayer } from '@/lib/youtube';
 
 const YT_PLAYING = 1;
 

@@ -23,12 +23,12 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { PageLoader } from '../../../../components/ui/PageLoader/PageLoader';
-import { SceneCard } from '../../../../components/features/scenes/SceneCard/SceneCard';
-import { useSettings } from '../../../../contexts/SettingsContext';
-import { Link } from '../../../../i18n/navigation';
-import { api, type SourceDetail, type SourceScenesPage } from '../../../../lib/api';
-import NotFound from '../../not-found';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
+import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
+import { useSettings } from '@/contexts/SettingsContext';
+import { Link } from '@/i18n/navigation';
+import { api, type SourceDetail, type SourceScenesPage } from '@/lib/api';
+import NotFound from '@/app/[lang]/not-found';
 
 type SourceType = SourceDetail['type'];
 type IconComponent = React.ComponentType<{ size?: number }>;

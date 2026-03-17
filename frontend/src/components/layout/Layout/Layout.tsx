@@ -2,9 +2,9 @@
 
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { Footer } from '../Footer/Footer';
-import { Header } from '../Header/Header';
-import { Navbar } from '../Navbar/Navbar';
+import { Footer } from '@/components/layout/Footer/Footer';
+import { Header } from '@/components/layout/Header/Header';
+import { Navbar } from '@/components/layout/Navbar/Navbar';
 
 interface LayoutProps {
   children: React.ReactNode;

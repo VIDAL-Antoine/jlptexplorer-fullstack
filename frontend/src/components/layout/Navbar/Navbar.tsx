@@ -3,7 +3,7 @@
 import { IconApps, IconVocabulary } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { NavLink, Stack, Text } from '@mantine/core';
-import { Link, usePathname } from '../../../i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 
 const LINKS = [
   { href: '/grammar-points' as const, labelKey: 'grammarPoints' as const, icon: IconVocabulary },

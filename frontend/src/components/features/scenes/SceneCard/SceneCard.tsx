@@ -16,14 +16,14 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useRef } from 'react';
-import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
-import { useSettings } from '../../../../hooks/useSettings';
-import { Link } from '../../../../i18n/navigation';
-import { type SceneWithDetails } from '../../../../lib/api';
-import { formatTime } from '../../../../utils/time';
-import { getSourceTypeIcon } from '../../../../utils/icons';
-import { AnnotatedText } from '../../grammar/AnnotatedText/AnnotatedText';
-import { YoutubePlayer, type YoutubePlayerHandle } from '../YoutubePlayer/YoutubePlayer';
+import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
+import { useSettings } from '@/hooks/useSettings';
+import { Link } from '@/i18n/navigation';
+import { type SceneWithDetails } from '@/lib/api';
+import { formatTime } from '@/utils/time';
+import { getSourceTypeIcon } from '@/utils/icons';
+import { AnnotatedText } from '@/components/features/grammar/AnnotatedText/AnnotatedText';
+import { YoutubePlayer, type YoutubePlayerHandle } from '@/components/features/scenes/YoutubePlayer/YoutubePlayer';
 
 interface SceneCardProps {
   scene: SceneWithDetails;

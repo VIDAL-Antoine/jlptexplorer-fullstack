@@ -14,13 +14,13 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { PageLoader } from '../../../../components/ui/PageLoader/PageLoader';
-import { SceneCard } from '../../../../components/features/scenes/SceneCard/SceneCard';
-import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
-import { useSettings } from '../../../../contexts/SettingsContext';
-import { Link } from '../../../../i18n/navigation';
-import { api, type GrammarPointDetail, type GrammarPointScenesPage } from '../../../../lib/api';
-import NotFound from '../../not-found';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
+import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
+import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
+import { useSettings } from '@/contexts/SettingsContext';
+import { Link } from '@/i18n/navigation';
+import { api, type GrammarPointDetail, type GrammarPointScenesPage } from '@/lib/api';
+import NotFound from '@/app/[lang]/not-found';
 
 const PAGE_SIZE = 12;
 

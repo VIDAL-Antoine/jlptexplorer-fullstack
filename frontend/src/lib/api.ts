@@ -1,4 +1,4 @@
-import { type JlptLevel } from '../constants/jlpt';
+import { type JlptLevel } from '@/constants/jlpt';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
 

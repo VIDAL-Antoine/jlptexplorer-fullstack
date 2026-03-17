@@ -1,4 +1,4 @@
-import { type TranscriptLineGrammarPoint } from '../lib/api';
+import { type TranscriptLineGrammarPoint } from '@/lib/api';
 
 export type Segment =
   | { type: 'plain'; text: string }

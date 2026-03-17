@@ -2,8 +2,8 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { Divider, Drawer, SegmentedControl, Select, Stack, Switch, Text } from '@mantine/core';
-import { useSettings } from '../../../contexts/SettingsContext';
-import { usePathname, useRouter } from '../../../i18n/navigation';
+import { useSettings } from '@/contexts/SettingsContext';
+import { usePathname, useRouter } from '@/i18n/navigation';
 
 const LOCALES = [
   { value: 'en', label: 'English' },

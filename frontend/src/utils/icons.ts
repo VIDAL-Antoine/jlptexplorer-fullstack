@@ -5,7 +5,7 @@ import {
   IconMusic,
   IconTag,
 } from '@tabler/icons-react';
-import { type Source } from '../lib/api';
+import { type Source } from '@/lib/api';
 
 export type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
 

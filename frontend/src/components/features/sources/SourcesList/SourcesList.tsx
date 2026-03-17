@@ -17,11 +17,11 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { useSettings } from '../../../../hooks/useSettings';
-import { Link } from '../../../../i18n/navigation';
-import { api, type Source } from '../../../../lib/api';
-import { getSourceTypeIcon } from '../../../../utils/icons';
-import { PageLoader } from '../../../ui/PageLoader/PageLoader';
+import { useSettings } from '@/hooks/useSettings';
+import { Link } from '@/i18n/navigation';
+import { api, type Source } from '@/lib/api';
+import { getSourceTypeIcon } from '@/utils/icons';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 
 export function SourcesList() {
   const t = useTranslations('SourcesList');

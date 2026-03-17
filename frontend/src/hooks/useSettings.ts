@@ -1,1 +1,1 @@
-export { useSettings } from '../contexts/SettingsContext';
+export { useSettings } from '@/contexts/SettingsContext';

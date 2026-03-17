@@ -18,10 +18,10 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { JLPT_LEVEL_COLORS } from '../../../../constants/jlpt';
-import { Link } from '../../../../i18n/navigation';
-import { api, type GrammarPoint } from '../../../../lib/api';
-import { PageLoader } from '../../../ui/PageLoader/PageLoader';
+import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
+import { Link } from '@/i18n/navigation';
+import { api, type GrammarPoint } from '@/lib/api';
+import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 
 const LEVELS = Object.keys(JLPT_LEVEL_COLORS);
 const PAGE_SIZE = 100;
