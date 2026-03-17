@@ -22,6 +22,8 @@ import { Link } from '@/i18n/navigation';
 import { type SceneWithDetails } from '@/lib/api';
 import { formatTime } from '@/utils/time';
 import { getSourceTypeIcon } from '@/utils/icons';
+import { getLocalizedTitle, getLocalizedName } from '@/utils/i18n';
+import { deduplicateAndSortGrammarPoints } from '@/utils/grammarPoints';
 import { AnnotatedText } from '@/components/features/grammar/AnnotatedText/AnnotatedText';
 import { YoutubePlayer, type YoutubePlayerHandle } from '@/components/features/scenes/YoutubePlayer/YoutubePlayer';
 
@@ -70,9 +72,7 @@ export function SceneCard({
             c="inherit"
           >
             <Title order={4}>
-              {sourceTitleLang === 'japanese'
-                ? (scene.sources.japanese_title ?? scene.sources.title)
-                : scene.sources.title}
+              {getLocalizedTitle(scene.sources, sourceTitleLang)}
             </Title>
           </Anchor>
           <Anchor
@@ -133,9 +133,7 @@ export function SceneCard({
                   )}
                   {line.speakers && (
                     <Text size="xs" fw={700} c="dimmed">
-                      {speakerNameLang === 'japanese'
-                        ? (line.speakers.name_japanese ?? line.speakers.name)
-                        : line.speakers.name}
+                      {getLocalizedName(line.speakers, speakerNameLang)}
                     </Text>
                   )}
                 </Group>
@@ -154,14 +152,7 @@ export function SceneCard({
                 )}
                 {grammarPoints.length > 0 && (
                   <Group gap="xs" mt="xs">
-                    {[...grammarPoints]
-                      .filter((tlgp, i, arr) => arr.findIndex((x) => x.grammar_point_id === tlgp.grammar_point_id) === i)
-                      .sort((a, b) =>
-                        (b.grammar_points?.jlpt_level ?? 'N5').localeCompare(
-                          a.grammar_points?.jlpt_level ?? 'N5'
-                        )
-                      )
-                      .map((tlgp) =>
+                    {deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) =>
                         tlgp.grammar_points ? (
                           <Badge
                             key={tlgp.id}

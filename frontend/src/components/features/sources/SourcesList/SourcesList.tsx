@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import {
@@ -17,49 +16,37 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
+import { useApiData } from '@/hooks/useApiData';
+import { useQueryParam } from '@/hooks/useQueryParam';
 import { useSettings } from '@/hooks/useSettings';
 import { Link } from '@/i18n/navigation';
 import { api, type Source } from '@/lib/api';
+import { getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
 import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
+
+const VALID_SOURCE_TYPES = new Set(['game', 'anime', 'movie', 'series', 'music']);
 
 export function SourcesList() {
   const t = useTranslations('SourcesList');
   const tTypes = useTranslations('SourceTypes');
-  const [sources, setSources] = useState<Source[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const VALID_SOURCE_TYPES = new Set(['game', 'anime', 'movie', 'series', 'music']);
+  const locale = useLocale();
+  const { setParam, searchParams } = useQueryParam();
   const rawType = searchParams.get('type');
   const [activeType, setActiveType] = useState<string>(
     rawType && VALID_SOURCE_TYPES.has(rawType) ? rawType : 'all'
   );
   const [search, setSearch] = useState('');
-  const locale = useLocale();
   const { sourceTitleLang } = useSettings();
+
+  const { data: sources, loading } = useApiData(() => api.sources.list(locale), [locale]);
 
   const handleTypeChange = (v: string) => {
     setActiveType(v);
-    const params = new URLSearchParams(searchParams.toString());
-    if (v === 'all') {
-      params.delete('type');
-    } else {
-      params.set('type', v);
-    }
-    const qs = params.toString();
-    router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
+    setParam('type', v === 'all' ? null : v);
   };
 
-  useEffect(() => {
-    api.sources.list(locale).then((data) => {
-      setSources(data);
-      setLoading(false);
-    });
-  }, [locale]);
-
-  if (loading) return <PageLoader />;
+  if (loading || !sources) { return <PageLoader />; }
 
   const availableTypes = Array.from(new Set(sources.map((s) => s.type))) as Source['type'][];
   const filtered = sources.filter((s) => {
@@ -129,9 +116,7 @@ export function SourcesList() {
               </Card.Section>
               <Center w="100%">
                 <Text fw={600} size="md" mt="sm">
-                  {sourceTitleLang === 'japanese'
-                    ? (source.japanese_title ?? source.title)
-                    : source.title}
+                  {getLocalizedTitle(source, sourceTitleLang)}
                 </Text>
               </Center>
             </Card>

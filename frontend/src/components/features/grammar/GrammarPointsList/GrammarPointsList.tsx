@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { IconSearch } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import {
@@ -19,8 +18,10 @@ import {
   Title,
 } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
+import { useApiData } from '@/hooks/useApiData';
+import { useQueryParam } from '@/hooks/useQueryParam';
 import { Link } from '@/i18n/navigation';
-import { api, type GrammarPoint } from '@/lib/api';
+import { api } from '@/lib/api';
 import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 
 const LEVELS = Object.keys(JLPT_LEVEL_COLORS);
@@ -28,18 +29,13 @@ const PAGE_SIZE = 100;
 
 export function GrammarPointsList() {
   const t = useTranslations('GrammarPointsList');
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [grammarPoints, setGrammarPoints] = useState<GrammarPoint[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState<boolean>(true);
+  const locale = useLocale();
+  const { setParam, searchParams } = useQueryParam();
   const rawLevel = searchParams.get('jlpt_level');
   const [level, setLevel] = useState(rawLevel && LEVELS.includes(rawLevel) ? rawLevel : 'All');
   const [inputValue, setInputValue] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const locale = useLocale();
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -52,14 +48,7 @@ export function GrammarPointsList() {
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
     setPage(1);
-    const params = new URLSearchParams(searchParams.toString());
-    if (newLevel === 'All') {
-      params.delete('jlpt_level');
-    } else {
-      params.set('jlpt_level', newLevel);
-    }
-    const qs = params.toString();
-    router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
+    setParam('jlpt_level', newLevel === 'All' ? null : newLevel);
   };
 
   const levelFilterData = [
@@ -67,21 +56,16 @@ export function GrammarPointsList() {
     ...LEVELS.map((l) => ({ label: l, value: l })),
   ];
 
-  useEffect(() => {
-    setLoading(true);
-    api.grammarPoints
-      .list(locale, {
+  const { data, loading } = useApiData(
+    () =>
+      api.grammarPoints.list(locale, {
         jlptLevel: level === 'All' ? undefined : level,
         search: search || undefined,
         page,
         limit: PAGE_SIZE,
-      })
-      .then((data) => {
-        setGrammarPoints(data.grammar_points);
-        setTotalPages(data.totalPages);
-        setLoading(false);
-      });
-  }, [level, search, page, locale]);
+      }),
+    [level, search, page, locale]
+  );
 
   return (
     <Stack mt="xl">
@@ -109,12 +93,12 @@ export function GrammarPointsList() {
         onChange={(e) => setInputValue(e.currentTarget.value)}
       />
 
-      {loading ? (
+      {loading || !data ? (
         <PageLoader />
       ) : (
         <Stack>
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }}>
-            {grammarPoints.map((gp) =>
+            {data.grammar_points.map((gp) =>
               gp.has_scenes ? (
                 <Card
                   key={gp.id}
@@ -167,9 +151,9 @@ export function GrammarPointsList() {
               ),
             )}
           </SimpleGrid>
-          {totalPages > 1 && (
+          {data.totalPages > 1 && (
             <Center>
-              <Pagination total={totalPages} value={page} onChange={setPage} />
+              <Pagination total={data.totalPages} value={page} onChange={setPage} />
             </Center>
           )}
         </Stack>
