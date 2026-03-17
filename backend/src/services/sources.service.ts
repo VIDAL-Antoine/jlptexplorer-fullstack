@@ -9,7 +9,7 @@ export async function listSources(locale: string, type?: source_type) {
 
 export async function getSource(slug: string, locale: string) {
   const source = await sourcesRepository.findSourceBySlug(slug, locale);
-  if (!source) return null;
+  if (!source) {return null;}
 
   const grammarPoints = Array.from(
     new Map(
@@ -43,7 +43,7 @@ export async function getSourceScenes(
   options: { grammarPointSlugs: string[]; page: number; limit: number }
 ) {
   const source = await sourcesRepository.findSourceIdBySlug(slug);
-  if (!source) return null;
+  if (!source) {return null;}
 
   const { scenes, total, availableGrammarPoints } = await sourcesRepository.findSourceScenes(
     source.id,
@@ -85,7 +85,7 @@ export async function updateSource(
   }
 ) {
   const existing = await sourcesRepository.findSourceIdBySlug(paramSlug);
-  if (!existing) return null;
+  if (!existing) {return null;}
 
   const source = await sourcesRepository.updateSource(paramSlug, existing.id, data);
   return {

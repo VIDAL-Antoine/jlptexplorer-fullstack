@@ -15,7 +15,7 @@ export async function getSource(
   reply: FastifyReply
 ) {
   const result = await sourcesService.getSource(request.params.slug, request.params.locale);
-  if (!result) return reply.status(404).send({ error: "Source not found" });
+  if (!result) {return reply.status(404).send({ error: "Source not found" });}
   return result;
 }
 
@@ -27,13 +27,13 @@ export async function getSourceScenes(
   reply: FastifyReply
 ) {
   const { locale, slug } = request.params;
-  const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
-  const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? "12") || 12));
+  const page = Math.max(1, parseInt(request.query.page ?? "1", 10) || 1);
+  const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? "12", 10) || 12));
   const grammarPointSlugs =
     request.query.grammar_points?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
 
   const result = await sourcesService.getSourceScenes(slug, locale, { grammarPointSlugs, page, limit });
-  if (!result) return reply.status(404).send({ error: "Source not found" });
+  if (!result) {return reply.status(404).send({ error: "Source not found" });}
   return result;
 }
 
@@ -67,7 +67,7 @@ export async function updateSource(
   reply: FastifyReply
 ) {
   const result = await sourcesService.updateSource(request.params.slug, request.body);
-  if (!result) return reply.status(404).send({ error: "Source not found" });
+  if (!result) {return reply.status(404).send({ error: "Source not found" });}
   return result;
 }
 

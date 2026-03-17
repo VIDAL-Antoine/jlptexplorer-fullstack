@@ -14,7 +14,7 @@ export async function getSpeaker(
   reply: FastifyReply
 ) {
   const result = await speakersService.getSpeaker(request.params.slug, request.params.locale);
-  if (!result) return reply.status(404).send({ error: "Speaker not found" });
+  if (!result) {return reply.status(404).send({ error: "Speaker not found" });}
   return result;
 }
 
@@ -48,7 +48,7 @@ export async function updateSpeaker(
   reply: FastifyReply
 ) {
   const result = await speakersService.updateSpeaker(request.params.slug, request.body);
-  if (!result) return reply.status(404).send({ error: "Speaker not found" });
+  if (!result) {return reply.status(404).send({ error: "Speaker not found" });}
   return result;
 }
 

@@ -17,7 +17,7 @@ export async function listGrammarPoints(
 
   // Stable sort: grammar points with scenes first, then those without
   mapped.sort((a, b) => {
-    if (a.has_scenes !== b.has_scenes) return a.has_scenes ? -1 : 1;
+    if (a.has_scenes !== b.has_scenes) {return a.has_scenes ? -1 : 1;}
     return 0;
   });
 
@@ -32,7 +32,7 @@ export async function listGrammarPoints(
 
 export async function getGrammarPoint(slug: string, locale: string) {
   const grammarPoint = await grammarPointsRepository.findGrammarPointBySlug(slug, locale);
-  if (!grammarPoint) return null;
+  if (!grammarPoint) {return null;}
 
   const { scenesCount, availableSources } = await grammarPointsRepository.findGrammarPointMeta(
     grammarPoint.id,
@@ -52,7 +52,7 @@ export async function getGrammarPointScenes(
   options: { sourceSlugs: string[]; page: number; limit: number }
 ) {
   const grammarPoint = await grammarPointsRepository.findGrammarPointIdBySlug(slug);
-  if (!grammarPoint) return null;
+  if (!grammarPoint) {return null;}
 
   const { scenes, total, availableSources } = await grammarPointsRepository.findGrammarPointScenes(
     grammarPoint.id,
@@ -97,7 +97,7 @@ export async function updateGrammarPoint(
   }
 ) {
   const existing = await grammarPointsRepository.findGrammarPointIdBySlug(paramSlug);
-  if (!existing) return null;
+  if (!existing) {return null;}
 
   const grammarPoint = await grammarPointsRepository.updateGrammarPoint(paramSlug, existing.id, {
     ...data,

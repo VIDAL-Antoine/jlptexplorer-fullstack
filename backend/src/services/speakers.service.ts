@@ -8,7 +8,7 @@ export async function listSpeakers(locale: string) {
 
 export async function getSpeaker(slug: string, locale: string) {
   const speaker = await speakersRepository.findSpeakerBySlug(slug, locale);
-  if (!speaker) return null;
+  if (!speaker) {return null;}
 
   return {
     ...flattenSpeaker(speaker),
@@ -53,7 +53,7 @@ export async function updateSpeaker(
   }
 ) {
   const existing = await speakersRepository.findSpeakerIdBySlug(paramSlug);
-  if (!existing) return null;
+  if (!existing) {return null;}
 
   const speaker = await speakersRepository.updateSpeaker(paramSlug, existing.id, data);
   return {

@@ -9,7 +9,7 @@ import type { jlpt_level } from "@/generated/prisma/enums";
 
 async function resolveGrammarPointSlugs(lines: TranscriptLineInput[]): Promise<Map<string, number>> {
   const allSlugs = [...new Set(lines.flatMap((l) => l.grammar_points?.map((gp) => gp.slug) ?? []))];
-  if (!allSlugs.length) return new Map();
+  if (!allSlugs.length) {return new Map();}
 
   const points = await findGrammarPointsBySlugIn(allSlugs);
   const missing = allSlugs.filter((s) => !points.find((p) => p.slug === s));
@@ -22,7 +22,7 @@ async function resolveGrammarPointSlugs(lines: TranscriptLineInput[]): Promise<M
 
 async function resolveSpeakerSlugs(lines: TranscriptLineInput[]): Promise<Map<string, number>> {
   const allSlugs = [...new Set(lines.flatMap((l) => (l.speaker_slug ? [l.speaker_slug] : [])))];
-  if (!allSlugs.length) return new Map();
+  if (!allSlugs.length) {return new Map();}
 
   const speakers = await findSpeakersBySlugIn(allSlugs);
   const missing = allSlugs.filter((s) => !speakers.find((sp) => sp.slug === s));
@@ -154,7 +154,7 @@ export async function updateTranslations(
   lines: { id: number; translation: string }[]
 ) {
   const existingLines = await scenesRepository.findTranscriptLinesBySceneId(sceneId);
-  if (!existingLines.length) return null;
+  if (!existingLines.length) {return null;}
 
   const validIds = new Set(existingLines.map((l) => l.id));
   const missing = lines.filter((l) => !validIds.has(l.id)).map((l) => l.id);

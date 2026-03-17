@@ -12,8 +12,8 @@ export async function listGrammarPoints(
 ) {
   const { locale } = request.params;
   const { jlpt_level, search } = request.query;
-  const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
-  const limit = Math.max(1, Math.min(500, parseInt(request.query.limit ?? "100") || 100));
+  const page = Math.max(1, parseInt(request.query.page ?? "1", 10) || 1);
+  const limit = Math.max(1, Math.min(500, parseInt(request.query.limit ?? "100", 10) || 100));
 
   return grammarPointsService.listGrammarPoints(locale, { jlpt_level, search }, { page, limit });
 }
@@ -26,7 +26,7 @@ export async function getGrammarPoint(
     request.params.slug,
     request.params.locale
   );
-  if (!result) return reply.status(404).send({ error: "Grammar point not found" });
+  if (!result) {return reply.status(404).send({ error: "Grammar point not found" });}
   return result;
 }
 
@@ -38,8 +38,8 @@ export async function getGrammarPointScenes(
   reply: FastifyReply
 ) {
   const { locale, slug } = request.params;
-  const page = Math.max(1, parseInt(request.query.page ?? "1") || 1);
-  const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? "12") || 12));
+  const page = Math.max(1, parseInt(request.query.page ?? "1", 10) || 1);
+  const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? "12", 10) || 12));
   const sourceSlugs =
     request.query.sources?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
 
@@ -48,7 +48,7 @@ export async function getGrammarPointScenes(
     page,
     limit,
   });
-  if (!result) return reply.status(404).send({ error: "Grammar point not found" });
+  if (!result) {return reply.status(404).send({ error: "Grammar point not found" });}
   return result;
 }
 
@@ -92,7 +92,7 @@ export async function updateGrammarPoint(
     request.params.slug,
     request.body
   );
-  if (!result) return reply.status(404).send({ error: "Grammar point not found" });
+  if (!result) {return reply.status(404).send({ error: "Grammar point not found" });}
   return result;
 }
 
