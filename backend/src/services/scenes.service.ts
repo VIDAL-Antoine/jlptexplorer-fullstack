@@ -1,11 +1,10 @@
 import { parseTime } from '@/utils/parse-time';
-import { flattenScene, flattenSceneAll } from '@/utils/flatten';
+import { flattenScene, flattenSceneAll, flattenSource, flattenGrammarPoint } from '@/utils/flatten';
 import * as scenesRepository from '@/repositories/scenes.repository';
 import * as sourcesRepository from '@/repositories/sources.repository';
 import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository';
 import { findSpeakersBySlugIn } from '@/repositories/speakers.repository';
 import type { TranscriptLineInput } from '@/schemas/scenes.schema';
-import type { jlpt_level } from '@/generated/prisma/enums';
 
 async function resolveGrammarPointSlugs(
   lines: TranscriptLineInput[],
@@ -77,12 +76,23 @@ function buildLineData(
   }));
 }
 
+const DEFAULT_LIMIT = 12;
+
 export async function listScenes(
   locale: string,
-  filters: { source_id?: number; jlpt_level?: jlpt_level },
+  options: { sourceSlugs: string[]; grammarPointSlugs: string[]; page: number; limit: number },
 ) {
-  const scenes = await scenesRepository.findScenes(locale, filters);
-  return scenes.map(flattenScene);
+  const { scenes, total, availableSources, availableGrammarPoints } =
+    await scenesRepository.findScenesPage(locale, options);
+  const { page, limit } = options;
+  return {
+    scenes: scenes.map(flattenScene),
+    total,
+    page,
+    totalPages: Math.ceil(total / (limit || DEFAULT_LIMIT)),
+    available_sources: availableSources.map(flattenSource),
+    available_grammar_points: availableGrammarPoints.map(flattenGrammarPoint),
+  };
 }
 
 export async function getScene(id: number, locale: string) {

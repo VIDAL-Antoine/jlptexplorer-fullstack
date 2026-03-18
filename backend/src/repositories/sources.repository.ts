@@ -71,7 +71,7 @@ export async function findSourceScenes(
         },
       },
       include: { translations: { where: { locale } } },
-      orderBy: { jlpt_level: 'asc' },
+      orderBy: [{ jlpt_level: 'asc' }, { title: 'asc' }],
     }),
   ]);
 

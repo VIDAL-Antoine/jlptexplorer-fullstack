@@ -3,15 +3,20 @@ import * as scenesService from '@/services/scenes.service';
 import type { LocaleParams } from '@/schemas/common.schema';
 import type { SceneBody, UpdateTranslationsBody, ListScenesQuery } from '@/schemas/scenes.schema';
 
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 12;
+
 export async function listScenes(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListScenesQuery }>,
   _reply: FastifyReply,
 ) {
   const { locale } = request.params;
-  const { source_id, jlpt_level } = request.query;
+  const { sources, grammar_points, page, limit } = request.query;
   return scenesService.listScenes(locale, {
-    source_id: source_id ? parseInt(source_id, 10) : undefined,
-    jlpt_level,
+    sourceSlugs: sources ? sources.split(',') : [],
+    grammarPointSlugs: grammar_points ? grammar_points.split(',') : [],
+    page: page ? parseInt(page, 10) : DEFAULT_PAGE,
+    limit: limit ? parseInt(limit, 10) : DEFAULT_LIMIT,
   });
 }
 

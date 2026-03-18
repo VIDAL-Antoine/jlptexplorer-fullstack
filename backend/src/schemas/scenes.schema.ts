@@ -1,10 +1,11 @@
 import { z } from 'zod';
 import { localeParams, idParams } from './common.schema';
-import { jlptLevel } from './grammar-points.schema';
 
 export const listScenesQuery = z.object({
-  source_id: z.string().optional(),
-  jlpt_level: jlptLevel.optional(),
+  sources: z.string().optional(),
+  grammar_points: z.string().optional(),
+  page: z.string().optional(),
+  limit: z.string().optional(),
 });
 
 export const grammarPointAnnotation = z.object({

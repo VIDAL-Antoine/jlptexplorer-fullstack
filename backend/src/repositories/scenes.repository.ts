@@ -1,6 +1,5 @@
 import { prisma } from '@/config/prisma';
 import type { Prisma } from '@/generated/prisma/client';
-import type { jlpt_level } from '@/generated/prisma/enums';
 
 export function buildSceneInclude(locale: string) {
   return {
@@ -36,28 +35,60 @@ export function buildSceneIncludeAll() {
   };
 }
 
-export async function findScenes(
+export async function findScenesPage(
   locale: string,
-  filters: { source_id?: number; jlpt_level?: jlpt_level },
+  options: { sourceSlugs: string[]; grammarPointSlugs: string[]; page: number; limit: number },
 ) {
-  return prisma.scenes.findMany({
-    where: {
-      ...(filters.source_id ? { source_id: filters.source_id } : {}),
-      ...(filters.jlpt_level
-        ? {
+  const { sourceSlugs, grammarPointSlugs, page, limit } = options;
+
+  const sourceFilter: Prisma.scenesWhereInput =
+    sourceSlugs.length > 0 ? { sources: { slug: { in: sourceSlugs } } } : {};
+
+  const grammarFilter: Prisma.scenesWhereInput =
+    grammarPointSlugs.length > 0
+      ? {
+          AND: grammarPointSlugs.map((slug) => ({
             transcript_lines: {
               some: {
                 transcript_line_grammar_points: {
-                  some: { grammar_points: { jlpt_level: filters.jlpt_level } },
+                  some: { grammar_points: { slug } },
                 },
               },
             },
-          }
-        : {}),
-    },
-    include: buildSceneInclude(locale),
-    orderBy: [{ episode_number: 'asc' }, { start_time: 'asc' }],
-  });
+          })),
+        }
+      : {};
+
+  const where: Prisma.scenesWhereInput = { ...sourceFilter, ...grammarFilter };
+
+  const [scenes, total, availableSources, availableGrammarPoints] = await Promise.all([
+    prisma.scenes.findMany({
+      where,
+      include: buildSceneInclude(locale),
+      orderBy: [{ source_id: 'asc' }, { episode_number: 'asc' }, { start_time: 'asc' }],
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.scenes.count({ where }),
+    // available_sources filtered only by grammarFilter (not sourceFilter) so all source options remain selectable
+    prisma.sources.findMany({
+      where: { scenes: { some: grammarFilter } },
+      include: { translations: { where: { locale } } },
+      orderBy: { id: 'asc' },
+    }),
+    // available_grammar_points filtered only by sourceFilter (not grammarFilter) so all grammar options remain selectable
+    prisma.grammar_points.findMany({
+      where: {
+        transcript_line_grammar_points: {
+          some: { transcript_lines: { scenes: sourceFilter } },
+        },
+      },
+      include: { translations: { where: { locale } } },
+      orderBy: [{ jlpt_level: 'asc' }, { title: 'asc' }],
+    }),
+  ]);
+
+  return { scenes, total, availableSources, availableGrammarPoints };
 }
 
 export async function findSceneById(id: number, locale: string) {
