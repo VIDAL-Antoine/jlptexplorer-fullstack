@@ -3,21 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-  AspectRatio,
-  Badge,
-  Group,
-  Image,
-  MultiSelect,
-  Pagination,
-  SimpleGrid,
-  Skeleton,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
+import { AspectRatio, Badge, Group, Image, Stack, Text, Title } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
-import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
+import { GrammarPointsMultiSelect } from '@/components/features/grammar/GrammarPointsMultiSelect/GrammarPointsMultiSelect';
+import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
@@ -65,29 +54,19 @@ export default function SourcePage() {
 
   function updateParams(grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (grammar.length > 0) {
-      params.set('grammar_points', grammar.join(','));
-    }
-    if (newPage > 1) {
-      params.set('page', String(newPage));
-    }
+    if (grammar.length > 0) params.set('grammar_points', grammar.join(','));
+    if (newPage > 1) params.set('page', String(newPage));
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
 
-  if (sourceLoading) {
-    return <PageLoader />;
-  }
-  if (!source) {
-    return <NotFound />;
-  }
+  if (sourceLoading) return <PageLoader />;
+  if (!source) return <NotFound />;
 
   const SourceTypeIcon = getSourceTypeIcon(source.type);
   const displayTitle =
     sourceTitleLang === 'japanese' ? (source.japanese_title ?? source.title) : source.title;
 
-  // Merge available grammar points (from current filter) with already-selected ones
-  // so selected items remain deselectable even if they're no longer in available list
   const selectedGrammarPoints = source.grammar_points.filter((gp) =>
     grammarFilter.includes(gp.slug)
   );
@@ -97,17 +76,10 @@ export default function SourcePage() {
     ...selectedGrammarPoints.filter((gp) => !availableGrammarPoints.some((a) => a.id === gp.id)),
   ];
 
-  const toItem = (gp: { slug: string; title: string; romaji: string; meaning: string | null }) => ({
-    value: gp.slug,
-    label: [gp.romaji ? `${gp.title} (${gp.romaji})` : gp.title, gp.meaning]
-      .filter(Boolean)
-      .join(' — '),
-  });
-
-  const selectData = (['N5', 'N4', 'N3', 'N2', 'N1'] as const).flatMap((level) => {
-    const items = mergedGrammarPoints.filter((gp) => gp.jlpt_level === level).map(toItem);
-    return items.length ? [{ group: level, items }] : [];
-  });
+  const currentGrammarPointIds =
+    grammarFilter.length > 0
+      ? mergedGrammarPoints.filter((gp) => grammarFilter.includes(gp.slug)).map((gp) => gp.id)
+      : undefined;
 
   return (
     <Stack mt="xl" gap="lg">
@@ -137,9 +109,7 @@ export default function SourcePage() {
             </Text>
             {source.grammar_points.length > 0 && (
               <>
-                <Text size="sm" c="dimmed">
-                  ·
-                </Text>
+                <Text size="sm" c="dimmed">·</Text>
                 <Text size="sm" c="dimmed">
                   {t('grammarPointsCount', { count: source.grammar_points.length })}
                 </Text>
@@ -150,59 +120,25 @@ export default function SourcePage() {
       </Group>
 
       {source.grammar_points.length > 0 && (
-        <MultiSelect
-          size="lg"
-          placeholder={t('filterPlaceholder')}
-          data={selectData}
+        <GrammarPointsMultiSelect
+          grammarPoints={mergedGrammarPoints}
           value={grammarFilter}
           onChange={(value) => updateParams(value, 1)}
-          searchable
-          clearable
-          w="100%"
+          placeholder={t('filterPlaceholder')}
         />
       )}
 
-      {!scenesPage && scenesLoading ? (
-        <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
-          {Array.from({ length: PAGE_SIZE }).map((_, i) => (
-            <Skeleton key={i} height={280} radius="md" />
-          ))}
-        </SimpleGrid>
-      ) : !scenesPage || scenesPage.scenes.length === 0 ? (
-        <Text c="dimmed">{t('noScenes')}</Text>
-      ) : (
-        <Stack
-          gap="lg"
-          opacity={scenesLoading ? 0.5 : 1}
-          style={{ transition: 'opacity 0.15s ease' }}
-        >
-          <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
-            {scenesPage.scenes.map((scene) => (
-              <SceneCard
-                key={scene.id}
-                scene={scene}
-                hideSourceInfo
-                currentGrammarPointIds={
-                  grammarFilter.length > 0
-                    ? mergedGrammarPoints
-                        .filter((gp) => grammarFilter.includes(gp.slug))
-                        .map((gp) => gp.id)
-                    : undefined
-                }
-              />
-            ))}
-          </SimpleGrid>
-          {scenesPage.totalPages > 1 && (
-            <Group justify="center">
-              <Pagination
-                total={scenesPage.totalPages}
-                value={page}
-                onChange={(newPage) => updateParams(grammarFilter, newPage)}
-              />
-            </Group>
-          )}
-        </Stack>
-      )}
+      <ScenesGrid
+        scenes={scenesPage?.scenes ?? null}
+        totalPages={scenesPage?.totalPages ?? 0}
+        page={page}
+        onPageChange={(newPage) => updateParams(grammarFilter, newPage)}
+        loading={scenesLoading}
+        pageSize={PAGE_SIZE}
+        noScenesMessage={t('noScenes')}
+        currentGrammarPointIds={currentGrammarPointIds}
+        hideSourceInfo
+      />
     </Stack>
   );
 }

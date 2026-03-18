@@ -86,8 +86,8 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
             value={grammarPointTranscriptScript}
             onChange={(v) => setGrammarPointTranscriptScript(v as 'romaji' | 'kana')}
             data={[
-              { label: 'Romaji', value: 'romaji' },
               { label: 'かな', value: 'kana' },
+              { label: 'Romaji', value: 'romaji' },
             ]}
           />
         </div>

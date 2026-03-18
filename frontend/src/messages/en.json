@@ -9,7 +9,8 @@
   "Navbar": {
     "browse": "Browse",
     "grammarPoints": "Grammar Points",
-    "sources": "Sources"
+    "sources": "Sources",
+    "scenes": "Scenes"
   },
   "SettingsDrawer": {
     "title": "Settings",
@@ -62,6 +63,12 @@
     "grammarPointsCount": "{count, plural, one {# grammar point} other {# grammar points}}",
     "filterPlaceholder": "Filter by grammar point...",
     "noScenes": "No scenes yet for this source."
+  },
+  "ScenesPage": {
+    "title": "Scenes",
+    "filterBySource": "Filter by source...",
+    "filterByGrammar": "Filter by grammar point...",
+    "noScenes": "No scenes found."
   },
   "NotFound": {
     "message": "Page not found.",

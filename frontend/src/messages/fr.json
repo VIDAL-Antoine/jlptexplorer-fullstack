@@ -9,7 +9,8 @@
   "Navbar": {
     "browse": "Parcourir",
     "grammarPoints": "Points de grammaire",
-    "sources": "Sources"
+    "sources": "Sources",
+    "scenes": "Scènes"
   },
   "SettingsDrawer": {
     "title": "Paramètres",
@@ -62,6 +63,12 @@
     "grammarPointsCount": "{count, plural, one {# point de grammaire} other {# points de grammaire}}",
     "filterPlaceholder": "Filtrer par point de grammaire...",
     "noScenes": "Aucune scène pour cette source."
+  },
+  "ScenesPage": {
+    "title": "Scènes",
+    "filterBySource": "Filtrer par source...",
+    "filterByGrammar": "Filtrer par point de grammaire...",
+    "noScenes": "Aucune scène trouvée."
   },
   "NotFound": {
     "message": "Page introuvable.",
