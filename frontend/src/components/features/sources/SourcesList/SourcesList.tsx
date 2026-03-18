@@ -12,11 +12,11 @@ import {
   Group,
   Image,
   SimpleGrid,
+  Skeleton,
   Stack,
   Text,
   TextInput,
 } from '@mantine/core';
-import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
 import { useSettings } from '@/hooks/useSettings';
@@ -47,7 +47,28 @@ export function SourcesList() {
   };
 
   if (loading || !sources) {
-    return <PageLoader />;
+    return (
+      <Stack mt="xl">
+        <Skeleton height={46} radius="sm" />
+        <Group gap="xs">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} height={38} width={80} radius="xl" />
+          ))}
+        </Group>
+        <SimpleGrid cols={{ base: 3, sm: 3, md: 4, lg: 8 }}>
+          {Array.from({ length: 16 }).map((_, i) => (
+            <Card key={i} shadow="sm" padding="md" radius="md" withBorder>
+              <Card.Section>
+                <AspectRatio ratio={2 / 3}>
+                  <Skeleton height="100%" radius={0} />
+                </AspectRatio>
+              </Card.Section>
+              <Skeleton height={14} mt="sm" radius="sm" />
+            </Card>
+          ))}
+        </SimpleGrid>
+      </Stack>
+    );
   }
 
   const availableTypes = Array.from(new Set(sources.map((s) => s.type))) as Source['type'][];

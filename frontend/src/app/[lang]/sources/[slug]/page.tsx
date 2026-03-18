@@ -3,11 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { AspectRatio, Badge, Group, Image, Stack, Text, Title } from '@mantine/core';
+import { AspectRatio, Badge, Group, Image, Skeleton, Stack, Text, Title } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
 import { GrammarPointsMultiSelect } from '@/components/features/grammar/GrammarPointsMultiSelect/GrammarPointsMultiSelect';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
-import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { api, type SourceDetail, type SourceScenesPage } from '@/lib/api';
@@ -60,7 +59,31 @@ export default function SourcePage() {
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
 
-  if (sourceLoading) return <PageLoader />;
+  if (sourceLoading) {
+    return (
+      <Stack mt="xl" gap="lg">
+        <Group align="flex-start" gap="xl">
+          <Skeleton width={120} height={180} radius="md" style={{ flexShrink: 0 }} />
+          <Stack gap="xs">
+            <Group align="center" gap="sm">
+              <Skeleton height={36} width={200} radius="sm" />
+              <Skeleton height={24} width={80} radius="xl" />
+            </Group>
+            <Skeleton height={14} width={150} radius="sm" />
+          </Stack>
+        </Group>
+        <ScenesGrid
+          scenes={null}
+          totalPages={0}
+          page={1}
+          onPageChange={() => {}}
+          loading={true}
+          pageSize={PAGE_SIZE}
+          noScenesMessage=""
+        />
+      </Stack>
+    );
+  }
   if (!source) return <NotFound />;
 
   const SourceTypeIcon = getSourceTypeIcon(source.type);

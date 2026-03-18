@@ -3,11 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { Badge, Group, Stack, Text, Title } from '@mantine/core';
+import { Badge, Group, Skeleton, Stack, Text, Title } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourcesMultiSelect } from '@/components/features/sources/SourcesMultiSelect/SourcesMultiSelect';
-import { PageLoader } from '@/components/ui/PageLoader/PageLoader';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { Link } from '@/i18n/navigation';
 import { api, type GrammarPointDetail, type GrammarPointScenesPage } from '@/lib/api';
@@ -57,7 +56,31 @@ export default function GrammarPointPage() {
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
 
-  if (grammarPointLoading) return <PageLoader />;
+  if (grammarPointLoading) {
+    return (
+      <Stack mt="xl" gap="lg">
+        <div>
+          <Group align="center" gap="sm" mb="xs">
+            <Skeleton height={36} width={200} radius="sm" />
+            <Skeleton height={24} width={40} radius="xl" />
+          </Group>
+          <Skeleton height={14} width={120} radius="sm" mb="xs" />
+          <Skeleton height={14} width={300} radius="sm" mb="xs" />
+          <Skeleton height={12} width={100} radius="sm" />
+        </div>
+        <ScenesGrid
+          scenes={null}
+          totalPages={0}
+          page={1}
+          onPageChange={() => {}}
+          loading={true}
+          pageSize={PAGE_SIZE}
+          noScenesMessage=""
+          currentGrammarPointIds={[]}
+        />
+      </Stack>
+    );
+  }
   if (!grammarPoint) return <NotFound />;
 
   const selectedSources = grammarPoint.available_sources.filter((s) =>
