@@ -10,7 +10,6 @@ import {
   Group,
   Pagination,
   SegmentedControl,
-  Select,
   SimpleGrid,
   Stack,
   Text,
@@ -51,9 +50,29 @@ export function GrammarPointsList() {
     setParam('jlpt_level', newLevel === 'All' ? null : newLevel);
   };
 
-  const levelFilterData = [
-    { label: t('all'), value: 'All' },
-    ...LEVELS.map((l) => ({ label: l, value: l })),
+  const levelSegmentedData = [
+    {
+      label: (
+        <Text fz={'xl'} fw={700} py="xs">
+          {t('all')}
+        </Text>
+      ),
+      value: 'All',
+    },
+    ...LEVELS.map((l) => ({
+      label: (
+        <Text
+          fz={'xl'}
+          fw={700}
+          c={`${JLPT_LEVEL_COLORS[l as keyof typeof JLPT_LEVEL_COLORS]}.6`}
+          py="xs"
+          inherit
+        >
+          {l}
+        </Text>
+      ),
+      value: l,
+    })),
   ];
 
   const { data, loading } = useApiData(
@@ -69,16 +88,16 @@ export function GrammarPointsList() {
 
   return (
     <Stack mt="xl">
-      <Select
-        data={levelFilterData}
+      <SegmentedControl
+        data={levelSegmentedData}
         value={level}
-        onChange={(v) => handleLevelChange(v ?? 'All')}
-        size="lg"
+        onChange={handleLevelChange}
+        orientation="vertical"
+        fullWidth
         hiddenFrom="xs"
-        allowDeselect={false}
       />
       <SegmentedControl
-        data={levelFilterData}
+        data={levelSegmentedData}
         value={level}
         onChange={handleLevelChange}
         size="xl"

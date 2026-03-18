@@ -1,4 +1,5 @@
-import { MultiSelect } from '@mantine/core';
+import { Box, Group, MultiSelect, Text } from '@mantine/core';
+import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import type { GrammarPoint } from '@/lib/api';
 
 const JLPT_LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'] as const;
@@ -23,6 +24,8 @@ export function GrammarPointsMultiSelect({ grammarPoints, value, onChange, place
     return items.length ? [{ group: level, items }] : [];
   });
 
+  const gpBySlug = Object.fromEntries(grammarPoints.map((gp) => [gp.slug, gp]));
+
   return (
     <MultiSelect
       size="lg"
@@ -33,6 +36,18 @@ export function GrammarPointsMultiSelect({ grammarPoints, value, onChange, place
       searchable
       clearable
       w="100%"
+      renderOption={({ option }) => {
+        const gp = gpBySlug[option.value];
+        const color = gp
+          ? JLPT_LEVEL_COLORS[gp.jlpt_level as keyof typeof JLPT_LEVEL_COLORS]
+          : 'gray';
+        return (
+          <Group gap="xs" wrap="nowrap" w="100%">
+            <Box flex="none" w={10} h={10} bdrs={'50%'} bg={`var(--mantine-color-${color}-6)`} />
+            <Text>{option.label}</Text>
+          </Group>
+        );
+      }}
     />
   );
 }
