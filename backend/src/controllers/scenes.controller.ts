@@ -3,20 +3,19 @@ import * as scenesService from '@/services/scenes.service';
 import type { LocaleParams } from '@/schemas/common.schema';
 import type { SceneBody, UpdateTranslationsBody, ListScenesQuery } from '@/schemas/scenes.schema';
 
-const DEFAULT_PAGE = 1;
-const DEFAULT_LIMIT = 12;
-
 export async function listScenes(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListScenesQuery }>,
   _reply: FastifyReply,
 ) {
   const { locale } = request.params;
-  const { sources, grammar_points, page, limit } = request.query;
+  const { sources, grammar_points } = request.query;
+  const page = Math.max(1, parseInt(request.query.page ?? '1', 10) || 1);
+  const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? '12', 10) || 12));
   return scenesService.listScenes(locale, {
     sourceSlugs: sources ? sources.split(',') : [],
     grammarPointSlugs: grammar_points ? grammar_points.split(',') : [],
-    page: page ? parseInt(page, 10) : DEFAULT_PAGE,
-    limit: limit ? parseInt(limit, 10) : DEFAULT_LIMIT,
+    page,
+    limit,
   });
 }
 
