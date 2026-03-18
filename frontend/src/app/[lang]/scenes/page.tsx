@@ -47,6 +47,9 @@ export default function ScenesPage() {
 
   const availableSources = scenesPage?.available_sources ?? [];
   const availableGrammarPoints = scenesPage?.available_grammar_points ?? [];
+  const currentGrammarPointIds = availableGrammarPoints
+    .filter((gp) => grammarFilter.includes(gp.slug))
+    .map((gp) => gp.id);
 
   return (
     <Stack mt="xl" gap="lg">
@@ -73,6 +76,7 @@ export default function ScenesPage() {
         loading={scenesLoading}
         pageSize={PAGE_SIZE}
         noScenesMessage={t('noScenes')}
+        currentGrammarPointIds={currentGrammarPointIds}
       />
     </Stack>
   );
