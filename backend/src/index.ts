@@ -16,7 +16,7 @@ async function start() {
   await registerSwagger(server);
   await registerCors(server);
 
-  server.get('/ping', async () => {
+  server.get('/ping', { schema: { hide: true } }, async () => {
     return { status: 'ok' };
   });
 

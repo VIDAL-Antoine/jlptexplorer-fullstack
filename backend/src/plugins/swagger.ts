@@ -32,6 +32,10 @@ export async function registerSwagger(server: FastifyInstance) {
     uiConfig: {
       docExpansion: 'list',
       deepLinking: true,
+      operationsSorter: ((a: { get: (key: string) => string }, b: { get: (key: string) => string }) => {
+        const order = ['get', 'post', 'put', 'patch', 'delete'];
+        return order.indexOf(a.get('method')) - order.indexOf(b.get('method'));
+      }) as unknown as (name1: string, name2: string) => number,
     },
   });
 }
