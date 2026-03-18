@@ -87,7 +87,7 @@ export default function HomePage() {
           {JLPT_LEVELS.map((level) => (
             <Link
               key={level}
-              href={`/${locale}/grammar-points?level=${level}`}
+              href={`/${locale}/grammar-points?jlpt_level=${level}`}
               style={{ textDecoration: 'none' }}
             >
               <Card
