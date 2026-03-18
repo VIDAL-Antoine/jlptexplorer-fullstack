@@ -29,7 +29,13 @@ export function AnnotatedText({ text, annotations, currentGrammarPointIds }: Ann
           return <span key={i}>{segment.text}</span>;
         }
 
-        const primary = activeAnnotations[0];
+        const JLPT_ORDER = ['N5', 'N4', 'N3', 'N2', 'N1'];
+        const primary = activeAnnotations.reduce((best, a) =>
+          JLPT_ORDER.indexOf(a.grammar_points?.jlpt_level ?? 'N5') >
+          JLPT_ORDER.indexOf(best.grammar_points?.jlpt_level ?? 'N5')
+            ? a
+            : best
+        );
         const level = primary.grammar_points?.jlpt_level ?? 'N5';
         const color = `var(--mantine-color-${JLPT_LEVEL_COLORS[level]}-6)`;
 
