@@ -108,7 +108,7 @@ export default function GrammarPointPage() {
           </Badge>
         </Group>
         <Text c="dimmed">{grammarPoint.romaji}</Text>
-        <Text mt="xs">{grammarPoint.meaning}</Text>
+        <Text mt="xs">{grammarPoint.meaning ? grammarPoint.meaning.charAt(0).toUpperCase() + grammarPoint.meaning.slice(1) : ''}</Text>
         {grammarPoint.notes && (
           <Text size="sm" c="dimmed" mt="xs">
             {grammarPoint.notes}

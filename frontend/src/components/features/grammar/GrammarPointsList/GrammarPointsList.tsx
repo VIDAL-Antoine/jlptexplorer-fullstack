@@ -150,7 +150,7 @@ export function GrammarPointsList() {
                     {gp.romaji}
                   </Text>
                   <Text size="md" mt="xs">
-                    {gp.meaning}
+                    {gp.meaning ? gp.meaning.charAt(0).toUpperCase() + gp.meaning.slice(1) : ''}
                   </Text>
                 </Card>
               ) : (
@@ -173,7 +173,7 @@ export function GrammarPointsList() {
                     {gp.romaji}
                   </Text>
                   <Text size="md" mt="xs">
-                    {gp.meaning}
+                    {gp.meaning ? gp.meaning.charAt(0).toUpperCase() + gp.meaning.slice(1) : ''}
                   </Text>
                   <Badge mt="xs" color="gray" variant="light">
                     {t('noScenes')}

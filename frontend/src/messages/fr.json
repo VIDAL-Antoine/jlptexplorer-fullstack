@@ -4,7 +4,7 @@
     "openSettings": "Paramètres"
   },
   "Footer": {
-    "tagline": "JLPTExplorer — La grammaire japonaise en contexte"
+    "tagline": "JLPTExplorer — La grammaire japonaise avec du contexte"
   },
   "Navbar": {
     "browse": "Parcourir",
@@ -41,7 +41,7 @@
     "seekTo": "Aller à {time}"
   },
   "HomePage": {
-    "tagline": "La grammaire japonaise en contexte — JLPT N5 à N1",
+    "tagline": "La grammaire japonaise avec du contexte — JLPT N5 à N1",
     "ctaGrammar": "Parcourir les points de grammaire",
     "ctaSources": "Explorer les sources",
     "feature1Title": "Contexte réel",
