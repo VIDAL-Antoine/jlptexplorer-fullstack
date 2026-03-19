@@ -23,28 +23,41 @@ export function buildTranscriptLineIncludeAll() {
   };
 }
 
-export async function findTranscriptLinesBySceneId(
-  sceneId: number,
+export async function findTranscriptLines(
   locale: string,
-  filters: { speakerSlug?: string; startTime?: number; grammarPointSlugs?: string[] } = {},
+  filters: {
+    sceneId?: number;
+    speakerSlug?: string;
+    startTime?: number;
+    grammarPointSlugs?: string[];
+    page: number;
+    limit: number;
+  },
 ) {
-  const { speakerSlug, startTime, grammarPointSlugs } = filters;
-  return prisma.transcript_lines.findMany({
-    where: {
-      scene_id: sceneId,
-      ...(speakerSlug !== undefined ? { speakers: { slug: speakerSlug } } : {}),
-      ...(startTime !== undefined ? { start_time: startTime } : {}),
-      ...(grammarPointSlugs?.length
-        ? {
-            transcript_line_grammar_points: {
-              some: { grammar_points: { slug: { in: grammarPointSlugs } } },
-            },
-          }
-        : {}),
-    },
-    orderBy: { start_time: 'asc' },
-    include: buildTranscriptLineInclude(locale),
-  });
+  const { sceneId, speakerSlug, startTime, grammarPointSlugs, page, limit } = filters;
+  const where = {
+    ...(sceneId !== undefined ? { scene_id: sceneId } : {}),
+    ...(speakerSlug !== undefined ? { speakers: { slug: speakerSlug } } : {}),
+    ...(startTime !== undefined ? { start_time: startTime } : {}),
+    ...(grammarPointSlugs?.length
+      ? {
+          transcript_line_grammar_points: {
+            some: { grammar_points: { slug: { in: grammarPointSlugs } } },
+          },
+        }
+      : {}),
+  };
+  const [lines, total] = await Promise.all([
+    prisma.transcript_lines.findMany({
+      where,
+      orderBy: [{ scene_id: 'asc' }, { start_time: 'asc' }],
+      skip: (page - 1) * limit,
+      take: limit,
+      include: buildTranscriptLineInclude(locale),
+    }),
+    prisma.transcript_lines.count({ where }),
+  ]);
+  return { lines, total };
 }
 
 export async function findTranscriptLineById(id: number, locale: string) {

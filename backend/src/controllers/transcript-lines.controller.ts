@@ -12,16 +12,22 @@ export async function listTranscriptLines(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListTranscriptLinesQuery }>,
   reply: FastifyReply,
 ) {
-  const sceneId = parseInt(request.query.scene_id, 10);
-  if (isNaN(sceneId)) {
+  const { scene_id, speaker_slug, start_time, grammar_points } = request.query;
+  const page = Math.max(1, parseInt(request.query.page ?? '1', 10) || 1);
+  const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? '20', 10) || 20));
+
+  const sceneId = scene_id !== undefined ? parseInt(scene_id, 10) : undefined;
+  if (sceneId !== undefined && isNaN(sceneId)) {
     return reply.status(400).send({ error: 'Invalid scene_id' });
   }
 
-  const { speaker_slug, start_time, grammar_points } = request.query;
-  const result = await transcriptLinesService.listTranscriptLines(sceneId, request.params.locale, {
+  const result = await transcriptLinesService.listTranscriptLines(request.params.locale, {
+    ...(sceneId !== undefined ? { sceneId } : {}),
     ...(speaker_slug !== undefined ? { speakerSlug: speaker_slug } : {}),
     ...(start_time !== undefined ? { startTime: parseInt(start_time, 10) } : {}),
     ...(grammar_points !== undefined ? { grammarPointSlugs: grammar_points.split(',') } : {}),
+    page,
+    limit,
   });
   if (!result) {
     return reply.status(404).send({ error: 'Scene not found' });

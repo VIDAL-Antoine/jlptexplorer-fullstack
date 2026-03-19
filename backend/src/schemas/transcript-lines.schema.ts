@@ -22,10 +22,12 @@ export const transcriptLineParams = localeParams.extend({ id: z.string() });
 export const transcriptLineAdminParams = idParams;
 
 export const listTranscriptLinesQuery = z.object({
-  scene_id: z.string(),
+  scene_id: z.string().optional(),
   speaker_slug: z.string().optional(),
   start_time: z.string().optional(),
   grammar_points: z.string().optional(),
+  page: z.string().optional(),
+  limit: z.string().optional(),
 });
 
 export type TranscriptLineCreateBody = z.infer<typeof transcriptLineCreateBody>;

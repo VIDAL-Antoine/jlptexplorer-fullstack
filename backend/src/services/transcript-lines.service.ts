@@ -28,21 +28,32 @@ async function resolveSpeakerSlug(slug: string): Promise<number> {
   return speakers[0].id;
 }
 
+const DEFAULT_LIMIT = 20;
+
 export async function listTranscriptLines(
-  sceneId: number,
   locale: string,
-  filters: { speakerSlug?: string; startTime?: number; grammarPointSlugs?: string[] } = {},
+  filters: {
+    sceneId?: number;
+    speakerSlug?: string;
+    startTime?: number;
+    grammarPointSlugs?: string[];
+    page: number;
+    limit: number;
+  },
 ) {
-  const sceneExists = await scenesRepository.findSceneByIdAll(sceneId);
-  if (!sceneExists) {
-    return null;
+  if (filters.sceneId !== undefined) {
+    const sceneExists = await scenesRepository.findSceneByIdAll(filters.sceneId);
+    if (!sceneExists) {
+      return null;
+    }
   }
-  const lines = await transcriptLinesRepository.findTranscriptLinesBySceneId(
-    sceneId,
-    locale,
-    filters,
-  );
-  return lines.map(flattenTranscriptLine);
+  const { lines, total } = await transcriptLinesRepository.findTranscriptLines(locale, filters);
+  return {
+    lines: lines.map(flattenTranscriptLine),
+    total,
+    page: filters.page,
+    totalPages: Math.ceil(total / (filters.limit || DEFAULT_LIMIT)),
+  };
 }
 
 export async function getTranscriptLine(id: number, locale: string) {
