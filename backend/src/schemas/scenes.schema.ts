@@ -46,7 +46,17 @@ export const updateTranslationsBody = z.object({
   ),
 });
 
+export const scenePatchBody = z.object({
+  source_slug: z.string().optional(),
+  youtube_video_id: z.string().max(20).optional(),
+  start_time: z.union([z.number(), z.string()]).optional(),
+  end_time: z.union([z.number(), z.string()]).optional(),
+  episode_number: z.number().int().positive().optional(),
+  notes: z.string().optional(),
+});
+
 export type SceneBody = z.infer<typeof sceneBody>;
+export type ScenePatchBody = z.infer<typeof scenePatchBody>;
 export type TranscriptLineInput = z.infer<typeof transcriptLineInput>;
 export type GrammarPointAnnotation = z.infer<typeof grammarPointAnnotation>;
 export type UpdateTranslationsBody = z.infer<typeof updateTranslationsBody>;

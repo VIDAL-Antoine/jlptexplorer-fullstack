@@ -19,6 +19,15 @@ export const sourceBody = z.object({
   translations: z.record(z.string(), z.string()),
 });
 
+export const sourcePatchBody = z.object({
+  slug: z.string().max(100).optional(),
+  japanese_title: z.string().max(255).optional(),
+  type: sourceType.optional(),
+  cover_image_url: z.string().max(500).optional(),
+  translations: z.record(z.string(), z.string()).optional(),
+});
+
 export type SourceBody = z.infer<typeof sourceBody>;
+export type SourcePatchBody = z.infer<typeof sourcePatchBody>;
 export type ListSourcesQuery = z.infer<typeof listSourcesQuery>;
 export type SourceSceneQuery = z.infer<typeof sourceSceneQuery>;

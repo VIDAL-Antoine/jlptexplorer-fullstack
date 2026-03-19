@@ -68,6 +68,30 @@ export async function updateSpeaker(
   };
 }
 
+export async function patchSpeaker(
+  paramSlug: string,
+  data: {
+    slug?: string;
+    name_japanese?: string;
+    image_url?: string;
+    translations?: Record<string, string>;
+    descriptions?: Record<string, string>;
+  },
+) {
+  const existing = await speakersRepository.findSpeakerIdBySlug(paramSlug);
+  if (!existing) {
+    return null;
+  }
+
+  const speaker = await speakersRepository.patchSpeaker(paramSlug, existing.id, data);
+  return {
+    ...speaker,
+    translations: Object.fromEntries(
+      speaker.translations.map((t) => [t.locale, { name: t.name, description: t.description }]),
+    ),
+  };
+}
+
 export async function deleteSpeaker(slug: string) {
   return speakersRepository.deleteSpeaker(slug);
 }

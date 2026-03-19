@@ -7,6 +7,10 @@ import { sourcesPublicRoutes, sourcesAdminRoutes } from '@/routes/v1/sources';
 import { scenesPublicRoutes, scenesAdminRoutes } from '@/routes/v1/scenes';
 import { grammarPointsRoutes } from '@/routes/v1/grammar-points';
 import { speakersPublicRoutes, speakersAdminRoutes } from '@/routes/v1/speakers';
+import {
+  transcriptLinesPublicRoutes,
+  transcriptLinesAdminRoutes,
+} from '@/routes/v1/transcript-lines';
 
 async function start() {
   const server = fastify({ logger: true });
@@ -28,12 +32,14 @@ async function start() {
           localeApi.register(scenesPublicRoutes, { prefix: '/scenes' });
           localeApi.register(grammarPointsRoutes, { prefix: '/grammar-points' });
           localeApi.register(speakersPublicRoutes, { prefix: '/speakers' });
+          localeApi.register(transcriptLinesPublicRoutes, { prefix: '/transcript-lines' });
         },
         { prefix: '/:locale' },
       );
       api.register(scenesAdminRoutes, { prefix: '/scenes' });
       api.register(speakersAdminRoutes, { prefix: '/speakers' });
       api.register(sourcesAdminRoutes, { prefix: '/sources' });
+      api.register(transcriptLinesAdminRoutes, { prefix: '/transcript-lines' });
     },
     { prefix: '/api/v1' },
   );

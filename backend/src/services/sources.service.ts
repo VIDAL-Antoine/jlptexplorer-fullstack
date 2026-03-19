@@ -100,6 +100,28 @@ export async function updateSource(
   };
 }
 
+export async function patchSource(
+  paramSlug: string,
+  data: {
+    slug?: string;
+    japanese_title?: string;
+    type?: source_type;
+    cover_image_url?: string;
+    translations?: Record<string, string>;
+  },
+) {
+  const existing = await sourcesRepository.findSourceIdBySlug(paramSlug);
+  if (!existing) {
+    return null;
+  }
+
+  const source = await sourcesRepository.patchSource(paramSlug, existing.id, data);
+  return {
+    ...source,
+    translations: Object.fromEntries(source.translations.map((t) => [t.locale, t.title])),
+  };
+}
+
 export async function deleteSource(slug: string) {
   return sourcesRepository.deleteSource(slug);
 }

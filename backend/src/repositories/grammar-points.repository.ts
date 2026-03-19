@@ -193,6 +193,48 @@ export async function updateGrammarPoint(
   });
 }
 
+export async function patchGrammarPoint(
+  paramSlug: string,
+  grammarPointId: number,
+  data: {
+    slug?: string;
+    title?: string;
+    romaji?: string;
+    jlpt_level?: jlpt_level;
+    locale: string;
+    meaning?: string;
+    notes?: string;
+  },
+) {
+  const { slug, title, romaji, jlpt_level: jlptLevel, locale, meaning, notes } = data;
+  const hasTranslationUpdate = meaning !== undefined || notes !== undefined;
+
+  return prisma.grammar_points.update({
+    where: { slug: paramSlug },
+    data: {
+      ...(slug !== undefined ? { slug } : {}),
+      ...(title !== undefined ? { title } : {}),
+      ...(romaji !== undefined ? { romaji } : {}),
+      ...(jlptLevel !== undefined ? { jlpt_level: jlptLevel } : {}),
+      ...(hasTranslationUpdate
+        ? {
+            translations: {
+              upsert: {
+                where: { grammar_point_id_locale: { grammar_point_id: grammarPointId, locale } },
+                create: { locale, meaning: meaning ?? '', notes },
+                update: {
+                  ...(meaning !== undefined ? { meaning } : {}),
+                  ...(notes !== undefined ? { notes } : {}),
+                },
+              },
+            },
+          }
+        : {}),
+    },
+    include: { translations: { where: { locale } } },
+  });
+}
+
 export async function deleteGrammarPoint(slug: string) {
   return prisma.grammar_points.delete({ where: { slug } });
 }

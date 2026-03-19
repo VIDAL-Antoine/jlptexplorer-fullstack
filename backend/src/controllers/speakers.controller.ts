@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as speakersService from '@/services/speakers.service';
 import type { LocaleParams } from '@/schemas/common.schema';
-import type { SpeakerBody } from '@/schemas/speakers.schema';
+import type { SpeakerBody, SpeakerPatchBody } from '@/schemas/speakers.schema';
 
 export async function listSpeakers(
   request: FastifyRequest<{ Params: LocaleParams }>,
@@ -34,6 +34,17 @@ export async function updateSpeaker(
   reply: FastifyReply,
 ) {
   const result = await speakersService.updateSpeaker(request.params.slug, request.body);
+  if (!result) {
+    return reply.status(404).send({ error: 'Speaker not found' });
+  }
+  return result;
+}
+
+export async function patchSpeaker(
+  request: FastifyRequest<{ Params: { slug: string }; Body: SpeakerPatchBody }>,
+  reply: FastifyReply,
+) {
+  const result = await speakersService.patchSpeaker(request.params.slug, request.body);
   if (!result) {
     return reply.status(404).send({ error: 'Speaker not found' });
   }

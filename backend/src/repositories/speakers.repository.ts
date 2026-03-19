@@ -93,6 +93,39 @@ export async function updateSpeaker(
   });
 }
 
+export async function patchSpeaker(
+  paramSlug: string,
+  speakerId: number,
+  data: {
+    slug?: string;
+    name_japanese?: string;
+    image_url?: string;
+    translations?: Record<string, string>;
+    descriptions?: Record<string, string>;
+  },
+) {
+  return prisma.speakers.update({
+    where: { slug: paramSlug },
+    data: {
+      ...(data.slug !== undefined ? { slug: data.slug } : {}),
+      ...(data.name_japanese !== undefined ? { name_japanese: data.name_japanese } : {}),
+      ...(data.image_url !== undefined ? { image_url: data.image_url } : {}),
+      ...(data.translations
+        ? {
+            translations: {
+              upsert: Object.entries(data.translations).map(([locale, name]) => ({
+                where: { speaker_id_locale: { speaker_id: speakerId, locale } },
+                create: { locale, name, description: data.descriptions?.[locale] ?? null },
+                update: { name, ...(data.descriptions?.[locale] !== undefined ? { description: data.descriptions[locale] } : {}) },
+              })),
+            },
+          }
+        : {}),
+    },
+    include: { translations: true },
+  });
+}
+
 export async function deleteSpeaker(slug: string) {
   return prisma.speakers.delete({ where: { slug } });
 }

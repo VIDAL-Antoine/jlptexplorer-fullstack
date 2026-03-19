@@ -1,7 +1,12 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as sourcesService from '@/services/sources.service';
 import type { LocaleParams } from '@/schemas/common.schema';
-import type { SourceBody, ListSourcesQuery, SourceSceneQuery } from '@/schemas/sources.schema';
+import type {
+  SourceBody,
+  SourcePatchBody,
+  ListSourcesQuery,
+  SourceSceneQuery,
+} from '@/schemas/sources.schema';
 
 export async function listSources(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListSourcesQuery }>,
@@ -61,6 +66,17 @@ export async function updateSource(
   reply: FastifyReply,
 ) {
   const result = await sourcesService.updateSource(request.params.slug, request.body);
+  if (!result) {
+    return reply.status(404).send({ error: 'Source not found' });
+  }
+  return result;
+}
+
+export async function patchSource(
+  request: FastifyRequest<{ Params: { slug: string }; Body: SourcePatchBody }>,
+  reply: FastifyReply,
+) {
+  const result = await sourcesService.patchSource(request.params.slug, request.body);
   if (!result) {
     return reply.status(404).send({ error: 'Source not found' });
   }

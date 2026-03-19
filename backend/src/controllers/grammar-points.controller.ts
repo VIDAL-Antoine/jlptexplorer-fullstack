@@ -3,6 +3,7 @@ import * as grammarPointsService from '@/services/grammar-points.service';
 import type { LocaleParams } from '@/schemas/common.schema';
 import type {
   GrammarPointBody,
+  GrammarPointPatchBody,
   GrammarPointParams,
   ListGrammarPointsQuery,
   GrammarPointScenesQuery,
@@ -74,6 +75,21 @@ export async function updateGrammarPoint(
   reply: FastifyReply,
 ) {
   const result = await grammarPointsService.updateGrammarPoint(
+    request.params.locale,
+    request.params.slug,
+    request.body,
+  );
+  if (!result) {
+    return reply.status(404).send({ error: 'Grammar point not found' });
+  }
+  return result;
+}
+
+export async function patchGrammarPoint(
+  request: FastifyRequest<{ Params: GrammarPointParams; Body: GrammarPointPatchBody }>,
+  reply: FastifyReply,
+) {
+  const result = await grammarPointsService.patchGrammarPoint(
     request.params.locale,
     request.params.slug,
     request.body,

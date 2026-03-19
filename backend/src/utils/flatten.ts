@@ -94,6 +94,18 @@ export function flattenScene(scene: {
   };
 }
 
+export function flattenTranscriptLineAll<
+  T extends {
+    translations: Array<{ locale: string; translation: string | null }>;
+  },
+>(line: T) {
+  const { translations, ...rest } = line;
+  return {
+    ...rest,
+    translations: Object.fromEntries(translations.map((t) => [t.locale, t.translation])),
+  };
+}
+
 export function flattenSceneAll<
   T extends {
     transcript_lines: Array<{

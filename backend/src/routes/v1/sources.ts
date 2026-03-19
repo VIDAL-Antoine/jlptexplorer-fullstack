@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { listSourcesQuery, sourceBody, sourceSceneQuery } from '@/schemas/sources.schema';
+import { listSourcesQuery, sourceBody, sourcePatchBody, sourceSceneQuery } from '@/schemas/sources.schema';
 import { localeParams, slugParams } from '@/schemas/common.schema';
 import {
   listSources,
@@ -8,6 +8,7 @@ import {
   getSourceScenes,
   createSource,
   updateSource,
+  patchSource,
   deleteSource,
 } from '@/controllers/sources.controller';
 
@@ -34,6 +35,11 @@ export async function sourcesAdminRoutes(server: FastifyInstance) {
     '/:slug',
     { schema: { tags: TAGS, params: slugParams, body: sourceBody } },
     updateSource,
+  );
+  server.patch(
+    '/:slug',
+    { schema: { tags: TAGS, params: slugParams, body: sourcePatchBody } },
+    patchSource,
   );
   server.delete('/:slug', { schema: { tags: TAGS, params: slugParams } }, deleteSource);
 }

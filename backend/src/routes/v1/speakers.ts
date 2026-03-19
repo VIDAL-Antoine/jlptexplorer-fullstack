@@ -1,12 +1,13 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { speakerBody } from '@/schemas/speakers.schema';
+import { speakerBody, speakerPatchBody } from '@/schemas/speakers.schema';
 import { localeParams, slugParams } from '@/schemas/common.schema';
 import {
   listSpeakers,
   getSpeaker,
   createSpeaker,
   updateSpeaker,
+  patchSpeaker,
   deleteSpeaker,
 } from '@/controllers/speakers.controller';
 
@@ -24,6 +25,11 @@ export async function speakersAdminRoutes(server: FastifyInstance) {
     '/:slug',
     { schema: { tags: TAGS, params: slugParams, body: speakerBody } },
     updateSpeaker,
+  );
+  server.patch(
+    '/:slug',
+    { schema: { tags: TAGS, params: slugParams, body: speakerPatchBody } },
+    patchSpeaker,
   );
   server.delete('/:slug', { schema: { tags: TAGS, params: slugParams } }, deleteSpeaker);
 }

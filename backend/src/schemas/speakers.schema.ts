@@ -8,4 +8,13 @@ export const speakerBody = z.object({
   descriptions: z.record(z.string(), z.string()).optional(),
 });
 
+export const speakerPatchBody = z.object({
+  slug: z.string().max(100).optional(),
+  name_japanese: z.string().max(100).optional(),
+  image_url: z.string().max(500).optional(),
+  translations: z.record(z.string(), z.string()).optional(),
+  descriptions: z.record(z.string(), z.string()).optional(),
+});
+
 export type SpeakerBody = z.infer<typeof speakerBody>;
+export type SpeakerPatchBody = z.infer<typeof speakerPatchBody>;

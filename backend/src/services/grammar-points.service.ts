@@ -114,6 +114,31 @@ export async function updateGrammarPoint(
   return flattenGrammarPoint(grammarPoint);
 }
 
+export async function patchGrammarPoint(
+  locale: string,
+  paramSlug: string,
+  data: {
+    slug?: string;
+    title?: string;
+    romaji?: string;
+    meaning?: string;
+    jlpt_level?: jlpt_level;
+    notes?: string;
+  },
+) {
+  const existing = await grammarPointsRepository.findGrammarPointIdBySlug(paramSlug);
+  if (!existing) {
+    return null;
+  }
+
+  const grammarPoint = await grammarPointsRepository.patchGrammarPoint(
+    paramSlug,
+    existing.id,
+    { ...data, locale },
+  );
+  return flattenGrammarPoint(grammarPoint);
+}
+
 export async function deleteGrammarPoint(slug: string) {
   return grammarPointsRepository.deleteGrammarPoint(slug);
 }

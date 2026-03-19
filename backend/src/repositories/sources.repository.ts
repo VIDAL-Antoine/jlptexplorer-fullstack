@@ -129,6 +129,40 @@ export async function updateSource(
   });
 }
 
+export async function patchSource(
+  paramSlug: string,
+  sourceId: number,
+  data: {
+    slug?: string;
+    japanese_title?: string;
+    type?: source_type;
+    cover_image_url?: string;
+    translations?: Record<string, string>;
+  },
+) {
+  return prisma.sources.update({
+    where: { slug: paramSlug },
+    data: {
+      ...(data.slug !== undefined ? { slug: data.slug } : {}),
+      ...(data.japanese_title !== undefined ? { japanese_title: data.japanese_title } : {}),
+      ...(data.type !== undefined ? { type: data.type } : {}),
+      ...(data.cover_image_url !== undefined ? { cover_image_url: data.cover_image_url } : {}),
+      ...(data.translations
+        ? {
+            translations: {
+              upsert: Object.entries(data.translations).map(([locale, title]) => ({
+                where: { source_id_locale: { source_id: sourceId, locale } },
+                create: { locale, title },
+                update: { title },
+              })),
+            },
+          }
+        : {}),
+    },
+    include: { translations: true },
+  });
+}
+
 export async function deleteSource(slug: string) {
   return prisma.sources.delete({ where: { slug } });
 }

@@ -25,7 +25,17 @@ export const grammarPointScenesQuery = paginationQuery.extend({
   sources: z.string().optional(),
 });
 
+export const grammarPointPatchBody = z.object({
+  slug: z.string().max(100).optional(),
+  title: z.string().max(100).optional(),
+  romaji: z.string().max(100).optional(),
+  meaning: z.string().optional(),
+  jlpt_level: jlptLevel.optional(),
+  notes: z.string().optional(),
+});
+
 export type GrammarPointBody = z.infer<typeof grammarPointBody>;
+export type GrammarPointPatchBody = z.infer<typeof grammarPointPatchBody>;
 export type ListGrammarPointsQuery = z.infer<typeof listGrammarPointsQuery>;
 export type GrammarPointParams = z.infer<typeof grammarPointParams>;
 export type GrammarPointScenesQuery = z.infer<typeof grammarPointScenesQuery>;

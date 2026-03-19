@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import {
   listGrammarPointsQuery,
   grammarPointBody,
+  grammarPointPatchBody,
   grammarPointParams,
   grammarPointScenesQuery,
 } from '@/schemas/grammar-points.schema';
@@ -12,6 +13,7 @@ import {
   getGrammarPointScenes,
   createGrammarPoint,
   updateGrammarPoint,
+  patchGrammarPoint,
   deleteGrammarPoint,
 } from '@/controllers/grammar-points.controller';
 
@@ -38,6 +40,11 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     '/:slug',
     { schema: { tags: TAGS, params: grammarPointParams, body: grammarPointBody } },
     updateGrammarPoint,
+  );
+  server.patch(
+    '/:slug',
+    { schema: { tags: TAGS, params: grammarPointParams, body: grammarPointPatchBody } },
+    patchGrammarPoint,
   );
   server.delete(
     '/:slug',

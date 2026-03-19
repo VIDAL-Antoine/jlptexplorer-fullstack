@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import {
   sceneBody,
+  scenePatchBody,
   sceneParams,
   adminSceneParams,
   updateTranslationsBody,
@@ -13,6 +14,7 @@ import {
   getScene,
   createScene,
   updateScene,
+  patchScene,
   deleteScene,
   updateTranslations,
 } from '@/controllers/scenes.controller';
@@ -39,6 +41,11 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
     '/:id',
     { schema: { tags: TAGS, params: adminSceneParams, body: sceneBody } },
     updateScene,
+  );
+  server.patch(
+    '/:id',
+    { schema: { tags: TAGS, params: adminSceneParams, body: scenePatchBody } },
+    patchScene,
   );
   server.delete('/:id', { schema: { tags: TAGS, params: adminSceneParams } }, deleteScene);
 }

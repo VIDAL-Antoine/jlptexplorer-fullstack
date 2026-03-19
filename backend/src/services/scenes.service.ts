@@ -190,6 +190,45 @@ export async function updateScene(
   return flattenSceneAll(scene);
 }
 
+export async function patchScene(
+  id: number,
+  body: {
+    source_slug?: string;
+    youtube_video_id?: string;
+    start_time?: number | string;
+    end_time?: number | string;
+    episode_number?: number;
+    notes?: string;
+  },
+) {
+  const existing = await scenesRepository.findSceneByIdAll(id);
+  if (!existing) {
+    return null;
+  }
+
+  let source_id: number | undefined;
+  if (body.source_slug !== undefined) {
+    const source = await sourcesRepository.findSourceIdBySlug(body.source_slug);
+    if (!source) {
+      throw Object.assign(new Error(`Unknown source slug: ${body.source_slug}`), {
+        statusCode: 400,
+      });
+    }
+    source_id = source.id;
+  }
+
+  const scene = await scenesRepository.updateScene(id, {
+    ...(source_id !== undefined ? { source_id } : {}),
+    ...(body.youtube_video_id !== undefined ? { youtube_video_id: body.youtube_video_id } : {}),
+    ...(body.start_time !== undefined ? { start_time: parseTime(body.start_time) } : {}),
+    ...(body.end_time !== undefined ? { end_time: parseTime(body.end_time) } : {}),
+    ...(body.episode_number !== undefined ? { episode_number: body.episode_number } : {}),
+    ...(body.notes !== undefined ? { notes: body.notes } : {}),
+  });
+
+  return flattenSceneAll(scene);
+}
+
 export async function deleteScene(id: number) {
   return scenesRepository.deleteScene(id);
 }
