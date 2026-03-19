@@ -22,6 +22,11 @@ export async function registerSwagger(server: FastifyInstance) {
         },
         { name: 'grammar-points', description: 'JLPT grammar points' },
         { name: 'speakers', description: 'Character speakers' },
+        { name: 'transcript-lines', description: 'Dialogue lines within a scene' },
+        {
+          name: 'transcript-line-grammar-points',
+          description: 'Grammar point annotations on transcript lines (add, edit, delete)',
+        },
       ],
     },
     transform: jsonSchemaTransform,

@@ -11,6 +11,7 @@ import {
   transcriptLinesPublicRoutes,
   transcriptLinesAdminRoutes,
 } from '@/routes/v1/transcript-lines';
+import { transcriptLineGrammarPointsAdminRoutes } from '@/routes/v1/transcript-line-grammar-points';
 
 async function start() {
   const server = fastify({ logger: true });
@@ -40,6 +41,7 @@ async function start() {
       api.register(speakersAdminRoutes, { prefix: '/speakers' });
       api.register(sourcesAdminRoutes, { prefix: '/sources' });
       api.register(transcriptLinesAdminRoutes, { prefix: '/transcript-lines' });
+      api.register(transcriptLineGrammarPointsAdminRoutes, { prefix: '/transcript-line-grammar-points' });
     },
     { prefix: '/api/v1' },
   );
