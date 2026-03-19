@@ -99,10 +99,9 @@ export default function SourcePage() {
     ...selectedGrammarPoints.filter((gp) => !availableGrammarPoints.some((a) => a.id === gp.id)),
   ];
 
-  const currentGrammarPointIds =
-    grammarFilter.length > 0
-      ? mergedGrammarPoints.filter((gp) => grammarFilter.includes(gp.slug)).map((gp) => gp.id)
-      : undefined;
+  const currentGrammarPointIds = mergedGrammarPoints
+    .filter((gp) => grammarFilter.includes(gp.slug))
+    .map((gp) => gp.id);
 
   return (
     <Stack mt="xl" gap="lg">
