@@ -48,7 +48,7 @@ export function flattenTranscriptLine(line: {
   scene_id: number;
   start_time: number | null;
   speaker_id: number | null;
-  text: string;
+  japanese_text: string;
   translations: { translation: string | null }[];
 }) {
   const { translations, ...rest } = line;

@@ -163,7 +163,7 @@ export type TranscriptLine = {
   start_time: number | null;
   speaker_id: number | null;
   speakers: Speaker | null;
-  text: string;
+  japanese_text: string;
   translation: string | null;
   transcript_line_grammar_points: TranscriptLineGrammarPoint[];
 };

@@ -3,7 +3,7 @@ model transcript_lines {
   scene_id                       Int
   start_time                     Int?
   speaker_id                     Int?
-  text                           String
+  japanese_text                  String
   scenes                         scenes                           @relation(fields: [scene_id], references: [id], onDelete: Cascade)
   speakers                       speakers?                        @relation(fields: [speaker_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   transcript_line_grammar_points transcript_line_grammar_points[]

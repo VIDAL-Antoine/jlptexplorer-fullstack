@@ -21,7 +21,7 @@ export const grammarPointAnnotation = z.object({
 export const transcriptLineInput = z.object({
   start_time: z.union([z.number(), z.string()]).optional(),
   speaker_slug: z.string().optional(),
-  text: z.string(),
+  japanese_text: z.string(),
   translations: z.record(z.string(), z.string()).optional(),
   grammar_points: z.array(grammarPointAnnotation).optional(),
 });

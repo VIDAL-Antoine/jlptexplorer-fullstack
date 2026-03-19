@@ -142,7 +142,7 @@ export function SceneCard({
                 </Group>
                 <Text size="md" fw={hasGrammar ? 600 : 400} lang="ja">
                   <AnnotatedText
-                    text={line.text}
+                    text={line.japanese_text}
                     annotations={line.transcript_line_grammar_points}
                     currentGrammarPointIds={currentGrammarPointIds}
                     script={grammarPointTranscriptScript}

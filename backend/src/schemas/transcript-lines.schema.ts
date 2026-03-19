@@ -12,7 +12,7 @@ export const transcriptLineUpdateBody = transcriptLineInput.extend({
 });
 
 export const transcriptLinePatchBody = z.object({
-  text: z.string().optional(),
+  japanese_text: z.string().optional(),
   start_time: z.union([z.number(), z.string()]).optional(),
   speaker_slug: z.string().optional(),
   translations: z.record(z.string(), z.string()).optional(),

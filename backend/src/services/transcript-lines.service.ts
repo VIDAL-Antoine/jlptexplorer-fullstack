@@ -62,7 +62,7 @@ export async function getTranscriptLine(id: number, locale: string) {
 }
 
 export async function createTranscriptLine(body: TranscriptLineCreateBody) {
-  const { scene_id, speaker_slug, grammar_points, translations, start_time, text } = body;
+  const { scene_id, speaker_slug, grammar_points, translations, start_time, japanese_text } = body;
 
   const sceneExists = await scenesRepository.findSceneByIdAll(scene_id);
   if (!sceneExists) {
@@ -78,7 +78,7 @@ export async function createTranscriptLine(body: TranscriptLineCreateBody) {
 
   const line = await transcriptLinesRepository.createTranscriptLine({
     scene_id,
-    text,
+    japanese_text,
     start_time: parseTime(start_time),
     ...(speakerId !== undefined ? { speaker_id: speakerId } : {}),
     ...(translations && Object.keys(translations).length
@@ -121,7 +121,7 @@ export async function updateTranscriptLine(id: number, body: TranscriptLineUpdat
     return null;
   }
 
-  const { speaker_slug, grammar_points, translations, start_time, text } = body;
+  const { speaker_slug, grammar_points, translations, start_time, japanese_text } = body;
 
   const [speakerId, grammarSlugToId] = await Promise.all([
     speaker_slug ? resolveSpeakerSlug(speaker_slug) : Promise.resolve(undefined),
@@ -147,7 +147,7 @@ export async function updateTranscriptLine(id: number, body: TranscriptLineUpdat
   const line = await transcriptLinesRepository.replaceTranscriptLine(
     id,
     {
-      text,
+      japanese_text,
       start_time: parseTime(start_time),
       ...(speakerId !== undefined ? { speaker_id: speakerId } : { speaker_id: null }),
       ...(translations
@@ -171,7 +171,7 @@ export async function updateTranscriptLine(id: number, body: TranscriptLineUpdat
 export async function patchTranscriptLine(
   id: number,
   body: {
-    text?: string;
+    japanese_text?: string;
     start_time?: number | string;
     speaker_slug?: string;
     translations?: Record<string, string>;
@@ -186,7 +186,7 @@ export async function patchTranscriptLine(
     body.speaker_slug !== undefined ? await resolveSpeakerSlug(body.speaker_slug) : undefined;
 
   await transcriptLinesRepository.updateTranscriptLine(id, {
-    ...(body.text !== undefined ? { text: body.text } : {}),
+    ...(body.japanese_text !== undefined ? { japanese_text: body.japanese_text } : {}),
     ...(body.start_time !== undefined ? { start_time: parseTime(body.start_time) } : {}),
     ...(speakerId !== undefined ? { speaker_id: speakerId } : {}),
   });
