@@ -131,7 +131,9 @@ export default function SourcePage() {
             </Text>
             {source.grammar_points.length > 0 && (
               <>
-                <Text size="sm" c="dimmed">·</Text>
+                <Text size="sm" c="dimmed">
+                  ·
+                </Text>
                 <Text size="sm" c="dimmed">
                   {t('grammarPointsCount', { count: source.grammar_points.length })}
                 </Text>
