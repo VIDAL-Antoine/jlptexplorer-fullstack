@@ -17,7 +17,12 @@ export async function listTranscriptLines(
     return reply.status(400).send({ error: 'Invalid scene_id' });
   }
 
-  const result = await transcriptLinesService.listTranscriptLines(sceneId, request.params.locale);
+  const { speaker_slug, start_time, grammar_points } = request.query;
+  const result = await transcriptLinesService.listTranscriptLines(sceneId, request.params.locale, {
+    ...(speaker_slug !== undefined ? { speakerSlug: speaker_slug } : {}),
+    ...(start_time !== undefined ? { startTime: parseInt(start_time, 10) } : {}),
+    ...(grammar_points !== undefined ? { grammarPointSlugs: grammar_points.split(',') } : {}),
+  });
   if (!result) {
     return reply.status(404).send({ error: 'Scene not found' });
   }

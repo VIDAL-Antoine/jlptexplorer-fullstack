@@ -37,9 +37,18 @@ export function buildSceneIncludeAll() {
 
 export async function findScenesPage(
   locale: string,
-  options: { sourceSlugs: string[]; grammarPointSlugs: string[]; page: number; limit: number },
+  options: {
+    sourceSlugs: string[];
+    grammarPointSlugs: string[];
+    youtube_video_id?: string;
+    start_time?: number;
+    end_time?: number;
+    page: number;
+    limit: number;
+  },
 ) {
-  const { sourceSlugs, grammarPointSlugs, page, limit } = options;
+  const { sourceSlugs, grammarPointSlugs, youtube_video_id, start_time, end_time, page, limit } =
+    options;
 
   const sourceFilter: Prisma.scenesWhereInput =
     sourceSlugs.length > 0 ? { sources: { slug: { in: sourceSlugs } } } : {};
@@ -59,7 +68,13 @@ export async function findScenesPage(
         }
       : {};
 
-  const where: Prisma.scenesWhereInput = { ...sourceFilter, ...grammarFilter };
+  const exactFilter: Prisma.scenesWhereInput = {
+    ...(youtube_video_id !== undefined ? { youtube_video_id } : {}),
+    ...(start_time !== undefined ? { start_time } : {}),
+    ...(end_time !== undefined ? { end_time } : {}),
+  };
+
+  const where: Prisma.scenesWhereInput = { ...sourceFilter, ...grammarFilter, ...exactFilter };
 
   const [scenes, total, availableSources, availableGrammarPoints] = await Promise.all([
     prisma.scenes.findMany({

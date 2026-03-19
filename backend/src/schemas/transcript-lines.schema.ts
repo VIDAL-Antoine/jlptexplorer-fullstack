@@ -23,6 +23,9 @@ export const transcriptLineAdminParams = idParams;
 
 export const listTranscriptLinesQuery = z.object({
   scene_id: z.string(),
+  speaker_slug: z.string().optional(),
+  start_time: z.string().optional(),
+  grammar_points: z.string().optional(),
 });
 
 export type TranscriptLineCreateBody = z.infer<typeof transcriptLineCreateBody>;

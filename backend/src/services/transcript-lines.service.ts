@@ -28,12 +28,20 @@ async function resolveSpeakerSlug(slug: string): Promise<number> {
   return speakers[0].id;
 }
 
-export async function listTranscriptLines(sceneId: number, locale: string) {
+export async function listTranscriptLines(
+  sceneId: number,
+  locale: string,
+  filters: { speakerSlug?: string; startTime?: number; grammarPointSlugs?: string[] } = {},
+) {
   const sceneExists = await scenesRepository.findSceneByIdAll(sceneId);
   if (!sceneExists) {
     return null;
   }
-  const lines = await transcriptLinesRepository.findTranscriptLinesBySceneId(sceneId, locale);
+  const lines = await transcriptLinesRepository.findTranscriptLinesBySceneId(
+    sceneId,
+    locale,
+    filters,
+  );
   return lines.map(flattenTranscriptLine);
 }
 

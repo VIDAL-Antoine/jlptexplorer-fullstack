@@ -80,7 +80,15 @@ const DEFAULT_LIMIT = 12;
 
 export async function listScenes(
   locale: string,
-  options: { sourceSlugs: string[]; grammarPointSlugs: string[]; page: number; limit: number },
+  options: {
+    sourceSlugs: string[];
+    grammarPointSlugs: string[];
+    youtube_video_id?: string;
+    start_time?: number;
+    end_time?: number;
+    page: number;
+    limit: number;
+  },
 ) {
   const { scenes, total, availableSources, availableGrammarPoints } =
     await scenesRepository.findScenesPage(locale, options);

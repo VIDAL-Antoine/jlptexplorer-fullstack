@@ -23,9 +23,25 @@ export function buildTranscriptLineIncludeAll() {
   };
 }
 
-export async function findTranscriptLinesBySceneId(sceneId: number, locale: string) {
+export async function findTranscriptLinesBySceneId(
+  sceneId: number,
+  locale: string,
+  filters: { speakerSlug?: string; startTime?: number; grammarPointSlugs?: string[] } = {},
+) {
+  const { speakerSlug, startTime, grammarPointSlugs } = filters;
   return prisma.transcript_lines.findMany({
-    where: { scene_id: sceneId },
+    where: {
+      scene_id: sceneId,
+      ...(speakerSlug !== undefined ? { speakers: { slug: speakerSlug } } : {}),
+      ...(startTime !== undefined ? { start_time: startTime } : {}),
+      ...(grammarPointSlugs?.length
+        ? {
+            transcript_line_grammar_points: {
+              some: { grammar_points: { slug: { in: grammarPointSlugs } } },
+            },
+          }
+        : {}),
+    },
     orderBy: { start_time: 'asc' },
     include: buildTranscriptLineInclude(locale),
   });
