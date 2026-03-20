@@ -11,6 +11,7 @@ import {
   Chip,
   Group,
   Image,
+  Pagination,
   SimpleGrid,
   Skeleton,
   Stack,
@@ -21,11 +22,12 @@ import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
 import { useSettings } from '@/hooks/useSettings';
 import { Link } from '@/i18n/navigation';
-import { api, type Source } from '@/lib/api';
+import { api } from '@/lib/api';
 import { getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
 
 const VALID_SOURCE_TYPES = new Set(['game', 'anime', 'movie', 'series', 'music']);
+const PAGE_SIZE = 24;
 
 export function SourcesList() {
   const t = useTranslations('SourcesList');
@@ -37,16 +39,26 @@ export function SourcesList() {
     rawType && VALID_SOURCE_TYPES.has(rawType) ? rawType : 'all'
   );
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
   const { sourceTitleLang } = useSettings();
-
-  const { data: sources, loading } = useApiData(() => api.sources.list(locale), [locale]);
 
   const handleTypeChange = (v: string) => {
     setActiveType(v);
+    setPage(1);
     setParam('type', v === 'all' ? null : v);
   };
 
-  if (loading || !sources) {
+  const { data, loading } = useApiData(
+    () =>
+      api.sources.list(locale, {
+        type: activeType !== 'all' ? activeType : undefined,
+        page,
+        limit: PAGE_SIZE,
+      }),
+    [locale, activeType, page]
+  );
+
+  if (!data) {
     return (
       <Stack mt="xl">
         <Skeleton height={46} radius="sm" />
@@ -71,14 +83,12 @@ export function SourcesList() {
     );
   }
 
-  const availableTypes = Array.from(new Set(sources.map((s) => s.type))) as Source['type'][];
-  const filtered = sources.filter((s) => {
-    const matchesType = activeType === 'all' || s.type === activeType;
+  const filtered = data.sources.filter((s) => {
     const q = search.toLowerCase();
-    const matchesSearch =
+    return (
       (s.title ?? '').toLowerCase().includes(q) ||
-      (s.japanese_title ?? '').toLowerCase().includes(q);
-    return matchesType && matchesSearch;
+      (s.japanese_title ?? '').toLowerCase().includes(q)
+    );
   });
 
   return (
@@ -95,7 +105,7 @@ export function SourcesList() {
           <Chip value="all" size="xl">
             {t('all')}
           </Chip>
-          {availableTypes.map((type) => {
+          {data.available_types.map((type) => {
             const Icon = getSourceTypeIcon(type);
             return (
               <Chip key={type} value={type} size="xl">
@@ -109,7 +119,10 @@ export function SourcesList() {
         </Group>
       </Chip.Group>
 
-      <SimpleGrid cols={{ base: 3, sm: 3, md: 4, lg: 8 }}>
+      <SimpleGrid
+        cols={{ base: 3, sm: 3, md: 4, lg: 8 }}
+        style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.15s' }}
+      >
         {filtered.map((source) => {
           const TypeIcon = getSourceTypeIcon(source.type);
           return (
@@ -146,6 +159,12 @@ export function SourcesList() {
           );
         })}
       </SimpleGrid>
+
+      {data.totalPages > 1 && (
+        <Center>
+          <Pagination total={data.totalPages} value={page} onChange={setPage} />
+        </Center>
+      )}
     </Stack>
   );
 }

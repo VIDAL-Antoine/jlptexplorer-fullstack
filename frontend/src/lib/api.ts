@@ -57,14 +57,23 @@ export const api = {
       );
     },
   },
-  sources: {
-    list: (locale: string, type?: string) => {
+  speakers: {
+    list: (locale: string, params?: { page?: number; limit?: number }) => {
       const query = new URLSearchParams();
-      if (type) {
-        query.set('type', type);
-      }
+      if (params?.page) query.set('page', String(params.page));
+      if (params?.limit) query.set('limit', String(params.limit));
       const qs = query.toString();
-      return apiFetch<Source[]>(`/api/v1/${locale}/sources${qs ? `?${qs}` : ''}`);
+      return apiFetch<SpeakersPage>(`/api/v1/${locale}/speakers${qs ? `?${qs}` : ''}`);
+    },
+  },
+  sources: {
+    list: (locale: string, params?: { type?: string; page?: number; limit?: number }) => {
+      const query = new URLSearchParams();
+      if (params?.type) query.set('type', params.type);
+      if (params?.page) query.set('page', String(params.page));
+      if (params?.limit) query.set('limit', String(params.limit));
+      const qs = query.toString();
+      return apiFetch<SourcesPage>(`/api/v1/${locale}/sources${qs ? `?${qs}` : ''}`);
     },
     get: (locale: string, slug: string) =>
       apiFetch<SourceDetail>(`/api/v1/${locale}/sources/${slug}`),
@@ -157,6 +166,13 @@ export type Speaker = {
   image_url: string | null;
 };
 
+export type SpeakersPage = {
+  speakers: Speaker[];
+  total: number;
+  page: number;
+  totalPages: number;
+};
+
 export type TranscriptLine = {
   id: number;
   scene_id: number;
@@ -202,6 +218,14 @@ export type GrammarPointScenesPage = {
   page: number;
   totalPages: number;
   available_sources: Source[];
+};
+
+export type SourcesPage = {
+  sources: Source[];
+  total: number;
+  page: number;
+  totalPages: number;
+  available_types: Source['type'][];
 };
 
 export type SourceDetail = Source & {
