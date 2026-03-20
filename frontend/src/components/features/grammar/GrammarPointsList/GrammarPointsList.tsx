@@ -112,7 +112,7 @@ export function GrammarPointsList() {
         onChange={(e) => setInputValue(e.currentTarget.value)}
       />
 
-      {loading || !data ? (
+      {!data ? (
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }}>
           {Array.from({ length: 24 }).map((_, i) => (
             <Card key={i} shadow="sm" padding="md" radius="md" withBorder>
@@ -127,7 +127,7 @@ export function GrammarPointsList() {
         </SimpleGrid>
       ) : (
         <Stack>
-          <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }}>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.15s' }}>
             {data.grammar_points.map((gp) =>
               gp.has_scenes ? (
                 <Card
