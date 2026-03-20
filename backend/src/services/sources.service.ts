@@ -7,14 +7,17 @@ export async function listSources(
   options: { type?: source_type; page: number; limit: number },
 ) {
   const { type, page, limit } = options;
-  const all = await sourcesRepository.findSources(locale, type);
+  const all = await sourcesRepository.findSources(locale);
   const mapped = all.map(flattenSource);
-  const total = mapped.length;
+  const available_types = Array.from(new Set(mapped.map((s) => s.type)));
+  const filtered = type ? mapped.filter((s) => s.type === type) : mapped;
+  const total = filtered.length;
   return {
-    sources: mapped.slice((page - 1) * limit, page * limit),
+    sources: filtered.slice((page - 1) * limit, page * limit),
     total,
     page,
     totalPages: Math.ceil(total / limit),
+    available_types,
   };
 }
 
