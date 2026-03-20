@@ -53,8 +53,8 @@ export default function SourcePage() {
 
   function updateParams(grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (grammar.length > 0) params.set('grammar_points', grammar.join(','));
-    if (newPage > 1) params.set('page', String(newPage));
+    if (grammar.length > 0) {params.set('grammar_points', grammar.join(','));}
+    if (newPage > 1) {params.set('page', String(newPage));}
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
@@ -77,14 +77,14 @@ export default function SourcePage() {
           totalPages={0}
           page={1}
           onPageChange={() => {}}
-          loading={true}
+          loading
           pageSize={PAGE_SIZE}
           noScenesMessage=""
         />
       </Stack>
     );
   }
-  if (!source) return <NotFound />;
+  if (!source) {return <NotFound />;}
 
   const SourceTypeIcon = getSourceTypeIcon(source.type);
   const displayTitle =

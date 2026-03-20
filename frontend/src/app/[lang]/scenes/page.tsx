@@ -38,9 +38,9 @@ export default function ScenesPage() {
 
   function updateParams(sources: string[], grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (sources.length > 0) params.set('sources', sources.join(','));
-    if (grammar.length > 0) params.set('grammar_points', grammar.join(','));
-    if (newPage > 1) params.set('page', String(newPage));
+    if (sources.length > 0) {params.set('sources', sources.join(','));}
+    if (grammar.length > 0) {params.set('grammar_points', grammar.join(','));}
+    if (newPage > 1) {params.set('page', String(newPage));}
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }

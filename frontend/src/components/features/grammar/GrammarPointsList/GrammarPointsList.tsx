@@ -53,7 +53,7 @@ export function GrammarPointsList() {
   const levelSegmentedData = [
     {
       label: (
-        <Text fz={'xl'} fw={700} py="xs">
+        <Text fz="xl" fw={700} py="xs">
           {t('all')}
         </Text>
       ),
@@ -62,7 +62,7 @@ export function GrammarPointsList() {
     ...LEVELS.map((l) => ({
       label: (
         <Text
-          fz={'xl'}
+          fz="xl"
           fw={700}
           c={`${JLPT_LEVEL_COLORS[l as keyof typeof JLPT_LEVEL_COLORS]}.6`}
           py="xs"

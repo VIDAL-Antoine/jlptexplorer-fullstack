@@ -43,7 +43,7 @@ export function GrammarPointsMultiSelect({ grammarPoints, value, onChange, place
           : 'gray';
         return (
           <Group gap="xs" wrap="nowrap" w="100%">
-            <Box flex="none" w={10} h={10} bdrs={'50%'} bg={`var(--mantine-color-${color}-6)`} />
+            <Box flex="none" w={10} h={10} bdrs="50%" bg={`var(--mantine-color-${color}-6)`} />
             <Text>{option.label}</Text>
           </Group>
         );
