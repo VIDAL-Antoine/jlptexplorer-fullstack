@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export const listSpeakersQuery = z.object({
+  slug: z.string().optional(),
+  page: z.string().optional(),
+  limit: z.string().optional(),
+});
+
 export const speakerBody = z.object({
   slug: z.string().max(100),
   name_japanese: z.string().max(100).optional(),
@@ -18,3 +24,4 @@ export const speakerPatchBody = z.object({
 
 export type SpeakerBody = z.infer<typeof speakerBody>;
 export type SpeakerPatchBody = z.infer<typeof speakerPatchBody>;
+export type ListSpeakersQuery = z.infer<typeof listSpeakersQuery>;

@@ -2,9 +2,20 @@ import { flattenSource, flattenGrammarPoint, flattenScene } from '@/utils/flatte
 import * as sourcesRepository from '@/repositories/sources.repository';
 import type { source_type } from '@/generated/prisma/enums';
 
-export async function listSources(locale: string, type?: source_type) {
-  const sources = await sourcesRepository.findSources(locale, type);
-  return sources.map(flattenSource);
+export async function listSources(
+  locale: string,
+  options: { type?: source_type; page: number; limit: number },
+) {
+  const { type, page, limit } = options;
+  const all = await sourcesRepository.findSources(locale, type);
+  const mapped = all.map(flattenSource);
+  const total = mapped.length;
+  return {
+    sources: mapped.slice((page - 1) * limit, page * limit),
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
 }
 
 export async function getSource(slug: string, locale: string) {

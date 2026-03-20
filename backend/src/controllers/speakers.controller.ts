@@ -1,13 +1,15 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as speakersService from '@/services/speakers.service';
 import type { LocaleParams } from '@/schemas/common.schema';
-import type { SpeakerBody, SpeakerPatchBody } from '@/schemas/speakers.schema';
+import type { SpeakerBody, SpeakerPatchBody, ListSpeakersQuery } from '@/schemas/speakers.schema';
 
 export async function listSpeakers(
-  request: FastifyRequest<{ Params: LocaleParams }>,
+  request: FastifyRequest<{ Params: LocaleParams; Querystring: ListSpeakersQuery }>,
   _reply: FastifyReply,
 ) {
-  return speakersService.listSpeakers(request.params.locale);
+  const page = Math.max(1, parseInt(request.query.page ?? '1', 10) || 1);
+  const limit = Math.max(1, Math.min(200, parseInt(request.query.limit ?? '100', 10) || 100));
+  return speakersService.listSpeakers(request.params.locale, { slug: request.query.slug, page, limit });
 }
 
 export async function getSpeaker(

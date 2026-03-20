@@ -12,7 +12,9 @@ export async function listSources(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListSourcesQuery }>,
   _reply: FastifyReply,
 ) {
-  return sourcesService.listSources(request.params.locale, request.query.type);
+  const page = Math.max(1, parseInt(request.query.page ?? '1', 10) || 1);
+  const limit = Math.max(1, Math.min(200, parseInt(request.query.limit ?? '100', 10) || 100));
+  return sourcesService.listSources(request.params.locale, { type: request.query.type, page, limit });
 }
 
 export async function getSource(

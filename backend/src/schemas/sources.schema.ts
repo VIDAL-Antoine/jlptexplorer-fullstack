@@ -5,6 +5,8 @@ export const sourceType = z.enum(['game', 'anime', 'movie', 'series', 'music']);
 
 export const listSourcesQuery = z.object({
   type: sourceType.optional(),
+  page: z.string().optional(),
+  limit: z.string().optional(),
 });
 
 export const sourceSceneQuery = paginationQuery.extend({

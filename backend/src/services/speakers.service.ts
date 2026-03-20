@@ -1,9 +1,20 @@
 import { flattenSpeaker, flattenSource, flattenGrammarPoint } from '@/utils/flatten';
 import * as speakersRepository from '@/repositories/speakers.repository';
 
-export async function listSpeakers(locale: string) {
-  const speakers = await speakersRepository.findSpeakers(locale);
-  return speakers.map(flattenSpeaker);
+export async function listSpeakers(
+  locale: string,
+  options: { slug?: string; page: number; limit: number },
+) {
+  const { slug, page, limit } = options;
+  const all = await speakersRepository.findSpeakers(locale);
+  const mapped = all.map(flattenSpeaker).filter((s) => !slug || s.slug === slug);
+  const total = mapped.length;
+  return {
+    speakers: mapped.slice((page - 1) * limit, page * limit),
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
 }
 
 export async function getSpeaker(slug: string, locale: string) {
