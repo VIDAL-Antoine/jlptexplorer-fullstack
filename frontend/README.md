@@ -1,37 +1,40 @@
-# Mantine Next.js template
+# JLPTExplorer — Frontend
 
-This is a template for [Next.js](https://nextjs.org/) app router + [Mantine](https://mantine.dev/).
-If you want to use pages router instead, see [next-pages-template](https://github.com/mantinedev/next-pages-template).
+Next.js frontend for JLPTExplorer. Displays grammar points illustrated by YouTube clips from video games and anime.
 
-## Features
+## Stack
 
-This template comes with the following features:
+- **Framework:** Next.js 16 (App Router) + React 19
+- **UI:** Mantine 8 + Tabler Icons
+- **i18n:** next-intl (English + French, routes under `app/[lang]/`)
+- **Language:** TypeScript 5.9
+- **Package manager:** yarn 4
+- **Testing:** Jest + React Testing Library
+- **Storybook:** component development
 
-- [PostCSS](https://postcss.org/) with [mantine-postcss-preset](https://mantine.dev/styles/postcss-preset)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Storybook](https://storybook.js.org/)
-- [Jest](https://jestjs.io/) setup with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
-- ESLint setup with [eslint-config-mantine](https://github.com/mantinedev/eslint-config-mantine)
+## Dev commands
 
-## npm scripts
+```bash
+yarn dev             # start dev server (http://localhost:3000)
+yarn build           # production build
+yarn test            # lint + typecheck + jest
+yarn jest            # run tests only
+yarn storybook       # component dev server
+```
 
-### Build and dev scripts
+## Structure
 
-- `dev` – start dev server
-- `build` – bundle application for production
-- `analyze` – analyzes application bundle with [@next/bundle-analyzer](https://www.npmjs.com/package/@next/bundle-analyzer)
-
-### Testing scripts
-
-- `typecheck` – checks TypeScript types
-- `lint` – runs ESLint
-- `prettier:check` – checks files with Prettier
-- `jest` – runs jest tests
-- `jest:watch` – starts jest watch
-- `test` – runs `jest`, `prettier:check`, `lint` and `typecheck` scripts
-
-### Other scripts
-
-- `storybook` – starts storybook dev server
-- `storybook:build` – build production storybook bundle to `storybook-static`
-- `prettier:write` – formats all files with Prettier
+```
+src/
+├── app/[lang]/          ← App Router pages (i18n)
+├── components/
+│   ├── ui/              ← Presentational components
+│   ├── layout/          ← Header, Footer, Navbar, Layout
+│   └── features/        ← Feature components (grammar/, scenes/, sources/)
+├── contexts/            ← React Context providers (settings)
+├── hooks/               ← Shared hooks (useApiData, useQueryParam)
+├── lib/api/             ← API modules per domain + shared types
+├── messages/            ← i18n strings (en.json, fr.json)
+├── constants/           ← App-wide constants (JLPT levels)
+└── theme.ts             ← Mantine theme config
+```
