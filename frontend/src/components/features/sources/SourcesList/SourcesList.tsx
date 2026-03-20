@@ -20,7 +20,7 @@ import {
 } from '@mantine/core';
 import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
 import { getLocalizedTitle } from '@/utils/i18n';

@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Badge, Group, Skeleton, Stack, Text, Title } from '@mantine/core';
@@ -8,8 +7,9 @@ import NotFound from '@/app/[lang]/not-found';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourcesMultiSelect } from '@/components/features/sources/SourcesMultiSelect/SourcesMultiSelect';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
+import { useApiData } from '@/hooks/useApiData';
 import { Link } from '@/i18n/navigation';
-import { api, type GrammarPointDetail, type GrammarPointScenesPage } from '@/lib/api';
+import { api } from '@/lib/api';
 
 const PAGE_SIZE = 12;
 
@@ -25,28 +25,15 @@ export default function GrammarPointPage() {
   const sourceFilter = sourceFilterRaw ? sourceFilterRaw.split(',') : [];
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
-  const [grammarPoint, setGrammarPoint] = useState<GrammarPointDetail | null>(null);
-  const [grammarPointLoading, setGrammarPointLoading] = useState(true);
-  const [scenesPage, setScenesPage] = useState<GrammarPointScenesPage | null>(null);
-  const [scenesLoading, setScenesLoading] = useState(true);
+  const { data: grammarPoint, loading: grammarPointLoading } = useApiData(
+    () => api.grammarPoints.get(locale, slug),
+    [slug, locale]
+  );
 
-  useEffect(() => {
-    setGrammarPointLoading(true);
-    api.grammarPoints
-      .get(locale, slug)
-      .then(setGrammarPoint)
-      .catch(() => setGrammarPoint(null))
-      .finally(() => setGrammarPointLoading(false));
-  }, [slug, locale]);
-
-  useEffect(() => {
-    setScenesLoading(true);
-    api.grammarPoints
-      .scenes(locale, slug, { page, limit: PAGE_SIZE, sources: sourceFilter })
-      .then(setScenesPage)
-      .catch(() => setScenesPage(null))
-      .finally(() => setScenesLoading(false));
-  }, [slug, locale, page, sourceFilterRaw]); // eslint-disable-line react-hooks/exhaustive-deps -- sourceFilter is a new array each render; sourceFilterRaw is the stable string dep
+  const { data: scenesPage, loading: scenesLoading } = useApiData(
+    () => api.grammarPoints.scenes(locale, slug, { page, limit: PAGE_SIZE, sources: sourceFilter }),
+    [slug, locale, page, sourceFilterRaw] // eslint-disable-line react-hooks/exhaustive-deps -- sourceFilter is a new array each render; sourceFilterRaw is the stable string dep
+  );
 
   function updateParams(sources: string[], newPage: number) {
     const params = new URLSearchParams();

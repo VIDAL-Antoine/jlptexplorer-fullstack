@@ -1,29 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { IconBook } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Box, Button, Card, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS, type JlptLevel } from '@/constants/jlpt';
-import { api, type SceneWithDetails } from '@/lib/api';
+import { useApiData } from '@/hooks/useApiData';
+import { api } from '@/lib/api';
 
 const JLPT_LEVELS = Object.keys(JLPT_LEVEL_COLORS) as JlptLevel[];
 
 export default function HomePage() {
   const t = useTranslations('HomePage');
   const locale = useLocale();
-  const [featuredScene, setFeaturedScene] = useState<SceneWithDetails | null | undefined>(
-    undefined
-  );
 
-  useEffect(() => {
-    api.scenes
-      .list(locale, { limit: 1 })
-      .then((page) => setFeaturedScene(page.scenes[0] ?? null))
-      .catch(() => setFeaturedScene(null));
-  }, [locale]);
+  const { data: featuredScene } = useApiData(
+    () => api.scenes.list(locale, { limit: 1 }).then((page) => page.scenes[0] ?? null),
+    [locale]
+  );
 
   const firstGrammarPointId =
     featuredScene?.transcript_lines[0]?.transcript_line_grammar_points[0]?.grammar_point_id;

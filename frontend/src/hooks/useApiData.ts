@@ -12,12 +12,16 @@ export function useApiData<T>(
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    fetcher().then((result) => {
-      if (!cancelled) {
-        setData(result);
-        setLoading(false);
-      }
-    });
+    fetcher()
+      .then((result) => {
+        if (!cancelled) {
+          setData(result);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
     return () => {
       cancelled = true;
     };

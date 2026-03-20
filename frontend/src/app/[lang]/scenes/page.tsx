@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Stack, Title } from '@mantine/core';
 import { GrammarPointsMultiSelect } from '@/components/features/grammar/GrammarPointsMultiSelect/GrammarPointsMultiSelect';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourcesMultiSelect } from '@/components/features/sources/SourcesMultiSelect/SourcesMultiSelect';
-import { api, type ScenesPage } from '@/lib/api';
+import { useApiData } from '@/hooks/useApiData';
+import { api } from '@/lib/api';
 
 const PAGE_SIZE = 12;
 
@@ -24,17 +24,10 @@ export default function ScenesPage() {
   const grammarFilter = grammarFilterRaw ? grammarFilterRaw.split(',') : [];
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
-  const [scenesPage, setScenesPage] = useState<ScenesPage | null>(null);
-  const [scenesLoading, setScenesLoading] = useState(true);
-
-  useEffect(() => {
-    setScenesLoading(true);
-    api.scenes
-      .list(locale, { sources: sourceFilter, grammarPoints: grammarFilter, page, limit: PAGE_SIZE })
-      .then(setScenesPage)
-      .catch(() => setScenesPage(null))
-      .finally(() => setScenesLoading(false));
-  }, [locale, page, sourceFilterRaw, grammarFilterRaw]); // eslint-disable-line react-hooks/exhaustive-deps -- arrays are rebuilt each render; raw strings are the stable deps
+  const { data: scenesPage, loading: scenesLoading } = useApiData(
+    () => api.scenes.list(locale, { sources: sourceFilter, grammarPoints: grammarFilter, page, limit: PAGE_SIZE }),
+    [locale, page, sourceFilterRaw, grammarFilterRaw] // eslint-disable-line react-hooks/exhaustive-deps -- arrays are rebuilt each render; raw strings are the stable deps
+  );
 
   function updateParams(sources: string[], grammar: string[], newPage: number) {
     const params = new URLSearchParams();

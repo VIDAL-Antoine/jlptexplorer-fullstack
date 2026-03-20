@@ -22,7 +22,7 @@ import {
   type YoutubePlayerHandle,
 } from '@/components/features/scenes/YoutubePlayer/YoutubePlayer';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { type SceneWithDetails } from '@/lib/api';
 import { deduplicateAndSortGrammarPoints } from '@/utils/grammarPoints';
