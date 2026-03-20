@@ -14,6 +14,7 @@ JLPTExplorer is a Japanese grammar learning app similar to Bunpro, but focused o
 
 - **Framework:** Next.js 16 (App Router) + React 19
 - **UI:** Mantine 8 + Tabler Icons
+- **i18n:** next-intl (messages in `src/messages/en.json` and `fr.json`, routes under `app/[lang]/`)
 - **Language:** TypeScript 5.9
 - **Package manager:** yarn 4
 - **Testing:** Jest + Testing Library
@@ -24,6 +25,8 @@ JLPTExplorer is a Japanese grammar learning app similar to Bunpro, but focused o
 
 - **Framework:** Fastify 5
 - **ORM:** Prisma 7 (multi-file schema, `@prisma/adapter-pg`)
+- **Validation:** Zod + fastify-type-provider-zod (all routes validated)
+- **API docs:** Swagger UI (`@fastify/swagger` + `@fastify/swagger-ui`)
 - **Database:** PostgreSQL (local)
 - **Language:** TypeScript (CommonJS, compiled to `dist/`)
 - **Package manager:** npm
@@ -34,41 +37,108 @@ JLPTExplorer is a Japanese grammar learning app similar to Bunpro, but focused o
 ```
 jlptexplorer-fullstack/
 ├── frontend/
-│   ├── app/                    ← Next.js App Router (pages, layouts)
-│   ├── components/             ← Reusable UI components
-│   │   └── ComponentName/
-│   │       ├── ComponentName.tsx
-│   │       ├── ComponentName.test.tsx
-│   │       ├── ComponentName.story.tsx
-│   │       └── ComponentName.module.css
-│   ├── test-utils/             ← Test helpers
-│   └── theme.ts                ← Mantine theme config
+│   └── src/
+│       ├── app/[lang]/                  ← Next.js App Router (i18n routes)
+│       │   ├── page.tsx                 ← Home page
+│       │   ├── layout.tsx               ← i18n + Mantine + SettingsProvider
+│       │   ├── grammar-points/
+│       │   │   ├── page.tsx             ← Grammar points list
+│       │   │   └── [slug]/page.tsx      ← Grammar point detail
+│       │   ├── sources/
+│       │   │   ├── page.tsx             ← Sources list
+│       │   │   └── [slug]/page.tsx      ← Source detail
+│       │   └── scenes/page.tsx          ← Scenes with filters
+│       ├── components/
+│       │   ├── ui/                      ← Presentational: ColorSchemeToggle, SettingsDrawer
+│       │   ├── layout/                  ← Structural: Header, Footer, Navbar, Layout
+│       │   └── features/                ← Feature components grouped by domain
+│       │       ├── grammar/             ← AnnotatedText, GrammarPointsList, GrammarPointsMultiSelect
+│       │       ├── scenes/              ← SceneCard, ScenesGrid, YoutubePlayer
+│       │       └── sources/             ← SourcesList, SourcesMultiSelect
+│       │           └── ComponentName/
+│       │               ├── ComponentName.tsx
+│       │               ├── ComponentName.test.tsx
+│       │               ├── ComponentName.story.tsx
+│       │               └── ComponentName.module.css
+│       ├── contexts/
+│       │   └── SettingsContext.tsx      ← User preferences (localStorage)
+│       ├── hooks/
+│       │   ├── useApiData.ts            ← Generic API data fetching hook
+│       │   └── useQueryParam.ts         ← Query parameter management
+│       ├── lib/
+│       │   └── api/                     ← Domain-split API modules
+│       │       ├── client.ts            ← Base apiFetch wrapper
+│       │       ├── types.ts             ← All TypeScript API types
+│       │       ├── grammar-points.ts
+│       │       ├── scenes.ts
+│       │       ├── sources.ts
+│       │       └── speakers.ts
+│       ├── messages/
+│       │   ├── en.json                  ← UI strings (English)
+│       │   └── fr.json                  ← UI strings (French)
+│       ├── constants/
+│       │   └── jlpt.ts                  ← JLPT level color mapping
+│       └── theme.ts                     ← Mantine theme config
 └── backend/
     ├── src/
-    │   ├── index.ts            ← Fastify server entry (port 8080)
-    │   ├── lib/
-    │   │   └── prisma.ts       ← PrismaClient singleton
-    │   ├── plugins/            ← Fastify plugins (cors, etc.)
-    │   └── routes/             ← Route handlers par ressource
-    │       ├── scenes/
-    │       ├── grammar-points/
-    │       └── sources/
+    │   ├── index.ts                     ← Fastify server entry (port 8080)
+    │   ├── config/
+    │   │   └── prisma.ts                ← PrismaClient singleton
+    │   ├── plugins/                     ← Fastify plugins (cors, swagger, etc.)
+    │   ├── routes/v1/                   ← Route registration (public + admin per resource)
+    │   ├── controllers/                 ← HTTP request/response handlers
+    │   ├── services/                    ← Business logic layer
+    │   ├── repositories/                ← Data access layer (Prisma queries)
+    │   ├── schemas/                     ← Zod validation schemas
+    │   │   └── common.schema.ts         ← Shared: localeParams, slugParams, pagination
+    │   └── utils/                       ← Shared utilities (parse-time, flatten)
     ├── prisma/
     │   ├── schema/
-    │   │   ├── base.prisma     ← generator + datasource
+    │   │   ├── base.prisma              ← generator + datasource
     │   │   ├── scene.prisma
     │   │   ├── source.prisma
-    │   │   └── grammar.prisma
+    │   │   ├── source_translations.prisma
+    │   │   ├── grammar_point.prisma
+    │   │   ├── grammar_point_translations.prisma
+    │   │   ├── speaker.prisma
+    │   │   ├── speaker_translations.prisma
+    │   │   ├── transcript_line.prisma
+    │   │   ├── transcript_line_translations.prisma
+    │   │   └── transcript_line_grammar_point.prisma
     │   └── migrations/
-    └── prisma.config.ts        ← Prisma v7 config (datasource URL)
+    └── prisma.config.ts                 ← Prisma v7 config (datasource URL)
+```
+
+## Backend API structure
+
+```
+/api/v1/
+├── /{locale}/               ← Public locale-scoped routes (read-only)
+│   ├── /sources             GET (filterable by type)
+│   ├── /sources/{slug}      GET
+│   ├── /scenes              GET (filterable by source, grammar, jlpt_level; paginated)
+│   ├── /grammar-points      GET (filterable by jlpt_level)
+│   ├── /speakers            GET
+│   └── /transcript-lines    GET (filterable by scene_id, speaker_slug, grammar_points)
+├── /scenes                  POST, PUT, PATCH, DELETE (admin)
+├── /sources                 POST, PUT, PATCH, DELETE (admin)
+├── /speakers                POST, PUT, PATCH, DELETE (admin)
+├── /transcript-lines        POST, PUT, PATCH, DELETE (admin)
+└── /transcript-line-grammar-points  POST, PATCH, DELETE (admin)
 ```
 
 ## Key architectural decisions
 
 - **Prisma v7** requires `@prisma/adapter-pg` for direct PostgreSQL connections — no `url` in schema files, configured via `prisma.config.ts`
-- **Multi-file Prisma schema** in `prisma/schema/` (one file per domain)
+- **Multi-file Prisma schema** in `prisma/schema/` (one file per domain, 11 files total including translations)
 - **Generated client** in `src/generated/prisma/` (gitignored, rebuild with `npm run db:generate`)
 - Always use `npm run db:*` scripts instead of `npx prisma` directly (ensures local Prisma version is used)
+- **Backend layered architecture**: routes → controllers → services → repositories (each resource has one file per layer)
+- **Zod validation** on all backend routes via `fastify-type-provider-zod`; schemas in `src/schemas/`
+- **Path alias `@/`** available in both frontend (`src/`) and backend (`src/`)
+- **i18n** via next-intl: all frontend routes under `app/[lang]/`, messages in `src/messages/`
+- **SettingsContext** manages 4 user preferences in localStorage: speaker name language, source title language, dialogue translations visibility, grammar point script (romaji/kana/kanji)
+- `transcript_lines.japanese_text` — field was renamed from `text` to `japanese_text`
 
 ## Dev commands
 
