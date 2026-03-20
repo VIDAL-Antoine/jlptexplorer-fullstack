@@ -19,7 +19,7 @@ const SettingsContext = createContext<SettingsContextValue | null>(null);
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [speakerNameLang, setSpeakerNameLang] = useLocalStorage<'localized' | 'japanese'>({
     key: 'setting-speaker-lang',
-    defaultValue: 'japanese',
+    defaultValue: 'localized',
   });
   const [sourceTitleLang, setSourceTitleLang] = useLocalStorage<'localized' | 'japanese'>({
     key: 'setting-source-title-lang',
@@ -33,7 +33,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     'romaji' | 'kana'
   >({
     key: 'setting-grammar-point-script',
-    defaultValue: 'kana',
+    defaultValue: 'romaji',
   });
 
   return (
