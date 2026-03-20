@@ -11,7 +11,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <AppShell
@@ -25,7 +25,7 @@ export function Layout({ children }: LayoutProps) {
       </AppShell.Header>
 
       <AppShell.Navbar>
-        <Navbar />
+        <Navbar onNavigate={close} />
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>

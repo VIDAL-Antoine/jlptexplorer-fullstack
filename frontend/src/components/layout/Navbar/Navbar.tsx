@@ -11,7 +11,11 @@ const LINKS = [
   { href: '/scenes' as const, labelKey: 'scenes' as const, icon: IconMessageLanguage },
 ];
 
-export function Navbar() {
+interface NavbarProps {
+  onNavigate: () => void;
+}
+
+export function Navbar({ onNavigate }: NavbarProps) {
   const t = useTranslations('Navbar');
   const pathname = usePathname();
 
@@ -28,6 +32,7 @@ export function Navbar() {
           label={t(labelKey)}
           leftSection={<Icon size={18} />}
           active={pathname === href}
+          onClick={onNavigate}
         />
       ))}
     </Stack>
