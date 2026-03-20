@@ -1,24 +1,40 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { IconBook, IconDeviceGamepad2, IconPlayerPlay, IconSparkles } from '@tabler/icons-react';
+import { IconBook } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { Box, Button, Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Box, Button, Card, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { SceneCard } from '@/components/features/scenes/SceneCard/SceneCard';
 import { JLPT_LEVEL_COLORS, type JlptLevel } from '@/constants/jlpt';
+import { api, type SceneWithDetails } from '@/lib/api';
 
 const JLPT_LEVELS = Object.keys(JLPT_LEVEL_COLORS) as JlptLevel[];
 
 export default function HomePage() {
   const t = useTranslations('HomePage');
   const locale = useLocale();
+  const [featuredScene, setFeaturedScene] = useState<SceneWithDetails | null | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    api.scenes
+      .list(locale, { limit: 1 })
+      .then((page) => setFeaturedScene(page.scenes[0] ?? null))
+      .catch(() => setFeaturedScene(null));
+  }, [locale]);
+
+  const firstGrammarPointId =
+    featuredScene?.transcript_lines[0]?.transcript_line_grammar_points[0]?.grammar_point_id;
 
   return (
-    <Stack gap={48}>
-      {/* Hero */}
-      <Box pt="xl">
+    <Stack gap={48} maw={1024} mx="auto">
+      <Stack pt="sm" align="center" ta="center">
         <Title
           order={1}
           fw={900}
           lh={1.1}
-          mb="md"
           style={{
             fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
             background:
@@ -30,59 +46,40 @@ export default function HomePage() {
         >
           JLPTExplorer
         </Title>
-        <Text c="dimmed" fz="lg" mb="xl" maw={520}>
+        <Text c="dimmed" fz="lg">
           {t('tagline')}
         </Text>
-        <Group>
+      </Stack>
+
+      {featuredScene && (
+        <Box>
+          <Text c="dimmed" mb="xl" ta="center" fz="xl">
+            {t('demoExplainer')}
+          </Text>
+          <SceneCard
+            scene={featuredScene}
+            currentGrammarPointIds={firstGrammarPointId !== undefined ? [firstGrammarPointId] : []}
+            defaultOpened
+          />
+          <Group justify="flex-end" mt="xs">
+            <Link href={`/${locale}/scenes`} style={{ textDecoration: 'none' }}>
+              <Button variant="subtle" size="xs">
+                {t('allScenes')}
+              </Button>
+            </Link>
+          </Group>
+        </Box>
+      )}
+
+      <Box>
+        <Group justify="space-between" align="center" mb="md">
+          <Title order={3}>{t('browseLevels')}</Title>
           <Link href={`/${locale}/grammar-points`} style={{ textDecoration: 'none' }}>
-            <Button size="md" leftSection={<IconBook size={16} />}>
+            <Button size="sm" variant="light" leftSection={<IconBook size={14} />}>
               {t('ctaGrammar')}
             </Button>
           </Link>
-          <Link href={`/${locale}/sources`} style={{ textDecoration: 'none' }}>
-            <Button size="md" variant="outline" leftSection={<IconPlayerPlay size={16} />}>
-              {t('ctaSources')}
-            </Button>
-          </Link>
         </Group>
-      </Box>
-
-      {/* Feature highlights */}
-      <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
-        <Card withBorder radius="md" p="lg">
-          <ThemeIcon variant="light" color="indigo" size={48} radius="md" mb="md">
-            <IconSparkles size={24} />
-          </ThemeIcon>
-          <Title order={4}>{t('feature1Title')}</Title>
-          <Text c="dimmed" fz="sm" mt="xs">
-            {t('feature1Desc')}
-          </Text>
-        </Card>
-        <Card withBorder radius="md" p="lg">
-          <ThemeIcon variant="light" color="violet" size={48} radius="md" mb="md">
-            <IconBook size={24} />
-          </ThemeIcon>
-          <Title order={4}>{t('feature2Title')}</Title>
-          <Text c="dimmed" fz="sm" mt="xs">
-            {t('feature2Desc')}
-          </Text>
-        </Card>
-        <Card withBorder radius="md" p="lg">
-          <ThemeIcon variant="light" color="grape" size={48} radius="md" mb="md">
-            <IconDeviceGamepad2 size={24} />
-          </ThemeIcon>
-          <Title order={4}>{t('feature3Title')}</Title>
-          <Text c="dimmed" fz="sm" mt="xs">
-            {t('feature3Desc')}
-          </Text>
-        </Card>
-      </SimpleGrid>
-
-      {/* Browse by JLPT level */}
-      <Box>
-        <Title order={3} mb="md">
-          {t('browseLevels')}
-        </Title>
         <SimpleGrid cols={{ base: 2, sm: 5 }} spacing="sm">
           {JLPT_LEVELS.map((level) => (
             <Link

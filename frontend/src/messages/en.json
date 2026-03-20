@@ -41,16 +41,12 @@
     "seekTo": "Seek to {time}"
   },
   "HomePage": {
-    "tagline": "Japanese grammar in context — JLPT N5 to N1",
+    "tagline": "Japanese grammar in context — from JLPT N5 to JLPT N1",
     "ctaGrammar": "Browse grammar points",
     "ctaSources": "Explore sources",
-    "feature1Title": "Real context",
-    "feature1Desc": "Every grammar point illustrated by actual real dialogue — not textbook examples.",
-    "feature2Title": "Full JLPT coverage",
-    "feature2Desc": "From N5 (beginner) to N1 (advanced), organized by level.",
-    "feature3Title": "Games & anime",
-    "feature3Desc": "Explore your favourite universes — Dragon Ball, Sonic, and many more.",
-    "browseLevels": "Browse by level",
+    "demoExplainer": "Textbook examples don't stick. Practice JLPT grammar points with real scenes from Japanese sources.",
+    "allScenes": "View all scenes",
+    "browseLevels": "Browse by JLPT level",
     "levelLabel": "grammar points"
   },
   "GrammarPointPage": {

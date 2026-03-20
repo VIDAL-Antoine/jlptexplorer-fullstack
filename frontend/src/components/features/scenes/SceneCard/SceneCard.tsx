@@ -34,15 +34,17 @@ interface SceneCardProps {
   scene: SceneWithDetails;
   currentGrammarPointIds?: number[];
   hideSourceInfo?: boolean;
+  defaultOpened?: boolean;
 }
 
 export function SceneCard({
   scene,
   currentGrammarPointIds,
   hideSourceInfo = false,
+  defaultOpened = false,
 }: SceneCardProps) {
   const t = useTranslations('SceneCard');
-  const [opened, { toggle }] = useDisclosure(false);
+  const [opened, { toggle }] = useDisclosure(defaultOpened);
   const {
     speakerNameLang,
     sourceTitleLang,
@@ -90,7 +92,6 @@ export function SceneCard({
 
       <Button
         variant="subtle"
-        size="xs"
         onClick={toggle}
         rightSection={opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
         mb="xs"
