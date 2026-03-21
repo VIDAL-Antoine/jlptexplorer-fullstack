@@ -20,7 +20,7 @@ export function useApiData<T>(
         }
       })
       .catch(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) { setLoading(false); }
       });
     return () => {
       cancelled = true;

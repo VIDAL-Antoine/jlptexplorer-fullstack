@@ -35,7 +35,7 @@ export default function SourcePage() {
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
     () => api.sources.scenes(locale, slug, { page, limit: PAGE_SIZE, grammarPoints: grammarFilter }),
-    [slug, locale, page, grammarFilterRaw] // eslint-disable-line react-hooks/exhaustive-deps -- grammarFilter is a new array each render; grammarFilterRaw is the stable string dep
+    [slug, locale, page, grammarFilterRaw]
   );
 
   function updateParams(grammar: string[], newPage: number) {

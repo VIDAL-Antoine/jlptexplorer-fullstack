@@ -26,7 +26,7 @@ export default function ScenesPage() {
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
     () => api.scenes.list(locale, { sources: sourceFilter, grammarPoints: grammarFilter, page, limit: PAGE_SIZE }),
-    [locale, page, sourceFilterRaw, grammarFilterRaw] // eslint-disable-line react-hooks/exhaustive-deps -- arrays are rebuilt each render; raw strings are the stable deps
+    [locale, page, sourceFilterRaw, grammarFilterRaw]
   );
 
   function updateParams(sources: string[], grammar: string[], newPage: number) {
