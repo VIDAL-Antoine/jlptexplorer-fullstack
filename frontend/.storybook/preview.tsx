@@ -2,10 +2,19 @@ import '@mantine/core/styles.css';
 
 import { useEffect } from 'react';
 import { useGlobals } from 'storybook/preview-api';
+import { NextIntlClientProvider } from 'next-intl';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import { initialize, mswLoader } from 'msw-storybook-addon';
+import { SettingsProvider } from '../src/contexts/SettingsContext';
 import { theme } from '../src/theme';
+import messages from '../src/messages/en.json';
+
+initialize({ onUnhandledRequest: 'bypass' });
 
 export const parameters = {
+  nextjs: {
+    appDirectory: true,
+  },
   layout: 'fullscreen',
   options: {
     showPanel: false,
@@ -30,6 +39,8 @@ export const globalTypes = {
   },
 };
 
+export const loaders = [mswLoader];
+
 export const decorators = [
   (renderStory: any, context: any) => {
     const [{ theme: storybookTheme }, updateGlobals] = useGlobals();
@@ -53,10 +64,12 @@ export const decorators = [
 
     const scheme = (context.globals.theme || 'light') as 'light' | 'dark';
     return (
-      <MantineProvider theme={theme} forceColorScheme={scheme}>
-        <ColorSchemeScript />
-        {renderStory()}
-      </MantineProvider>
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <MantineProvider theme={theme} forceColorScheme={scheme}>
+          <ColorSchemeScript />
+          <SettingsProvider>{renderStory()}</SettingsProvider>
+        </MantineProvider>
+      </NextIntlClientProvider>
     );
   },
 ];

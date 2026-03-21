@@ -134,3 +134,5 @@ package-lock.json
 
 .DS_Store
 next-env.d.ts
+# Storybook build output
+storybook-static
