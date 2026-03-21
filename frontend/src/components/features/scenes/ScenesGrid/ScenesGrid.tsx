@@ -27,7 +27,7 @@ export function ScenesGrid({
 }: Props) {
   if (!scenes && loading) {
     return (
-      <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
+      <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }}>
         {Array.from({ length: pageSize }).map((_, i) => (
           <Skeleton key={i} height={280} radius="md" />
         ))}
@@ -41,7 +41,7 @@ export function ScenesGrid({
 
   return (
     <Stack gap="lg" opacity={loading ? 0.5 : 1} style={{ transition: 'opacity 0.15s ease' }}>
-      <SimpleGrid cols={{ base: 1, md: 2, lg: 3, xl: 4 }}>
+      <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }}>
         {scenes.map((scene) => (
           <SceneCard
             key={scene.id}
