@@ -157,18 +157,19 @@ export function SceneCard({
                 {grammarPoints.length > 0 && (
                   <Group gap="xs" mt="xs">
                     {(() => {
-                      const currentSpans = currentGrammarPointIds
-                        ? new Set(
-                            grammarPoints
-                              .filter(
-                                (t) =>
-                                  currentGrammarPointIds.includes(t.grammar_point_id) &&
-                                  t.start_index !== null &&
-                                  t.end_index !== null
-                              )
-                              .map((t) => `${t.start_index}:${t.end_index}`)
-                          )
-                        : new Set<string>();
+                      const currentRanges = currentGrammarPointIds
+                        ? grammarPoints
+                            .filter(
+                              (t) =>
+                                currentGrammarPointIds.includes(t.grammar_point_id) &&
+                                t.start_index !== null &&
+                                t.end_index !== null
+                            )
+                            .map((t) => ({ start: t.start_index!, end: t.end_index! }))
+                        : [];
+
+                      const overlapsCurrentRange = (start: number, end: number) =>
+                        currentRanges.some((r) => start < r.end && r.start < end);
 
                       const siblingIds = new Set(
                         grammarPoints
@@ -177,7 +178,7 @@ export function SceneCard({
                               !currentGrammarPointIds?.includes(t.grammar_point_id) &&
                               t.start_index !== null &&
                               t.end_index !== null &&
-                              currentSpans.has(`${t.start_index}:${t.end_index}`)
+                              overlapsCurrentRange(t.start_index!, t.end_index!)
                           )
                           .map((t) => t.grammar_point_id)
                       );
