@@ -11,6 +11,7 @@ export const listSourcesQuery = z.object({
 
 export const sourceSceneQuery = paginationQuery.extend({
   grammar_points: z.string().optional(),
+  grammar_match: z.enum(['scene', 'transcript_line']).optional(),
 });
 
 export const sourceBody = z.object({

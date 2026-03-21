@@ -83,6 +83,7 @@ export async function listScenes(
   options: {
     sourceSlugs: string[];
     grammarPointSlugs: string[];
+    grammarMatch: 'scene' | 'transcript_line';
     youtube_video_id?: string;
     start_time?: number;
     end_time?: number;

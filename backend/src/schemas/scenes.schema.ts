@@ -4,6 +4,7 @@ import { localeParams, idParams } from './common.schema';
 export const listScenesQuery = z.object({
   sources: z.string().optional(),
   grammar_points: z.string().optional(),
+  grammar_match: z.enum(['scene', 'transcript_line']).optional(),
   youtube_video_id: z.string().optional(),
   start_time: z.string().optional(),
   end_time: z.string().optional(),

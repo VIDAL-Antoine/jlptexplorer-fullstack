@@ -39,21 +39,38 @@ export async function findSourceIdBySlug(slug: string) {
 export async function findSourceScenes(
   sourceId: number,
   locale: string,
-  options: { grammarPointSlugs: string[]; page: number; limit: number },
+  options: { grammarPointSlugs: string[]; grammarMatch: 'scene' | 'transcript_line'; page: number; limit: number },
 ) {
-  const { grammarPointSlugs, page, limit } = options;
-  const where = {
-    source_id: sourceId,
-    AND: grammarPointSlugs.map((slug) => ({
-      transcript_lines: {
-        some: {
-          transcript_line_grammar_points: {
-            some: { grammar_points: { slug } },
-          },
-        },
-      },
-    })),
-  };
+  const { grammarPointSlugs, grammarMatch, page, limit } = options;
+
+  const grammarFilter =
+    grammarPointSlugs.length > 0
+      ? grammarMatch === 'transcript_line'
+        ? {
+            transcript_lines: {
+              some: {
+                AND: grammarPointSlugs.map((slug) => ({
+                  transcript_line_grammar_points: {
+                    some: { grammar_points: { slug } },
+                  },
+                })),
+              },
+            },
+          }
+        : {
+            AND: grammarPointSlugs.map((slug) => ({
+              transcript_lines: {
+                some: {
+                  transcript_line_grammar_points: {
+                    some: { grammar_points: { slug } },
+                  },
+                },
+              },
+            })),
+          }
+      : {};
+
+  const where = { source_id: sourceId, ...grammarFilter };
 
   const [scenes, total, availableGrammarPoints] = await Promise.all([
     prisma.scenes.findMany({

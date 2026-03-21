@@ -43,9 +43,11 @@ export async function getSourceScenes(
       ?.split(',')
       .map((s) => s.trim())
       .filter(Boolean) ?? [];
+  const grammarMatch = request.query.grammar_match ?? 'scene';
 
   const result = await sourcesService.getSourceScenes(slug, locale, {
     grammarPointSlugs,
+    grammarMatch,
     page,
     limit,
   });

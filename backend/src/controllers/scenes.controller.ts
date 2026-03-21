@@ -13,12 +13,13 @@ export async function listScenes(
   _reply: FastifyReply,
 ) {
   const { locale } = request.params;
-  const { sources, grammar_points, youtube_video_id, start_time, end_time } = request.query;
+  const { sources, grammar_points, grammar_match, youtube_video_id, start_time, end_time } = request.query;
   const page = Math.max(1, parseInt(request.query.page ?? '1', 10) || 1);
   const limit = Math.max(1, Math.min(50, parseInt(request.query.limit ?? '12', 10) || 12));
   return scenesService.listScenes(locale, {
     sourceSlugs: sources ? sources.split(',') : [],
     grammarPointSlugs: grammar_points ? grammar_points.split(',') : [],
+    grammarMatch: grammar_match ?? ('scene' as const),
     ...(youtube_video_id !== undefined ? { youtube_video_id } : {}),
     ...(start_time !== undefined ? { start_time: parseInt(start_time, 10) } : {}),
     ...(end_time !== undefined ? { end_time: parseInt(end_time, 10) } : {}),

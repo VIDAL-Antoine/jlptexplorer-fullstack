@@ -40,6 +40,7 @@ export async function findScenesPage(
   options: {
     sourceSlugs: string[];
     grammarPointSlugs: string[];
+    grammarMatch: 'scene' | 'transcript_line';
     youtube_video_id?: string;
     start_time?: number;
     end_time?: number;
@@ -47,7 +48,7 @@ export async function findScenesPage(
     limit: number;
   },
 ) {
-  const { sourceSlugs, grammarPointSlugs, youtube_video_id, start_time, end_time, page, limit } =
+  const { sourceSlugs, grammarPointSlugs, grammarMatch, youtube_video_id, start_time, end_time, page, limit } =
     options;
 
   const sourceFilter: Prisma.scenesWhereInput =
@@ -55,17 +56,29 @@ export async function findScenesPage(
 
   const grammarFilter: Prisma.scenesWhereInput =
     grammarPointSlugs.length > 0
-      ? {
-          AND: grammarPointSlugs.map((slug) => ({
+      ? grammarMatch === 'transcript_line'
+        ? {
             transcript_lines: {
               some: {
-                transcript_line_grammar_points: {
-                  some: { grammar_points: { slug } },
-                },
+                AND: grammarPointSlugs.map((slug) => ({
+                  transcript_line_grammar_points: {
+                    some: { grammar_points: { slug } },
+                  },
+                })),
               },
             },
-          })),
-        }
+          }
+        : {
+            AND: grammarPointSlugs.map((slug) => ({
+              transcript_lines: {
+                some: {
+                  transcript_line_grammar_points: {
+                    some: { grammar_points: { slug } },
+                  },
+                },
+              },
+            })),
+          }
       : {};
 
   const exactFilter: Prisma.scenesWhereInput = {

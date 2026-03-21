@@ -56,7 +56,7 @@ export async function getSource(slug: string, locale: string) {
 export async function getSourceScenes(
   slug: string,
   locale: string,
-  options: { grammarPointSlugs: string[]; page: number; limit: number },
+  options: { grammarPointSlugs: string[]; grammarMatch: 'scene' | 'transcript_line'; page: number; limit: number },
 ) {
   const source = await sourcesRepository.findSourceIdBySlug(slug);
   if (!source) {
