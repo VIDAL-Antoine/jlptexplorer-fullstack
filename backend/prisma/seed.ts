@@ -5311,7 +5311,6 @@ const speakers = [
 // Scenes
 // ---------------------------------------------------------------------------
 
-
 const scenes = [
   {
     source_slug: 'dragon-ball-z',
@@ -5548,7 +5547,6 @@ const scenes = [
           { slug: 'ta-past', start_index: 15, end_index: 18, matched_form: '願った' },
           { slug: 'wo-object', start_index: 29, end_index: 30, matched_form: 'を' },
           { slug: 'ta-past', start_index: 30, end_index: 35, matched_form: '繰り返した' },
-          { slug: 'suru', start_index: 30, end_index: 35, matched_form: '繰り返した' },
         ],
       },
     ],
