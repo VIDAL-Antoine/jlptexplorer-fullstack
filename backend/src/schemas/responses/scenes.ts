@@ -35,7 +35,6 @@ const rawSpeakerInScene = z
     slug: z.string(),
     name_japanese: z.string().nullable(),
     image_url: z.string().nullable(),
-    created_at: z.date(),
   })
   .nullable();
 
