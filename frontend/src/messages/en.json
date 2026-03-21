@@ -18,7 +18,11 @@
     "sourceTitles": "Source titles",
     "speakerNames": "Speaker names",
     "grammarBadges": "Grammar point transcript badges",
-    "showDialogueTranslations": "Show dialogue translations"
+    "showDialogueTranslations": "Show dialogue translations",
+    "grammarFilter": "Multi-grammar filter",
+    "grammarFilterDescription": "When multiple grammar points are selected, show scenes where they all appear:",
+    "grammarFilterScene": "In the whole scene",
+    "grammarFilterLine": "In the same dialogue line"
   },
   "GrammarPointsList": {
     "searchPlaceholder": "Search...",

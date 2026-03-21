@@ -18,7 +18,11 @@
     "sourceTitles": "Titres des sources",
     "speakerNames": "Noms des personnages",
     "grammarBadges": "Badges de transcription",
-    "showDialogueTranslations": "Afficher les traductions des dialogues"
+    "showDialogueTranslations": "Afficher les traductions des dialogues",
+    "grammarFilter": "Filtre multi-points de grammaire",
+    "grammarFilterDescription": "Quand plusieurs points de grammaire sont sélectionnés, afficher les scènes où ils apparaissent :",
+    "grammarFilterScene": "Dans toute la scène",
+    "grammarFilterLine": "Dans la même ligne de dialogue"
   },
   "GrammarPointsList": {
     "searchPlaceholder": "Rechercher...",

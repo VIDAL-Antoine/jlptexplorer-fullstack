@@ -22,7 +22,7 @@ export default function SourcePage() {
   const searchParams = useSearchParams();
   const t = useTranslations('SourcePage');
   const tTypes = useTranslations('SourceTypes');
-  const { sourceTitleLang } = useSettings();
+  const { sourceTitleLang, grammarMatch } = useSettings();
 
   const grammarFilterRaw = searchParams.get('grammar_points') ?? '';
   const grammarFilter = grammarFilterRaw ? grammarFilterRaw.split(',') : [];
@@ -34,8 +34,8 @@ export default function SourcePage() {
   );
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
-    () => api.sources.scenes(locale, slug, { page, limit: PAGE_SIZE, grammarPoints: grammarFilter }),
-    [slug, locale, page, grammarFilterRaw]
+    () => api.sources.scenes(locale, slug, { page, limit: PAGE_SIZE, grammarPoints: grammarFilter, grammarMatch }),
+    [slug, locale, page, grammarFilterRaw, grammarMatch]
   );
 
   function updateParams(grammar: string[], newPage: number) {

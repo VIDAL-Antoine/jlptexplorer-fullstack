@@ -6,6 +6,7 @@ import { Stack, Title } from '@mantine/core';
 import { GrammarPointsMultiSelect } from '@/components/features/grammar/GrammarPointsMultiSelect/GrammarPointsMultiSelect';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourcesMultiSelect } from '@/components/features/sources/SourcesMultiSelect/SourcesMultiSelect';
+import { useSettings } from '@/contexts/SettingsContext';
 import { useApiData } from '@/hooks/useApiData';
 import { api } from '@/lib/api';
 
@@ -17,6 +18,7 @@ export default function ScenesPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations('ScenesPage');
+  const { grammarMatch } = useSettings();
 
   const sourceFilterRaw = searchParams.get('sources') ?? '';
   const sourceFilter = sourceFilterRaw ? sourceFilterRaw.split(',') : [];
@@ -25,8 +27,8 @@ export default function ScenesPage() {
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
-    () => api.scenes.list(locale, { sources: sourceFilter, grammarPoints: grammarFilter, page, limit: PAGE_SIZE }),
-    [locale, page, sourceFilterRaw, grammarFilterRaw]
+    () => api.scenes.list(locale, { sources: sourceFilter, grammarPoints: grammarFilter, grammarMatch, page, limit: PAGE_SIZE }),
+    [locale, page, sourceFilterRaw, grammarFilterRaw, grammarMatch]
   );
 
   function updateParams(sources: string[], grammar: string[], newPage: number) {

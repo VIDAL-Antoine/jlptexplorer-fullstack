@@ -32,6 +32,8 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
     setShowDialogueTranslations,
     grammarPointTranscriptScript,
     setGrammarPointTranscriptScript,
+    grammarMatch,
+    setGrammarMatch,
   } = useSettings();
 
   return (
@@ -88,6 +90,23 @@ export function SettingsDrawer({ opened, onClose }: SettingsDrawerProps) {
             data={[
               { label: 'かな', value: 'kana' },
               { label: 'Romaji', value: 'romaji' },
+            ]}
+          />
+        </div>
+        <div>
+          <Text size="sm" fw={500} mb={4}>
+            {t('grammarFilter')}
+          </Text>
+          <Text size="xs" c="dimmed" mb="xs">
+            {t('grammarFilterDescription')}
+          </Text>
+          <SegmentedControl
+            fullWidth
+            value={grammarMatch}
+            onChange={(v) => setGrammarMatch(v as 'scene' | 'transcript_line')}
+            data={[
+              { label: t('grammarFilterScene'), value: 'scene' },
+              { label: t('grammarFilterLine'), value: 'transcript_line' },
             ]}
           />
         </div>
