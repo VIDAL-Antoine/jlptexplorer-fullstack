@@ -10,20 +10,7 @@ A Japanese grammar learning app (inspired by Bunpro) focused on contextual examp
 
 ## Getting started
 
-```bash
-# Backend
-cd backend
-npm install
-npm run db:generate
-npm run dev         # http://localhost:8080
+Each package has its own README with full setup instructions:
 
-# Frontend (separate terminal)
-cd frontend
-yarn install
-yarn dev            # http://localhost:3000
-```
-
-## Packages
-
-- [`frontend/`](./frontend) — Next.js app
-- [`backend/`](./backend) — Fastify API
+- [`backend/`](./backend) — start here, sets up the database and API
+- [`frontend/`](./frontend) — start after the backend is running
