@@ -12,6 +12,20 @@ Next.js frontend for JLPTExplorer. Displays grammar points illustrated by YouTub
 - **Testing:** Jest + React Testing Library
 - **Storybook:** component development
 
+## Getting started
+
+```bash
+# 1. Install dependencies
+yarn install
+
+# 2. Set up environment
+cp .env.example .env
+# Edit .env if the backend runs on a different host and port
+
+# 3. Start the dev server
+yarn dev            # http://localhost:3000
+```
+
 ## Dev commands
 
 ```bash
