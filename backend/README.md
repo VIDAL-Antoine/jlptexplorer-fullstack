@@ -12,6 +12,29 @@ Fastify REST API for JLPTExplorer, serving grammar points, scenes, sources, spea
 - **Package manager:** npm
 - **Dev runner:** tsx watch
 
+## Getting started
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Set up environment
+cp .env.example .env
+# Edit .env and set DATABASE_URL to your local PostgreSQL connection string
+
+# 3. Generate Prisma client
+npm run db:generate
+
+# 4. Apply migrations
+npm run db:migrate
+
+# 5. (Optional) Seed the database
+npm run db:seed
+
+# 6. Start the dev server
+npm run dev         # http://localhost:8080
+```
+
 ## Dev commands
 
 ```bash
