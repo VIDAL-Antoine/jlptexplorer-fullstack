@@ -33,14 +33,24 @@ export default function SourcePage() {
   );
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
-    () => api.sources.scenes(locale, slug, { page, limit: PAGE_SIZE, grammarPoints: grammarFilter, grammarMatch }),
+    () =>
+      api.sources.scenes(locale, slug, {
+        page,
+        limit: PAGE_SIZE,
+        grammarPoints: grammarFilter,
+        grammarMatch,
+      }),
     [slug, locale, page, grammarFilterRaw, grammarMatch]
   );
 
   function updateParams(grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (grammar.length > 0) {params.set('grammar_points', grammar.join(','));}
-    if (newPage > 1) {params.set('page', String(newPage));}
+    if (grammar.length > 0) {
+      params.set('grammar_points', grammar.join(','));
+    }
+    if (newPage > 1) {
+      params.set('page', String(newPage));
+    }
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
@@ -70,7 +80,9 @@ export default function SourcePage() {
       </Stack>
     );
   }
-  if (!source) {return <NotFound />;}
+  if (!source) {
+    return <NotFound />;
+  }
 
   const displayTitle =
     sourceTitleLang === 'japanese' ? (source.japanese_title ?? source.title) : source.title;

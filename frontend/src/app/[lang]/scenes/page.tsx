@@ -27,15 +27,28 @@ export default function ScenesPage() {
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
-    () => api.scenes.list(locale, { sources: sourceFilter, grammarPoints: grammarFilter, grammarMatch, page, limit: PAGE_SIZE }),
+    () =>
+      api.scenes.list(locale, {
+        sources: sourceFilter,
+        grammarPoints: grammarFilter,
+        grammarMatch,
+        page,
+        limit: PAGE_SIZE,
+      }),
     [locale, page, sourceFilterRaw, grammarFilterRaw, grammarMatch]
   );
 
   function updateParams(sources: string[], grammar: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (sources.length > 0) {params.set('sources', sources.join(','));}
-    if (grammar.length > 0) {params.set('grammar_points', grammar.join(','));}
-    if (newPage > 1) {params.set('page', String(newPage));}
+    if (sources.length > 0) {
+      params.set('sources', sources.join(','));
+    }
+    if (grammar.length > 0) {
+      params.set('grammar_points', grammar.join(','));
+    }
+    if (newPage > 1) {
+      params.set('page', String(newPage));
+    }
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }

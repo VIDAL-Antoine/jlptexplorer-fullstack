@@ -184,7 +184,9 @@ export function SceneCard({
                       );
 
                       return deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) => {
-                        if (!tlgp.grammar_points) { return null; }
+                        if (!tlgp.grammar_points) {
+                          return null;
+                        }
                         const isPrimary = currentGrammarPointIds?.includes(tlgp.grammar_point_id);
                         const isSibling = !isPrimary && siblingIds.has(tlgp.grammar_point_id);
                         const variant = isPrimary ? 'filled' : isSibling ? 'outline' : 'light';

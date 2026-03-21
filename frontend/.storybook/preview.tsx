@@ -1,13 +1,13 @@
 import '@mantine/core/styles.css';
 
 import { useEffect } from 'react';
-import { useGlobals } from 'storybook/preview-api';
-import { NextIntlClientProvider } from 'next-intl';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { initialize, mswLoader } from 'msw-storybook-addon';
+import { NextIntlClientProvider } from 'next-intl';
+import { useGlobals } from 'storybook/preview-api';
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { SettingsProvider } from '../src/contexts/SettingsContext';
-import { theme } from '../src/theme';
 import messages from '../src/messages/en.json';
+import { theme } from '../src/theme';
 
 initialize({ onUnhandledRequest: 'bypass' });
 

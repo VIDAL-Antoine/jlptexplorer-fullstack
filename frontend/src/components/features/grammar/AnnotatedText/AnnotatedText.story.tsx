@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Text } from '@mantine/core';
-import { gpTeIru, gpNaiNegative, gpWaTopic, gpWoObject } from '../../../../../.storybook/fixtures';
 import type { TranscriptLineGrammarPoint } from '@/lib/api/types';
+import { gpNaiNegative, gpTeIru, gpWaTopic, gpWoObject } from '../../../../../.storybook/fixtures';
 import { AnnotatedText } from './AnnotatedText';
 
 const meta: Meta<typeof AnnotatedText> = {

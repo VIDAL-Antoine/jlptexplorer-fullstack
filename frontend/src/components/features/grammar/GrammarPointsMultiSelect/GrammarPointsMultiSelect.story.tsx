@@ -1,6 +1,6 @@
-import { type ComponentProps, useState } from 'react';
+import { useState, type ComponentProps } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { allGrammarPoints, gpWaTopic, gpTeIru } from '../../../../../.storybook/fixtures';
+import { allGrammarPoints, gpTeIru, gpWaTopic } from '../../../../../.storybook/fixtures';
 import { GrammarPointsMultiSelect } from './GrammarPointsMultiSelect';
 
 const meta: Meta<typeof GrammarPointsMultiSelect> = {

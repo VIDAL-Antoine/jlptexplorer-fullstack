@@ -127,7 +127,10 @@ export function GrammarPointsList() {
         </SimpleGrid>
       ) : (
         <Stack>
-          <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.15s' }}>
+          <SimpleGrid
+            cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+            style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.15s' }}
+          >
             {data.grammar_points.map((gp) =>
               gp.has_scenes ? (
                 <Card

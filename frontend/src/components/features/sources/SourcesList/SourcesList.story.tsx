@@ -1,7 +1,7 @@
-import { http, HttpResponse } from 'msw';
 import type { Meta, StoryObj } from '@storybook/react';
-import { defaultHandlers } from '../../../../../.storybook/handlers';
+import { http, HttpResponse } from 'msw';
 import { allSources, sourcesPageResponse } from '../../../../../.storybook/fixtures';
+import { defaultHandlers } from '../../../../../.storybook/handlers';
 import { SourcesList } from './SourcesList';
 
 const BASE = 'http://localhost:8080';

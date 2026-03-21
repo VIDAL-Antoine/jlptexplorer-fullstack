@@ -36,8 +36,12 @@ export default function GrammarPointPage() {
 
   function updateParams(sources: string[], newPage: number) {
     const params = new URLSearchParams();
-    if (sources.length > 0) {params.set('source', sources.join(','));}
-    if (newPage > 1) {params.set('page', String(newPage));}
+    if (sources.length > 0) {
+      params.set('source', sources.join(','));
+    }
+    if (newPage > 1) {
+      params.set('page', String(newPage));
+    }
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
   }
@@ -67,7 +71,9 @@ export default function GrammarPointPage() {
       </Stack>
     );
   }
-  if (!grammarPoint) {return <NotFound />;}
+  if (!grammarPoint) {
+    return <NotFound />;
+  }
 
   const selectedSources = grammarPoint.available_sources.filter((s) =>
     sourceFilter.includes(s.slug)

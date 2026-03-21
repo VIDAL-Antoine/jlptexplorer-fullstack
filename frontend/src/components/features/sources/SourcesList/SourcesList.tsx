@@ -18,9 +18,9 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
+import { useSettings } from '@/contexts/SettingsContext';
 import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
-import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
 import { getLocalizedTitle } from '@/utils/i18n';

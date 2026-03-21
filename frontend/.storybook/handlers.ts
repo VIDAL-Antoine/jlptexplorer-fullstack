@@ -29,12 +29,15 @@ export const defaultHandlers = [
       );
     }
 
-    return HttpResponse.json({ grammar_points: points, total: points.length, page: 1, totalPages: 1 });
+    return HttpResponse.json({
+      grammar_points: points,
+      total: points.length,
+      page: 1,
+      totalPages: 1,
+    });
   }),
 
-  http.get(`${BASE}/api/v1/:locale/grammar-points/:slug`, () =>
-    HttpResponse.json(gpWaTopicDetail)
-  ),
+  http.get(`${BASE}/api/v1/:locale/grammar-points/:slug`, () => HttpResponse.json(gpWaTopicDetail)),
 
   http.get(`${BASE}/api/v1/:locale/grammar-points/:slug/scenes`, () =>
     HttpResponse.json({ scenes: [], total: 0, page: 1, totalPages: 0, available_sources: [] })
@@ -47,7 +50,13 @@ export const defaultHandlers = [
     const sources = type ? allSources.filter((s) => s.type === type) : allSources;
     const available_types = Array.from(new Set(allSources.map((s) => s.type)));
 
-    return HttpResponse.json({ sources, total: sources.length, page: 1, totalPages: 1, available_types });
+    return HttpResponse.json({
+      sources,
+      total: sources.length,
+      page: 1,
+      totalPages: 1,
+      available_types,
+    });
   }),
 
   http.get(`${BASE}/api/v1/:locale/sources/dragon-ball-z`, () =>
@@ -63,7 +72,13 @@ export const defaultHandlers = [
   ),
 
   http.get(`${BASE}/api/v1/:locale/sources/:slug/scenes`, () =>
-    HttpResponse.json({ scenes: [], total: 0, page: 1, totalPages: 0, available_grammar_points: [] })
+    HttpResponse.json({
+      scenes: [],
+      total: 0,
+      page: 1,
+      totalPages: 0,
+      available_grammar_points: [],
+    })
   ),
 
   http.get(`${BASE}/api/v1/:locale/scenes`, () => HttpResponse.json(scenesPageResponse)),
