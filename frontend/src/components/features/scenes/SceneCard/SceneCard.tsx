@@ -156,28 +156,56 @@ export function SceneCard({
                 )}
                 {grammarPoints.length > 0 && (
                   <Group gap="xs" mt="xs">
-                    {deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) =>
-                      tlgp.grammar_points ? (
-                        <Badge
-                          key={tlgp.id}
-                          size="xs"
-                          color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
-                          variant={
-                            currentGrammarPointIds?.includes(tlgp.grammar_point_id)
-                              ? 'filled'
-                              : 'light'
-                          }
-                          tt="lowercase"
-                          component={Link}
-                          href={`/grammar-points/${tlgp.grammar_points.slug}`}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          {grammarPointTranscriptScript === 'romaji'
-                            ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
-                            : tlgp.grammar_points.title}
-                        </Badge>
-                      ) : null
-                    )}
+                    {(() => {
+                      const currentSpans = currentGrammarPointIds
+                        ? new Set(
+                            grammarPoints
+                              .filter(
+                                (t) =>
+                                  currentGrammarPointIds.includes(t.grammar_point_id) &&
+                                  t.start_index !== null &&
+                                  t.end_index !== null
+                              )
+                              .map((t) => `${t.start_index}:${t.end_index}`)
+                          )
+                        : new Set<string>();
+
+                      const siblingIds = new Set(
+                        grammarPoints
+                          .filter(
+                            (t) =>
+                              !currentGrammarPointIds?.includes(t.grammar_point_id) &&
+                              t.start_index !== null &&
+                              t.end_index !== null &&
+                              currentSpans.has(`${t.start_index}:${t.end_index}`)
+                          )
+                          .map((t) => t.grammar_point_id)
+                      );
+
+                      return deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) => {
+                        if (!tlgp.grammar_points) { return null; }
+                        const isPrimary = currentGrammarPointIds?.includes(tlgp.grammar_point_id);
+                        const isSibling = !isPrimary && siblingIds.has(tlgp.grammar_point_id);
+                        const variant = isPrimary ? 'filled' : isSibling ? 'outline' : 'light';
+
+                        return (
+                          <Badge
+                            key={tlgp.id}
+                            size="xs"
+                            color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
+                            variant={variant}
+                            tt="lowercase"
+                            component={Link}
+                            href={`/grammar-points/${tlgp.grammar_points.slug}`}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {grammarPointTranscriptScript === 'romaji'
+                              ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
+                              : tlgp.grammar_points.title}
+                          </Badge>
+                        );
+                      });
+                    })()}
                   </Group>
                 )}
               </Box>
