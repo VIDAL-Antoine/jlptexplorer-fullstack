@@ -9,16 +9,8 @@ export async function createTranscriptLineGrammarPoint(
   request: FastifyRequest<{ Body: TranscriptLineGrammarPointCreateBody }>,
   reply: FastifyReply,
 ) {
-  try {
-    const result = await service.createTranscriptLineGrammarPoint(request.body);
-    return reply.status(201).send(result);
-  } catch (err: unknown) {
-    const error = err as { statusCode?: number; message?: string };
-    if (error.statusCode === 400) {
-      return reply.status(400).send({ error: error.message });
-    }
-    throw err;
-  }
+  const result = await service.createTranscriptLineGrammarPoint(request.body);
+  return reply.status(201).send(result);
 }
 
 export async function patchTranscriptLineGrammarPoint(
@@ -30,19 +22,11 @@ export async function patchTranscriptLineGrammarPoint(
     return reply.status(400).send({ error: 'Invalid id' });
   }
 
-  try {
-    const result = await service.patchTranscriptLineGrammarPoint(id, request.body);
-    if (!result) {
-      return reply.status(404).send({ error: 'Transcript line grammar point not found' });
-    }
-    return result;
-  } catch (err: unknown) {
-    const error = err as { statusCode?: number; message?: string };
-    if (error.statusCode === 400) {
-      return reply.status(400).send({ error: error.message });
-    }
-    throw err;
+  const result = await service.patchTranscriptLineGrammarPoint(id, request.body);
+  if (!result) {
+    return reply.status(404).send({ error: 'Transcript line grammar point not found' });
   }
+  return result;
 }
 
 export async function deleteTranscriptLineGrammarPoint(

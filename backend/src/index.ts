@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import fastify from 'fastify';
+import fastify, { type FastifyError } from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import { registerCors } from '@/plugins/cors';
 import { registerSwagger } from '@/plugins/swagger';
@@ -17,6 +17,15 @@ async function start() {
   const server = fastify({ logger: true });
   server.setValidatorCompiler(validatorCompiler);
   server.setSerializerCompiler(serializerCompiler);
+
+  server.setErrorHandler((error: FastifyError, _request, reply) => {
+    const status = error.statusCode ?? 500;
+    if (status >= 400 && status < 500) {
+      return reply.status(status).send({ error: error.message });
+    }
+    server.log.error(error);
+    return reply.status(500).send({ error: 'Internal server error' });
+  });
 
   await registerSwagger(server);
   await registerCors(server);
