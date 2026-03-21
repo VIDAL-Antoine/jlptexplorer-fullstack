@@ -2,13 +2,12 @@
 
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { Badge, Group, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { Group, Skeleton, Stack } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
+import { GrammarPointHeader } from '@/components/features/grammar/GrammarPointHeader/GrammarPointHeader';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourcesMultiSelect } from '@/components/features/sources/SourcesMultiSelect/SourcesMultiSelect';
-import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { useApiData } from '@/hooks/useApiData';
-import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
 
 const PAGE_SIZE = 12;
@@ -81,30 +80,10 @@ export default function GrammarPointPage() {
 
   return (
     <Stack mt="xl" gap="lg">
-      <div>
-        <Group align="center" gap="sm">
-          <Title order={1}>{grammarPoint.title}</Title>
-          <Badge
-            color={JLPT_LEVEL_COLORS[grammarPoint.jlpt_level]}
-            size="lg"
-            component={Link}
-            href={`/grammar-points?jlpt_level=${grammarPoint.jlpt_level}`}
-            style={{ cursor: 'pointer' }}
-          >
-            {grammarPoint.jlpt_level}
-          </Badge>
-        </Group>
-        <Text c="dimmed">{grammarPoint.romaji}</Text>
-        <Text mt="xs">{grammarPoint.meaning ? grammarPoint.meaning.charAt(0).toUpperCase() + grammarPoint.meaning.slice(1) : ''}</Text>
-        {grammarPoint.notes && (
-          <Text size="sm" c="dimmed" mt="xs">
-            {grammarPoint.notes}
-          </Text>
-        )}
-        <Text size="sm" c="dimmed" mt="xs">
-          {t('scenesCount', { count: grammarPoint.scenes_count })}
-        </Text>
-      </div>
+      <GrammarPointHeader
+        grammarPoint={grammarPoint}
+        tScenes={(key, values) => t(key as Parameters<typeof t>[0], values)}
+      />
 
       {grammarPoint.available_sources.length > 0 && (
         <SourcesMultiSelect

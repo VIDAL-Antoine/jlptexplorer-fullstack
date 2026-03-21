@@ -2,15 +2,14 @@
 
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { AspectRatio, Badge, Group, Image, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { Group, Skeleton, Stack } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
 import { GrammarPointsMultiSelect } from '@/components/features/grammar/GrammarPointsMultiSelect/GrammarPointsMultiSelect';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
+import { SourceHeader } from '@/components/features/sources/SourceHeader/SourceHeader';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useApiData } from '@/hooks/useApiData';
-import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
-import { getSourceTypeIcon } from '@/utils/icons';
 
 const PAGE_SIZE = 12;
 
@@ -73,7 +72,6 @@ export default function SourcePage() {
   }
   if (!source) {return <NotFound />;}
 
-  const SourceTypeIcon = getSourceTypeIcon(source.type);
   const displayTitle =
     sourceTitleLang === 'japanese' ? (source.japanese_title ?? source.title) : source.title;
 
@@ -92,43 +90,12 @@ export default function SourcePage() {
 
   return (
     <Stack mt="xl" gap="lg">
-      <Group align="flex-start" gap="xl">
-        {source.cover_image_url && (
-          <AspectRatio ratio={2 / 3} w={120} style={{ flexShrink: 0 }}>
-            <Image src={source.cover_image_url} alt={source.title ?? ''} radius="md" fit="cover" />
-          </AspectRatio>
-        )}
-        <Stack gap="xs">
-          <Group align="center" gap="sm">
-            <Title order={1}>{displayTitle}</Title>
-            <Badge
-              variant="light"
-              size="lg"
-              leftSection={<SourceTypeIcon size={12} />}
-              component={Link}
-              href={`/sources?type=${source.type}`}
-              style={{ cursor: 'pointer' }}
-            >
-              {tTypes(source.type)}
-            </Badge>
-          </Group>
-          <Group gap="xs">
-            <Text size="sm" c="dimmed">
-              {t('scenesCount', { count: source.scenes_count })}
-            </Text>
-            {source.grammar_points.length > 0 && (
-              <>
-                <Text size="sm" c="dimmed">
-                  ·
-                </Text>
-                <Text size="sm" c="dimmed">
-                  {t('grammarPointsCount', { count: source.grammar_points.length })}
-                </Text>
-              </>
-            )}
-          </Group>
-        </Stack>
-      </Group>
+      <SourceHeader
+        source={source}
+        displayTitle={displayTitle ?? ''}
+        tTypes={(key) => tTypes(key as Parameters<typeof tTypes>[0])}
+        tScenes={(key, values) => t(key as Parameters<typeof t>[0], values)}
+      />
 
       {source.grammar_points.length > 0 && (
         <GrammarPointsMultiSelect
