@@ -52,9 +52,9 @@ jlptexplorer-fullstack/
 │       │   ├── ui/                      ← Presentational: ColorSchemeToggle, SettingsDrawer
 │       │   ├── layout/                  ← Structural: Header, Footer, Navbar, Layout
 │       │   └── features/                ← Feature components grouped by domain
-│       │       ├── grammar/             ← AnnotatedText, GrammarPointsList, GrammarPointsMultiSelect
+│       │       ├── grammar/             ← AnnotatedText, GrammarPointHeader, GrammarPointsList, GrammarPointsMultiSelect
 │       │       ├── scenes/              ← SceneCard, ScenesGrid, YoutubePlayer
-│       │       └── sources/             ← SourcesList, SourcesMultiSelect
+│       │       └── sources/             ← SourceHeader, SourcesList, SourcesMultiSelect
 │       │           └── ComponentName/
 │       │               ├── ComponentName.tsx
 │       │               ├── ComponentName.test.tsx
@@ -114,12 +114,12 @@ jlptexplorer-fullstack/
 ```
 /api/v1/
 ├── /{locale}/               ← Public locale-scoped routes (read-only)
-│   ├── /sources             GET (filterable by type)
+│   ├── /sources             GET (filterable by type, grammar_points, grammar_match)
 │   ├── /sources/{slug}      GET
-│   ├── /scenes              GET (filterable by source, grammar, jlpt_level; paginated)
+│   ├── /scenes              GET (filterable by source, grammar, jlpt_level, grammar_match; paginated)
 │   ├── /grammar-points      GET (filterable by jlpt_level)
 │   ├── /speakers            GET
-│   └── /transcript-lines    GET (filterable by scene_id, speaker_slug, grammar_points)
+│   └── /transcript-lines    GET (filterable by scene_id, speaker_slug, grammar_points; enriched with source, speaker, grammar points)
 ├── /scenes                  POST, PUT, PATCH, DELETE (admin)
 ├── /sources                 POST, PUT, PATCH, DELETE (admin)
 ├── /speakers                POST, PUT, PATCH, DELETE (admin)
@@ -137,7 +137,8 @@ jlptexplorer-fullstack/
 - **Zod validation** on all backend routes via `fastify-type-provider-zod`; schemas in `src/schemas/`
 - **Path alias `@/`** available in both frontend (`src/`) and backend (`src/`)
 - **i18n** via next-intl: all frontend routes under `app/[lang]/`, messages in `src/messages/`
-- **SettingsContext** manages 4 user preferences in localStorage: speaker name language, source title language, dialogue translations visibility, grammar point script (romaji/kana/kanji)
+- **SettingsContext** manages 5 user preferences in localStorage: speaker name language, source title language, dialogue translations visibility, grammar point script (romaji/kana), grammar match mode (`scene` | `transcript_line`)
+- **`grammar_match`** query param on `/scenes` and `/sources`: `scene` returns scenes that have at least one grammar match anywhere in their transcript lines; `transcript_line` filters by individual line
 - `transcript_lines.japanese_text` — field was renamed from `text` to `japanese_text`
 
 ## Dev commands
