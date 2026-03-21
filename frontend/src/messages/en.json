@@ -17,7 +17,7 @@
     "contentLanguage": "Content language",
     "sourceTitles": "Source titles",
     "speakerNames": "Speaker names",
-    "grammarBadges": "Grammar point transcript badges",
+    "grammarBadges": "Display format for grammar point badges below dialogue lines",
     "showDialogueTranslations": "Show dialogue translations",
     "grammarFilter": "Multi-grammar filter",
     "grammarFilterDescription": "When multiple grammar points are selected, show scenes where they all appear:",

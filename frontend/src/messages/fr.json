@@ -17,7 +17,7 @@
     "contentLanguage": "Langue du contenu",
     "sourceTitles": "Titres des sources",
     "speakerNames": "Noms des personnages",
-    "grammarBadges": "Badges de transcription",
+    "grammarBadges": "Format d'affichage des badges des points de grammaire sous les lignes de dialogue",
     "showDialogueTranslations": "Afficher les traductions des dialogues",
     "grammarFilter": "Filtre multi-points de grammaire",
     "grammarFilterDescription": "Quand plusieurs points de grammaire sont sélectionnés, afficher les scènes où ils apparaissent :",
