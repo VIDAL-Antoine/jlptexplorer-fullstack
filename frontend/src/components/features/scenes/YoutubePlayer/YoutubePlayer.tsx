@@ -78,6 +78,10 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
       return () => {
         cancelled = true;
         clearInterval(interval);
+        const iframe = document.getElementById(elementId) as HTMLIFrameElement | null;
+        if (iframe) {
+          iframe.src = '';
+        }
         playerRef.current?.destroy();
         playerRef.current = null;
       };

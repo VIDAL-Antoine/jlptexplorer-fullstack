@@ -12,4 +12,17 @@ export default withBundleAnalyzer(withNextIntl({
   experimental: {
     optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'compute-pressure=(self "https://www.youtube.com")',
+          },
+        ],
+      },
+    ];
+  },
 }));
