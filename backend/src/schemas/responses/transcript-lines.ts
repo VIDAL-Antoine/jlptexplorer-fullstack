@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { jlptLevel } from '@/schemas/grammar-points.schema';
-import { errorResponse } from './primitives';
+import { errorResponse, sourceResponse, speakerResponse, transcriptLineGrammarPointResponse } from './primitives';
 
 export { errorResponse };
 
-// ─── Public read (flattenTranscriptLine) ──────────────────────────────────────
+// ─── Public read (flattenTranscriptLineFull) ──────────────────────────────────
 
 export const transcriptLineReadResponse = z.object({
   id: z.number().int(),
@@ -13,6 +13,9 @@ export const transcriptLineReadResponse = z.object({
   speaker_id: z.number().int().nullable(),
   japanese_text: z.string(),
   translation: z.string().nullable(),
+  source: sourceResponse,
+  speakers: speakerResponse.nullable(),
+  transcript_line_grammar_points: z.array(transcriptLineGrammarPointResponse),
 });
 
 export const listTranscriptLinesResponse = z.object({

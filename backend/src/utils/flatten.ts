@@ -55,6 +55,38 @@ export function flattenTranscriptLine(line: {
   return { ...rest, translation: translations[0]?.translation ?? null };
 }
 
+export function flattenTranscriptLineFull(line: {
+  id: number;
+  scene_id: number;
+  start_time: number | null;
+  speaker_id: number | null;
+  japanese_text: string;
+  translations: { translation: string | null }[];
+  speakers: Parameters<typeof flattenSpeaker>[0] | null;
+  transcript_line_grammar_points: Array<{
+    id: number;
+    transcript_line_id: number;
+    grammar_point_id: number;
+    start_index: number | null;
+    end_index: number | null;
+    matched_form: string | null;
+    grammar_points: Parameters<typeof flattenGrammarPoint>[0] | null;
+  }>;
+  scenes: { sources: Parameters<typeof flattenSource>[0] };
+}) {
+  const { translations, speakers, transcript_line_grammar_points, scenes, ...rest } = line;
+  return {
+    ...rest,
+    translation: translations[0]?.translation ?? null,
+    source: flattenSource(scenes.sources),
+    speakers: speakers ? flattenSpeaker(speakers) : null,
+    transcript_line_grammar_points: transcript_line_grammar_points.map((tlgp) => ({
+      ...tlgp,
+      grammar_points: tlgp.grammar_points ? flattenGrammarPoint(tlgp.grammar_points) : null,
+    })),
+  };
+}
+
 export function flattenScene(scene: {
   id: number;
   source_id: number;

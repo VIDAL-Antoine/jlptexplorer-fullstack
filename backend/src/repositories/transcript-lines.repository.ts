@@ -10,6 +10,11 @@ export function buildTranscriptLineInclude(locale: string) {
         grammar_points: { include: { translations: { where: { locale } } } },
       },
     },
+    scenes: {
+      include: {
+        sources: { include: { translations: { where: { locale } } } },
+      },
+    },
   };
 }
 

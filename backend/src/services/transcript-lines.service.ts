@@ -1,5 +1,5 @@
 import { parseTime } from '@/utils/parse-time';
-import { flattenTranscriptLine, flattenTranscriptLineAll } from '@/utils/flatten';
+import { flattenTranscriptLineFull, flattenTranscriptLineAll } from '@/utils/flatten';
 import * as transcriptLinesRepository from '@/repositories/transcript-lines.repository';
 import * as scenesRepository from '@/repositories/scenes.repository';
 import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository';
@@ -49,7 +49,7 @@ export async function listTranscriptLines(
   }
   const { lines, total } = await transcriptLinesRepository.findTranscriptLines(locale, filters);
   return {
-    lines: lines.map(flattenTranscriptLine),
+    lines: lines.map(flattenTranscriptLineFull),
     total,
     page: filters.page,
     totalPages: Math.ceil(total / (filters.limit || DEFAULT_LIMIT)),
@@ -58,7 +58,7 @@ export async function listTranscriptLines(
 
 export async function getTranscriptLine(id: number, locale: string) {
   const line = await transcriptLinesRepository.findTranscriptLineById(id, locale);
-  return line ? flattenTranscriptLine(line) : null;
+  return line ? flattenTranscriptLineFull(line) : null;
 }
 
 export async function createTranscriptLine(body: TranscriptLineCreateBody) {
