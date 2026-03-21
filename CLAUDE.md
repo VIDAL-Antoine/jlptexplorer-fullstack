@@ -345,10 +345,14 @@ Always distinguish based on what precedes で: if it follows a na-adjective or n
 
 **Copula て-form で (clause connector after na-adj/noun) has no slug — always ignore it** (e.g. 穏やかで、静かで). Only applies to this specific case. The particle で (means, location, duration) uses `de-means-of`, `de-location` etc. and must NOT be ignored. Likewise, で inside ても、ている、てから etc. is part of those grammar points and is not affected by this rule.
 
-#### の — possessive vs nominalizer vs other
+#### の — possessive vs nominalizer vs subject marker vs のこと
 
-- `no-possessive` (matched_form = `の`): の between two nouns marking possession or attribution
+- `no-possessive` (matched_form = `の`): の between two nouns (or adverbial modifier + noun) marking possession or attribution. Example: それほどの有名人 → `no-possessive`
 - `no-nominalizer` (matched_form = `の`): の nominalizing a verb clause (〜のが、〜のを、〜のは)
+- `no-subject` (matched_form = `の`): の replacing が as subject marker inside a relative/subordinate clause. Key test: can you replace の with が and preserve the meaning? Example: 悔いの無いように = 悔いが無いように → `no-subject`. Distinct from `ga-subject-marker` (which uses matched_form = `が`).
+- `no-koto-as-for` (matched_form = `のこと`): noun + のこと meaning "about/regarding [noun]". Example: あの男のことは = "about that man". Span covers の + こと. **Do NOT tag as `no-possessive`** — のこと is a fixed expression, not a simple possessive modifier.
+
+**Disambiguation `no-possessive` vs `no-subject`**: if の connects two nouns as attribute/possession → `no-possessive`. If の is inside a relative clause and can be swapped for が → `no-subject`.
 
 **Do NOT tag の inside**: のに (use `noni-although`), ので (use `node-because`), のだ/んだ (use `n-da`), ものの、ものだ etc.
 
@@ -581,6 +585,8 @@ matched_form = **just the そうだ/そうな/そう/そうに suffix** — do N
 
 **Always ignore `mono-da`** — produces only false positives in real dialogue (ものだ appears constantly as ものだ "it is a thing that" without being the grammar point). Skip it entirely.
 
+**Exception: still tag `da-desu` within `ものだ`** — skipping `mono-da` means not tagging the *compound pattern*, but the standalone copula `だ` inside `ものだ` must still be tagged as `da-desu` (same span as the だ only). Example: いい時代になったものだな → tag `da-desu` at the だ position.
+
 #### `dake-de` — only by / just with
 
 When だけ is immediately followed by で, tag as **`dake-de`** (a single grammar point), NOT as separate `dake` + `de-means-of`. matched_form = `だけで`. Example: 計算だけで → matched_form = `だけで`.
@@ -590,11 +596,31 @@ When だけ is immediately followed by で, tag as **`dake-de`** (a single gramm
 matched_form = adjective stem + さ: 大きさ、強さ、美しさ. Do NOT confuse with sentence-final さ particle.
 
 
+#### `suru` — compound する verb
+
+matched_form = `する` only — do NOT include the preceding noun/kanji. The noun is the lexical part; する is the grammar point. Example: 続行する → matched_form = `する`. Consistent with the `ta-past` rule for する compounds (推測した → matched_form = `した`).
+
+When the compound verb is conjugated (te-iru, ta-past, nai-negative, etc.), always tag **both** `suru` and the conjugation slug on the **same span and matched_form**. Example: 博している → two entries sharing span/matched_form `している`: `suru` + `te-iru`. Example: 続行した → `suru` + `ta-past`, both matched_form = `した`. The matched_form starts at the する part (し/し/し…), never at the preceding noun.
+
 #### `i-adjective` conjugations
 
 - `i-adjective-past`: matched_form = adj + かった (高かった、よかった)
 - `i-adjective-negative`: matched_form = adj stem + くない (高くない、よくない)
 - `i-adjective-te-form`: matched_form = adj stem + くて (高くて — connects clauses)
+
+#### `hodo-extent` — to the extent of / so much that
+
+matched_form = `ほど` only — do NOT include preceding demonstratives (それ、これ、あれ) or adverbs. Example: それほどの有名人 → matched_form = `ほど` (span covers ほど only, NOT それほど).
+
+#### `hotondo-nai` — hardly any / almost none
+
+matched_form = `ほとんど` for the first part + verb/adjective negative for the second part (discontinuous, two entries same slug). Example: ほとんどいない → two entries: `ほとんど` (start to start+4) and `いない` (negative verb span). Parallels `amari-nai`, `mattaku-nai`, `zenzen-nai`.
+
+Do NOT add a separate `nai-negative` entry — the compound slug replaces it entirely.
+
+#### `ga-ii` — it is good / you should
+
+matched_form = `がいい`. Use when verb plain form + が + いい expresses a recommendation or command. Example: 腕を振るうがいい → matched_form = `がいい`, span covers が + いい only (NOT the preceding verb). Distinct from `ba-ii` (ばいい) and `hou-ga-ii` (〜方がいい).
 
 ### Workflow for conversion
 
