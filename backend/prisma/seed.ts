@@ -275,9 +275,9 @@ const n5GrammarPoints = [
     notes: 'Usage 2: seeking confirmation',
   },
   {
-    slug: 'tsumori',
-    title: 'つもり',
-    romaji: 'tsumori',
+    slug: 'tsumori-da',
+    title: 'つもりだ',
+    romaji: 'tsumori da',
     en: 'plan to; intend to',
     fr: 'avoir l\'intention de ; compter faire',
     jlpt_level: 'N5' as const,
