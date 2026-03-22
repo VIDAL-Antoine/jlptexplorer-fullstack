@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localeParams, paginationQuery } from './common.schema';
+import { localeParams, paginationQuery, slugField } from './common.schema';
 
 export const jlptLevel = z.enum(['N5', 'N4', 'N3', 'N2', 'N1', 'Other']);
 
@@ -11,7 +11,7 @@ export const listGrammarPointsQuery = z.object({
 });
 
 export const grammarPointBody = z.object({
-  slug: z.string().max(100),
+  slug: slugField,
   title: z.string().max(100),
   romaji: z.string().max(100),
   meaning: z.string(),
@@ -26,7 +26,7 @@ export const grammarPointScenesQuery = paginationQuery.extend({
 });
 
 export const grammarPointPatchBody = z.object({
-  slug: z.string().max(100).optional(),
+  slug: slugField.optional(),
   title: z.string().max(100).optional(),
   romaji: z.string().max(100).optional(),
   meaning: z.string().optional(),

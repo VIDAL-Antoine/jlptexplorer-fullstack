@@ -26,7 +26,6 @@ const rawSourceInScene = z.object({
   type: sourceType,
   cover_image_url: z.string().nullable(),
   japanese_title: z.string().nullable(),
-  created_at: z.date(),
 });
 
 const rawSpeakerInScene = z
@@ -45,7 +44,6 @@ const rawGrammarPointInScene = z
     title: z.string(),
     romaji: z.string(),
     jlpt_level: jlptLevel,
-    created_at: z.date(),
   })
   .nullable();
 
@@ -78,7 +76,6 @@ export const sceneWriteResponse = z.object({
   end_time: z.number().int(),
   episode_number: z.number().int(),
   notes: z.string().nullable(),
-  created_at: z.date(),
   sources: rawSourceInScene,
   transcript_lines: z.array(rawTranscriptLineInScene),
 });

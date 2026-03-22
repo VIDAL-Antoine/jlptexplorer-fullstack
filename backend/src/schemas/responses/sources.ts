@@ -32,6 +32,5 @@ export const sourceWriteResponse = z.object({
   type: sourceType,
   cover_image_url: z.string().nullable(),
   japanese_title: z.string().nullable(),
-  created_at: z.date(),
   translations: z.record(z.string(), z.string()),
 });

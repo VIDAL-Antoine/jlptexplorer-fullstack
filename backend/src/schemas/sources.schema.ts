@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { paginationQuery } from './common.schema';
+import { paginationQuery, slugField } from './common.schema';
 
 export const sourceType = z.enum(['game', 'anime', 'movie', 'series', 'music']);
 
@@ -15,7 +15,7 @@ export const sourceSceneQuery = paginationQuery.extend({
 });
 
 export const sourceBody = z.object({
-  slug: z.string().max(100),
+  slug: slugField,
   japanese_title: z.string().max(255).optional(),
   type: sourceType,
   cover_image_url: z.string().max(500).optional(),
@@ -23,7 +23,7 @@ export const sourceBody = z.object({
 });
 
 export const sourcePatchBody = z.object({
-  slug: z.string().max(100).optional(),
+  slug: slugField.optional(),
   japanese_title: z.string().max(255).optional(),
   type: sourceType.optional(),
   cover_image_url: z.string().max(500).optional(),

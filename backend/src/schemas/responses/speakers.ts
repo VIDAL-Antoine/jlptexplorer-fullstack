@@ -31,7 +31,6 @@ const speakerSceneResponse = z.object({
   end_time: z.number().int(),
   episode_number: z.number().int(),
   notes: z.string().nullable(),
-  created_at: z.date(),
   sources: sourceResponse,
 });
 
@@ -57,7 +56,6 @@ export const speakerWriteResponse = z.object({
   slug: z.string(),
   name_japanese: z.string().nullable(),
   image_url: z.string().nullable(),
-  created_at: z.date(),
   translations: z.record(
     z.string(),
     z.object({ name: z.string(), description: z.string().nullable() }),

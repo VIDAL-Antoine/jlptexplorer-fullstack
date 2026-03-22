@@ -43,7 +43,6 @@ const rawSpeakerInLine = z
     slug: z.string(),
     name_japanese: z.string().nullable(),
     image_url: z.string().nullable(),
-    created_at: z.date(),
     translations: z.array(rawSpeakerTranslation),
   })
   .nullable();
@@ -55,7 +54,6 @@ const rawGrammarPointInLine = z
     title: z.string(),
     romaji: z.string(),
     jlpt_level: jlptLevel,
-    created_at: z.date(),
   })
   .nullable();
 

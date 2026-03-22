@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import fastify, { type FastifyError } from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import { Prisma } from '@prisma/client';
 import { registerCors } from '@/plugins/cors';
 import { registerSwagger } from '@/plugins/swagger';
 import { registerApiKeyAuth } from '@/plugins/api-key';
@@ -20,6 +21,23 @@ async function start() {
   server.setSerializerCompiler(serializerCompiler);
 
   server.setErrorHandler((error: FastifyError, _request, reply) => {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return reply.status(409).send({ error: 'A record with this value already exists' });
+      }
+      if (error.code === 'P2025') {
+        return reply.status(404).send({ error: 'Record not found' });
+      }
+      if (error.code === 'P2003') {
+        return reply.status(400).send({ error: 'Related record not found' });
+      }
+      if (error.code === 'P2014') {
+        return reply.status(400).send({ error: 'Required relation missing' });
+      }
+      if (error.code === 'P2000') {
+        return reply.status(400).send({ error: 'Value too long for column' });
+      }
+    }
     const status = error.statusCode ?? 500;
     if (status >= 400 && status < 500) {
       return reply.status(status).send({ error: error.message });

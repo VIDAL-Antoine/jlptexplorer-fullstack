@@ -10,7 +10,6 @@ export const grammarPointResponse = z.object({
   title: z.string(),
   romaji: z.string(),
   jlpt_level: jlptLevel,
-  created_at: z.date(),
   meaning: z.string().nullable(),
   notes: z.string().nullable(),
 });
@@ -21,7 +20,6 @@ export const sourceResponse = z.object({
   type: sourceType,
   cover_image_url: z.string().nullable(),
   japanese_title: z.string().nullable(),
-  created_at: z.date(),
   title: z.string().nullable(),
 });
 
@@ -63,7 +61,6 @@ export const sceneResponse = z.object({
   end_time: z.number().int(),
   episode_number: z.number().int(),
   notes: z.string().nullable(),
-  created_at: z.date(),
   sources: sourceResponse,
   transcript_lines: z.array(transcriptLineResponse),
 });

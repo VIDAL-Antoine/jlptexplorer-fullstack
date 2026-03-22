@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { slugField } from './common.schema';
 
 export const listSpeakersQuery = z.object({
   slug: z.string().optional(),
@@ -7,7 +8,7 @@ export const listSpeakersQuery = z.object({
 });
 
 export const speakerBody = z.object({
-  slug: z.string().max(100),
+  slug: slugField,
   name_japanese: z.string().max(100).optional(),
   image_url: z.string().max(500).optional(),
   translations: z.record(z.string(), z.string()),
@@ -15,7 +16,7 @@ export const speakerBody = z.object({
 });
 
 export const speakerPatchBody = z.object({
-  slug: z.string().max(100).optional(),
+  slug: slugField.optional(),
   name_japanese: z.string().max(100).optional(),
   image_url: z.string().max(500).optional(),
   translations: z.record(z.string(), z.string()).optional(),
