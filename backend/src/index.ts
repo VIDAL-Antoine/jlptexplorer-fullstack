@@ -3,6 +3,7 @@ import fastify, { type FastifyError } from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import { registerCors } from '@/plugins/cors';
 import { registerSwagger } from '@/plugins/swagger';
+import { registerApiKeyAuth } from '@/plugins/api-key';
 import { sourcesPublicRoutes, sourcesAdminRoutes } from '@/routes/v1/sources';
 import { scenesPublicRoutes, scenesAdminRoutes } from '@/routes/v1/scenes';
 import { grammarPointsRoutes } from '@/routes/v1/grammar-points';
@@ -46,11 +47,14 @@ async function start() {
         },
         { prefix: '/:locale' },
       );
-      api.register(scenesAdminRoutes, { prefix: '/scenes' });
-      api.register(speakersAdminRoutes, { prefix: '/speakers' });
-      api.register(sourcesAdminRoutes, { prefix: '/sources' });
-      api.register(transcriptLinesAdminRoutes, { prefix: '/transcript-lines' });
-      api.register(transcriptLineGrammarPointsAdminRoutes, { prefix: '/transcript-line-grammar-points' });
+      api.register(async (adminApi) => {
+        await registerApiKeyAuth(adminApi);
+        adminApi.register(scenesAdminRoutes, { prefix: '/scenes' });
+        adminApi.register(speakersAdminRoutes, { prefix: '/speakers' });
+        adminApi.register(sourcesAdminRoutes, { prefix: '/sources' });
+        adminApi.register(transcriptLinesAdminRoutes, { prefix: '/transcript-lines' });
+        adminApi.register(transcriptLineGrammarPointsAdminRoutes, { prefix: '/transcript-line-grammar-points' });
+      });
     },
     { prefix: '/api/v1' },
   );
