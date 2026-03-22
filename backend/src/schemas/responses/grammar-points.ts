@@ -1,7 +1,23 @@
 import { z } from 'zod';
 import { grammarPointResponse, sourceResponse, sceneResponse, errorResponse } from './primitives';
+import { jlptLevel } from '@/schemas/grammar-points.schema';
 
 export { errorResponse, grammarPointResponse };
+
+// ─── Admin write ──────────────────────────────────────────────────────────────
+// translations: locale -> { meaning, notes }
+
+export const grammarPointAdminResponse = z.object({
+  id: z.number().int(),
+  slug: z.string(),
+  title: z.string(),
+  romaji: z.string(),
+  jlpt_level: jlptLevel,
+  translations: z.record(
+    z.string(),
+    z.object({ meaning: z.string(), notes: z.string().nullable() }),
+  ),
+});
 
 export const listGrammarPointsResponse = z.object({
   grammar_points: z.array(grammarPointResponse.extend({ has_scenes: z.boolean() })),

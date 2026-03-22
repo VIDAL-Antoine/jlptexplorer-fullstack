@@ -4,12 +4,13 @@ import {
   grammarPointBody,
   grammarPointPatchBody,
   grammarPointParams,
+  grammarPointAdminParams,
   grammarPointScenesQuery,
 } from '@/schemas/grammar-points.schema';
 import { localeParams } from '@/schemas/common.schema';
 import {
   errorResponse,
-  grammarPointResponse,
+  grammarPointAdminResponse,
   listGrammarPointsResponse,
   getGrammarPointResponse,
   getGrammarPointScenesResponse,
@@ -26,7 +27,7 @@ import {
 
 const TAGS = ['grammar-points'];
 
-export async function grammarPointsRoutes(server: FastifyInstance) {
+export async function grammarPointsPublicRoutes(server: FastifyInstance) {
   server.get(
     '/',
     {
@@ -62,14 +63,16 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     },
     getGrammarPointScenes,
   );
+}
+
+export async function grammarPointsAdminRoutes(server: FastifyInstance) {
   server.post(
     '/',
     {
       schema: {
         tags: TAGS,
-        params: localeParams,
         body: grammarPointBody,
-        response: { 201: grammarPointResponse },
+        response: { 201: grammarPointAdminResponse },
       },
     },
     createGrammarPoint,
@@ -79,9 +82,9 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     {
       schema: {
         tags: TAGS,
-        params: grammarPointParams,
+        params: grammarPointAdminParams,
         body: grammarPointBody,
-        response: { 200: grammarPointResponse, 404: errorResponse },
+        response: { 200: grammarPointAdminResponse, 404: errorResponse },
       },
     },
     updateGrammarPoint,
@@ -91,9 +94,9 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     {
       schema: {
         tags: TAGS,
-        params: grammarPointParams,
+        params: grammarPointAdminParams,
         body: grammarPointPatchBody,
-        response: { 200: grammarPointResponse, 404: errorResponse },
+        response: { 200: grammarPointAdminResponse, 404: errorResponse },
       },
     },
     patchGrammarPoint,
@@ -103,7 +106,7 @@ export async function grammarPointsRoutes(server: FastifyInstance) {
     {
       schema: {
         tags: TAGS,
-        params: grammarPointParams,
+        params: grammarPointAdminParams,
         response: { 404: errorResponse },
       },
     },

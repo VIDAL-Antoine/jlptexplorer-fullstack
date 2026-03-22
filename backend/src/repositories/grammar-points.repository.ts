@@ -143,9 +143,7 @@ export async function createGrammarPoint(data: {
   title: string;
   romaji: string;
   jlpt_level: jlpt_level;
-  locale: string;
-  meaning: string;
-  notes?: string;
+  translations: { locale: string; meaning: string; notes?: string }[];
 }) {
   return prisma.grammar_points.create({
     data: {
@@ -153,9 +151,9 @@ export async function createGrammarPoint(data: {
       title: data.title,
       romaji: data.romaji,
       jlpt_level: data.jlpt_level,
-      translations: { create: { locale: data.locale, meaning: data.meaning, notes: data.notes } },
+      translations: { create: data.translations },
     },
-    include: { translations: { where: { locale: data.locale } } },
+    include: { translations: true },
   });
 }
 
@@ -167,9 +165,7 @@ export async function updateGrammarPoint(
     title: string;
     romaji: string;
     jlpt_level: jlpt_level;
-    locale: string;
-    meaning: string;
-    notes?: string;
+    translations: { locale: string; meaning: string; notes?: string }[];
   },
 ) {
   return prisma.grammar_points.update({
@@ -180,16 +176,14 @@ export async function updateGrammarPoint(
       romaji: data.romaji,
       jlpt_level: data.jlpt_level,
       translations: {
-        upsert: {
-          where: {
-            grammar_point_id_locale: { grammar_point_id: grammarPointId, locale: data.locale },
-          },
-          create: { locale: data.locale, meaning: data.meaning, notes: data.notes },
-          update: { meaning: data.meaning, notes: data.notes },
-        },
+        upsert: data.translations.map(({ locale, meaning, notes }) => ({
+          where: { grammar_point_id_locale: { grammar_point_id: grammarPointId, locale } },
+          create: { locale, meaning, notes },
+          update: { meaning, notes },
+        })),
       },
     },
-    include: { translations: { where: { locale: data.locale } } },
+    include: { translations: true },
   });
 }
 
@@ -201,13 +195,10 @@ export async function patchGrammarPoint(
     title?: string;
     romaji?: string;
     jlpt_level?: jlpt_level;
-    locale: string;
-    meaning?: string;
-    notes?: string;
+    translations?: { locale: string; meaning?: string; notes?: string }[];
   },
 ) {
-  const { slug, title, romaji, jlpt_level: jlptLevel, locale, meaning, notes } = data;
-  const hasTranslationUpdate = meaning !== undefined || notes !== undefined;
+  const { slug, title, romaji, jlpt_level: jlptLevel, translations } = data;
 
   return prisma.grammar_points.update({
     where: { slug: paramSlug },
@@ -216,22 +207,22 @@ export async function patchGrammarPoint(
       ...(title !== undefined ? { title } : {}),
       ...(romaji !== undefined ? { romaji } : {}),
       ...(jlptLevel !== undefined ? { jlpt_level: jlptLevel } : {}),
-      ...(hasTranslationUpdate
+      ...(translations && translations.length > 0
         ? {
             translations: {
-              upsert: {
+              upsert: translations.map(({ locale, meaning, notes }) => ({
                 where: { grammar_point_id_locale: { grammar_point_id: grammarPointId, locale } },
                 create: { locale, meaning: meaning ?? '', notes },
                 update: {
                   ...(meaning !== undefined ? { meaning } : {}),
                   ...(notes !== undefined ? { notes } : {}),
                 },
-              },
+              })),
             },
           }
         : {}),
     },
-    include: { translations: { where: { locale } } },
+    include: { translations: true },
   });
 }
 

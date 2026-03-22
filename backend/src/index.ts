@@ -7,7 +7,7 @@ import { registerSwagger } from '@/plugins/swagger';
 import { registerApiKeyAuth } from '@/plugins/api-key';
 import { sourcesPublicRoutes, sourcesAdminRoutes } from '@/routes/v1/sources';
 import { scenesPublicRoutes, scenesAdminRoutes } from '@/routes/v1/scenes';
-import { grammarPointsRoutes } from '@/routes/v1/grammar-points';
+import { grammarPointsPublicRoutes, grammarPointsAdminRoutes } from '@/routes/v1/grammar-points';
 import { speakersPublicRoutes, speakersAdminRoutes } from '@/routes/v1/speakers';
 import {
   transcriptLinesPublicRoutes,
@@ -59,7 +59,7 @@ async function start() {
         async (localeApi) => {
           localeApi.register(sourcesPublicRoutes, { prefix: '/sources' });
           localeApi.register(scenesPublicRoutes, { prefix: '/scenes' });
-          localeApi.register(grammarPointsRoutes, { prefix: '/grammar-points' });
+          localeApi.register(grammarPointsPublicRoutes, { prefix: '/grammar-points' });
           localeApi.register(speakersPublicRoutes, { prefix: '/speakers' });
           localeApi.register(transcriptLinesPublicRoutes, { prefix: '/transcript-lines' });
         },
@@ -71,6 +71,7 @@ async function start() {
         adminApi.register(speakersAdminRoutes, { prefix: '/speakers' });
         adminApi.register(sourcesAdminRoutes, { prefix: '/sources' });
         adminApi.register(transcriptLinesAdminRoutes, { prefix: '/transcript-lines' });
+        adminApi.register(grammarPointsAdminRoutes, { prefix: '/grammar-points' });
         adminApi.register(transcriptLineGrammarPointsAdminRoutes, { prefix: '/transcript-line-grammar-points' });
       });
     },

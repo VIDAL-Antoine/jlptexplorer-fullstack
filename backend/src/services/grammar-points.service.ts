@@ -75,31 +75,29 @@ export async function getGrammarPointScenes(
   };
 }
 
-export async function createGrammarPoint(
-  locale: string,
-  data: {
-    slug: string;
-    title: string;
-    romaji: string;
-    meaning: string;
-    jlpt_level: jlpt_level;
-    notes?: string;
-  },
-) {
-  const grammarPoint = await grammarPointsRepository.createGrammarPoint({ ...data, locale });
-  return flattenGrammarPoint(grammarPoint);
+function toTranslationsRecord(translations: { locale: string; meaning: string; notes: string | null }[]) {
+  return Object.fromEntries(translations.map((t) => [t.locale, { meaning: t.meaning, notes: t.notes }]));
+}
+
+export async function createGrammarPoint(data: {
+  slug: string;
+  title: string;
+  romaji: string;
+  jlpt_level: jlpt_level;
+  translations: { locale: string; meaning: string; notes?: string }[];
+}) {
+  const gp = await grammarPointsRepository.createGrammarPoint(data);
+  return { ...gp, translations: toTranslationsRecord(gp.translations) };
 }
 
 export async function updateGrammarPoint(
-  locale: string,
   paramSlug: string,
   data: {
     slug: string;
     title: string;
     romaji: string;
-    meaning: string;
     jlpt_level: jlpt_level;
-    notes?: string;
+    translations: { locale: string; meaning: string; notes?: string }[];
   },
 ) {
   const existing = await grammarPointsRepository.findGrammarPointIdBySlug(paramSlug);
@@ -107,23 +105,18 @@ export async function updateGrammarPoint(
     return null;
   }
 
-  const grammarPoint = await grammarPointsRepository.updateGrammarPoint(paramSlug, existing.id, {
-    ...data,
-    locale,
-  });
-  return flattenGrammarPoint(grammarPoint);
+  const gp = await grammarPointsRepository.updateGrammarPoint(paramSlug, existing.id, data);
+  return { ...gp, translations: toTranslationsRecord(gp.translations) };
 }
 
 export async function patchGrammarPoint(
-  locale: string,
   paramSlug: string,
   data: {
     slug?: string;
     title?: string;
     romaji?: string;
-    meaning?: string;
     jlpt_level?: jlpt_level;
-    notes?: string;
+    translations?: { locale: string; meaning?: string; notes?: string }[];
   },
 ) {
   const existing = await grammarPointsRepository.findGrammarPointIdBySlug(paramSlug);
@@ -131,12 +124,8 @@ export async function patchGrammarPoint(
     return null;
   }
 
-  const grammarPoint = await grammarPointsRepository.patchGrammarPoint(
-    paramSlug,
-    existing.id,
-    { ...data, locale },
-  );
-  return flattenGrammarPoint(grammarPoint);
+  const gp = await grammarPointsRepository.patchGrammarPoint(paramSlug, existing.id, data);
+  return { ...gp, translations: toTranslationsRecord(gp.translations) };
 }
 
 export async function deleteGrammarPoint(slug: string) {

@@ -5,6 +5,7 @@ import type {
   GrammarPointBody,
   GrammarPointPatchBody,
   GrammarPointParams,
+  GrammarPointAdminParams,
   ListGrammarPointsQuery,
   GrammarPointScenesQuery,
 } from '@/schemas/grammar-points.schema';
@@ -60,25 +61,18 @@ export async function getGrammarPointScenes(
 }
 
 export async function createGrammarPoint(
-  request: FastifyRequest<{ Params: LocaleParams; Body: GrammarPointBody }>,
+  request: FastifyRequest<{ Body: GrammarPointBody }>,
   reply: FastifyReply,
 ) {
-  const grammarPoint = await grammarPointsService.createGrammarPoint(
-    request.params.locale,
-    request.body,
-  );
+  const grammarPoint = await grammarPointsService.createGrammarPoint(request.body);
   return reply.status(201).send(grammarPoint);
 }
 
 export async function updateGrammarPoint(
-  request: FastifyRequest<{ Params: GrammarPointParams; Body: GrammarPointBody }>,
+  request: FastifyRequest<{ Params: GrammarPointAdminParams; Body: GrammarPointBody }>,
   reply: FastifyReply,
 ) {
-  const result = await grammarPointsService.updateGrammarPoint(
-    request.params.locale,
-    request.params.slug,
-    request.body,
-  );
+  const result = await grammarPointsService.updateGrammarPoint(request.params.slug, request.body);
   if (!result) {
     return reply.status(404).send({ error: 'Grammar point not found' });
   }
@@ -86,14 +80,10 @@ export async function updateGrammarPoint(
 }
 
 export async function patchGrammarPoint(
-  request: FastifyRequest<{ Params: GrammarPointParams; Body: GrammarPointPatchBody }>,
+  request: FastifyRequest<{ Params: GrammarPointAdminParams; Body: GrammarPointPatchBody }>,
   reply: FastifyReply,
 ) {
-  const result = await grammarPointsService.patchGrammarPoint(
-    request.params.locale,
-    request.params.slug,
-    request.body,
-  );
+  const result = await grammarPointsService.patchGrammarPoint(request.params.slug, request.body);
   if (!result) {
     return reply.status(404).send({ error: 'Grammar point not found' });
   }
@@ -101,7 +91,7 @@ export async function patchGrammarPoint(
 }
 
 export async function deleteGrammarPoint(
-  request: FastifyRequest<{ Params: GrammarPointParams }>,
+  request: FastifyRequest<{ Params: GrammarPointAdminParams }>,
   reply: FastifyReply,
 ) {
   await grammarPointsService.deleteGrammarPoint(request.params.slug);
