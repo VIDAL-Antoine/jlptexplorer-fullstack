@@ -1,6 +1,6 @@
 import { prisma } from '@/config/prisma';
 import { buildSceneInclude } from '@/repositories/scenes.repository';
-import type { source_type } from '@/generated/prisma/enums';
+import type { source_type } from '@prisma/client';
 
 export async function findSources(locale: string, type?: source_type) {
   return prisma.sources.findMany({

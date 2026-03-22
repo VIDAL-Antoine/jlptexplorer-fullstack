@@ -1,6 +1,6 @@
 import { prisma } from '@/config/prisma';
 import { buildSceneInclude } from '@/repositories/scenes.repository';
-import type { jlpt_level } from '@/generated/prisma/enums';
+import type { jlpt_level } from '@prisma/client';
 
 export async function findGrammarPoints(
   locale: string,

@@ -1,5 +1,5 @@
 import { prisma } from '@/config/prisma';
-import type { Prisma } from '@/generated/prisma/client';
+import type { Prisma } from '@prisma/client';
 
 export function buildTranscriptLineInclude(locale: string) {
   return {

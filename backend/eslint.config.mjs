@@ -5,7 +5,7 @@ import { defineConfig } from 'eslint/config';
 export default defineConfig(
   tseslint.configs.recommended,
   prettierConfig,
-  { ignores: ['dist/**', 'src/generated/**'] },
+  { ignores: ['dist/**'] },
   {
     languageOptions: {
       parserOptions: {

@@ -1,6 +1,6 @@
 import { flattenGrammarPoint, flattenScene, flattenSource } from '@/utils/flatten';
 import * as grammarPointsRepository from '@/repositories/grammar-points.repository';
-import type { jlpt_level } from '@/generated/prisma/enums';
+import type { jlpt_level } from '@prisma/client';
 
 export async function listGrammarPoints(
   locale: string,
