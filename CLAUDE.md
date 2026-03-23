@@ -444,6 +444,8 @@ Use only when て connects clauses without being followed by いる/ある/etc. 
 - 食べて → `食べて`
 - 読んで → `読んで` (voiced て-form for Group 1 む/ぬ/ぶ stems)
 
+**When the te-form feeds into a `te-kuru` or `te-iku` construction**: the te-form verb's grammar point (e.g. `naru`, `suru`, etc.) and any conjugation on the kuru/iku part (e.g. `e-ro-imperative`) all share the **same full span** as `te-kuru`/`te-iku`. The te-form is inseparable from the construction — you cannot substitute the continuative (-i) form. Example: `なって来い` → `naru` + `te-kuru` + `e-ro-imperative` all share matched_form = `なって来い`.
+
 #### `rareru-potential` — potential form
 
 matched_form = full potential form from verb stem:
