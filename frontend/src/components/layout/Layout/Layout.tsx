@@ -27,8 +27,8 @@ export function Layout({ children }: LayoutProps) {
         <Navbar onNavigate={close} />
       </AppShell.Navbar>
 
-      <AppShell.Main>
-        {children}
+      <AppShell.Main style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1 }}>{children}</div>
         <Footer />
       </AppShell.Main>
     </AppShell>
