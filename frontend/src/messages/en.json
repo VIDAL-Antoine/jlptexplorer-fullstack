@@ -4,7 +4,36 @@
     "openSettings": "Settings"
   },
   "Footer": {
-    "tagline": "JLPTExplorer — Japanese grammar in context"
+    "tagline": "JLPTExplorer — Japanese grammar in context",
+    "legal": "All media belong to their respective owners and are used for educational, non-commercial purposes only. No tracking is performed. YouTube videos are embedded using enhanced privacy mode (youtube-nocookie.com)."
+  },
+  "YoutubePlayer": {
+    "cookiesRequired": "Accept YouTube cookies to watch this video.",
+    "managePreferences": "Manage cookie preferences"
+  },
+  "CookieConsent": {
+    "consentModal": {
+      "title": "Cookie preferences",
+      "description": "JLPTExplorer saves your preferences locally and does not use tracking cookies. Video clips are embedded via YouTube in privacy-enhanced mode — YouTube may set cookies when you interact with a video.",
+      "acceptAllBtn": "Accept all",
+      "acceptNecessaryBtn": "Reject all",
+      "showPreferencesBtn": "Manage preferences"
+    },
+    "preferencesModal": {
+      "title": "Cookie preferences",
+      "acceptAllBtn": "Accept all",
+      "acceptNecessaryBtn": "Reject all",
+      "savePreferencesBtn": "Save preferences",
+      "closeIconLabel": "Close",
+      "necessary": {
+        "title": "Strictly necessary",
+        "description": "Local storage is used to save your display preferences (language, theme). This cannot be disabled."
+      },
+      "youtube": {
+        "title": "YouTube videos",
+        "description": "Video clips are embedded via YouTube using privacy-enhanced mode (youtube-nocookie.com). YouTube may set cookies when you play a video."
+      }
+    }
   },
   "Navbar": {
     "browse": "Browse",

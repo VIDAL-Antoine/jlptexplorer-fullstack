@@ -4,7 +4,36 @@
     "openSettings": "Paramètres"
   },
   "Footer": {
-    "tagline": "JLPTExplorer — La grammaire japonaise avec du contexte"
+    "tagline": "JLPTExplorer — La grammaire japonaise avec du contexte",
+    "legal": "Tous les médias appartiennent à leurs propriétaires respectifs et sont utilisés uniquement à des fins éducatives non commerciales. Aucun traçage n'est effectué. Les vidéos YouTube sont en mode confidentialité améliorée (youtube-nocookie.com)."
+  },
+  "YoutubePlayer": {
+    "cookiesRequired": "Acceptez les cookies YouTube pour regarder cette vidéo.",
+    "managePreferences": "Gérer les préférences cookies"
+  },
+  "CookieConsent": {
+    "consentModal": {
+      "title": "Préférences cookies",
+      "description": "JLPTExplorer sauvegarde vos préférences localement et n'utilise pas de cookies de suivi. Les vidéos sont intégrées via YouTube en mode confidentialité améliorée — YouTube peut déposer des cookies lorsque vous interagissez avec une vidéo.",
+      "acceptAllBtn": "Tout accepter",
+      "acceptNecessaryBtn": "Tout refuser",
+      "showPreferencesBtn": "Gérer les préférences"
+    },
+    "preferencesModal": {
+      "title": "Préférences cookies",
+      "acceptAllBtn": "Tout accepter",
+      "acceptNecessaryBtn": "Tout refuser",
+      "savePreferencesBtn": "Sauvegarder",
+      "closeIconLabel": "Fermer",
+      "necessary": {
+        "title": "Strictement nécessaires",
+        "description": "Le stockage local est utilisé pour sauvegarder vos préférences d'affichage (langue, thème). Ces paramètres ne peuvent pas être désactivés."
+      },
+      "youtube": {
+        "title": "Vidéos YouTube",
+        "description": "Les clips vidéo sont intégrés via YouTube en mode confidentialité améliorée (youtube-nocookie.com). YouTube peut déposer des cookies lorsque vous lisez une vidéo."
+      }
+    }
   },
   "Navbar": {
     "browse": "Parcourir",

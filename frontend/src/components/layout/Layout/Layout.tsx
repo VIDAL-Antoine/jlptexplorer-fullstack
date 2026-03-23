@@ -17,7 +17,6 @@ export function Layout({ children }: LayoutProps) {
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 240, breakpoint: 'sm', collapsed: { mobile: !opened } }}
-      footer={{ height: 44 }}
       padding="md"
     >
       <AppShell.Header>
@@ -28,11 +27,10 @@ export function Layout({ children }: LayoutProps) {
         <Navbar onNavigate={close} />
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
-
-      <AppShell.Footer>
+      <AppShell.Main>
+        {children}
         <Footer />
-      </AppShell.Footer>
+      </AppShell.Main>
     </AppShell>
   );
 }
