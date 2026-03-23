@@ -15,6 +15,7 @@ declare global {
         elementId: string,
         options: {
           videoId: string;
+          host?: string;
           playerVars?: Record<string, number | string>;
           events?: {
             onReady?: (event: { target: YTPlayer }) => void;
