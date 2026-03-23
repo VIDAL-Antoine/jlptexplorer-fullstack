@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocale } from 'next-intl';
 import * as CookieConsent from 'vanilla-cookieconsent';
 import en from '@/messages/en.json';
@@ -35,17 +35,19 @@ const translations: Record<string, CookieConsent.Translation> = {
   fr: buildTranslation(fr),
 };
 
+let ccInitialized = false;
+
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
   const locale = useLocale();
   const [isYoutubeAccepted, setIsYoutubeAccepted] = useState(false);
-  const initialized = useRef(false);
 
   useEffect(() => {
-    if (initialized.current) {
+    if (ccInitialized) {
       CookieConsent.setLanguage(locale === 'fr' ? 'fr' : 'en');
+      setIsYoutubeAccepted(CookieConsent.acceptedCategory('youtube'));
       return;
     }
-    initialized.current = true;
+    ccInitialized = true;
 
     CookieConsent.run({
       categories: {
@@ -63,6 +65,7 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
         setIsYoutubeAccepted(CookieConsent.acceptedCategory('youtube'));
       },
     });
+    setIsYoutubeAccepted(CookieConsent.acceptedCategory('youtube'));
   }, [locale]);
 
   return (
