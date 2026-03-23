@@ -23,7 +23,13 @@ export function Header({ opened, toggle }: HeaderProps) {
       <Group h="100%" px="md" justify="space-between">
         <Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Anchor component={Link} href="/" underline="never" c="inherit">
+          <Anchor
+            component={Link}
+            href="/"
+            underline="never"
+            c="inherit"
+            onClick={() => opened && toggle()}
+          >
             <Text fw={700} size="lg">
               JLPTExplorer
             </Text>
