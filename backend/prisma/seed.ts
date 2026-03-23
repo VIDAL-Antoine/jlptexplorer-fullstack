@@ -189,7 +189,7 @@ const n5GrammarPoints = [
     en: 'because',
     fr: 'parce que ; car',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 1: reason / cause',
+    notes: { en: 'Usage 1: reason / cause', fr: 'Usage 1 : raison / cause' },
   },
   {
     slug: 'kara-from',
@@ -198,7 +198,10 @@ const n5GrammarPoints = [
     en: 'from',
     fr: 'depuis ; à partir de',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 2: starting point',
+    notes: {
+      en: 'Usage 2: starting point. In formal speech, より is preferred.',
+      fr: 'Usage 2 : point de départ. En langage formel, より est préféré.',
+    },
   },
   {
     slug: 'kurai-gurai',
@@ -229,7 +232,7 @@ const n5GrammarPoints = [
     title: 'だ・です',
     romaji: 'da / desu',
     en: 'there is; this is',
-    fr: 'c\'est ; il y a (copule)',
+    fr: "c'est ; il y a (copule)",
     jlpt_level: 'N5' as const,
   },
   {
@@ -263,7 +266,7 @@ const n5GrammarPoints = [
     en: 'probably',
     fr: 'probablement ; sans doute',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 1: expressing probability',
+    notes: { en: 'Usage 1: expressing probability', fr: 'Usage 1 : exprimer la probabilité' },
   },
   {
     slug: 'darou-confirmation',
@@ -272,14 +275,14 @@ const n5GrammarPoints = [
     en: "isn't it?; right?",
     fr: "n'est-ce pas ? ; c'est bien ça ?",
     jlpt_level: 'N5' as const,
-    notes: 'Usage 2: seeking confirmation',
+    notes: { en: 'Usage 2: seeking confirmation', fr: 'Usage 2 : chercher une confirmation' },
   },
   {
     slug: 'tsumori-da',
     title: 'つもりだ',
     romaji: 'tsumori da',
     en: 'plan to; intend to',
-    fr: 'avoir l\'intention de ; compter faire',
+    fr: "avoir l'intention de ; compter faire",
     jlpt_level: 'N5' as const,
   },
   {
@@ -289,7 +292,7 @@ const n5GrammarPoints = [
     en: 'at; in',
     fr: 'particule de lieu (action)',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 1: location of action',
+    notes: { en: 'Usage 1: location of action', fr: "Usage 1 : lieu de l'action" },
   },
   {
     slug: 'de-means-of',
@@ -298,7 +301,7 @@ const n5GrammarPoints = [
     en: 'with; by',
     fr: 'particule de moyen',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 2: means / method',
+    notes: { en: 'Usage 2: means / method', fr: 'Usage 2 : moyen / méthode' },
   },
   {
     slug: 'te-iru',
@@ -321,7 +324,7 @@ const n5GrammarPoints = [
     title: 'てください',
     romaji: 'te kudasai',
     en: 'please do…',
-    fr: 'veuillez faire... ; s\'il vous plaît',
+    fr: "veuillez faire... ; s'il vous plaît",
     jlpt_level: 'N5' as const,
   },
   {
@@ -331,7 +334,10 @@ const n5GrammarPoints = [
     en: 'probably',
     fr: 'probablement (forme polie de だろう)',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 1: expressing probability (polite form of だろう)',
+    notes: {
+      en: 'Usage 1: expressing probability (polite form of だろう)',
+      fr: 'Usage 1 : exprimer la probabilité (forme polie de だろう)',
+    },
   },
   {
     slug: 'deshou-confirmation',
@@ -340,7 +346,10 @@ const n5GrammarPoints = [
     en: "isn't it?; right?",
     fr: "n'est-ce pas ? (forme polie de だろう)",
     jlpt_level: 'N5' as const,
-    notes: 'Usage 2: seeking confirmation (polite form of だろう)',
+    notes: {
+      en: 'Usage 2: seeking confirmation (polite form of だろう)',
+      fr: 'Usage 2 : chercher une confirmation (forme polie de だろう)',
+    },
   },
   {
     slug: 'te-wa-ikenai',
@@ -355,7 +364,7 @@ const n5GrammarPoints = [
     title: 'てもいい',
     romaji: 'te mo ii',
     en: 'is okay; is alright to',
-    fr: 'c\'est permis de ; on peut',
+    fr: "c'est permis de ; on peut",
     jlpt_level: 'N5' as const,
   },
   {
@@ -365,16 +374,19 @@ const n5GrammarPoints = [
     en: 'and',
     fr: 'et (liste exhaustive)',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 1: listing nouns (exhaustive)',
+    notes: {
+      en: 'Usage 1: listing nouns (exhaustive)',
+      fr: 'Usage 1 : liste de noms (exhaustive)',
+    },
   },
   {
     slug: 'to-together-with',
     title: 'と',
     romaji: 'to',
     en: 'with',
-    fr: 'avec (quelqu\'un)',
+    fr: "avec (quelqu'un)",
     jlpt_level: 'N5' as const,
-    notes: 'Usage 2: together with someone',
+    notes: { en: 'Usage 2: together with someone', fr: "Usage 2 : avec quelqu'un" },
   },
   {
     slug: 'na',
@@ -439,7 +451,7 @@ const n5GrammarPoints = [
     en: 'of (indicates possession)',
     fr: 'particule possessive',
     jlpt_level: 'N5' as const,
-    notes: 'Usage 1: possessive particle',
+    notes: { en: 'Usage 1: possessive particle', fr: 'Usage 1 : particule possessive' },
   },
   {
     slug: 'no-koto-nominalizer',
@@ -526,7 +538,7 @@ const n5GrammarPoints = [
     title: 'まで',
     romaji: 'made',
     en: 'until; till; to; even',
-    fr: 'jusqu\'à ; même',
+    fr: "jusqu'à ; même",
     jlpt_level: 'N5' as const,
   },
   {
@@ -582,7 +594,7 @@ const n5GrammarPoints = [
     title: 'を',
     romaji: 'wo',
     en: 'object marker',
-    fr: 'particule d\'objet',
+    fr: "particule d'objet",
     jlpt_level: 'N5' as const,
   },
   {
@@ -863,16 +875,16 @@ const n4GrammarPoints = [
     en: 'I heard that; it is said that',
     fr: "j'ai entendu dire que ; il paraît que",
     jlpt_level: 'N4' as const,
-    notes: 'Usage 1: hearsay',
+    notes: { en: 'Usage 1: hearsay', fr: 'Usage 1 : ouï-dire' },
   },
   {
     slug: 'sou-da-appearance',
     title: 'そうだ',
     romaji: 'sou da',
     en: 'look like; appear; seem',
-    fr: 'avoir l\'air de ; sembler',
+    fr: "avoir l'air de ; sembler",
     jlpt_level: 'N4' as const,
-    notes: 'Usage 2: appearance / conjecture',
+    notes: { en: 'Usage 2: appearance / conjecture', fr: 'Usage 2 : apparence / conjecture' },
   },
   {
     slug: 'sou-ni-sou-na',
@@ -911,7 +923,7 @@ const n4GrammarPoints = [
     title: 'だけで',
     romaji: 'dake de',
     en: 'just by',
-    fr: 'rien qu\'en faisant ; juste en',
+    fr: "rien qu'en faisant ; juste en",
     jlpt_level: 'N4' as const,
   },
   {
@@ -975,8 +987,12 @@ const n4GrammarPoints = [
     title: 'てあげる',
     romaji: 'te ageru',
     en: 'to do something for someone',
-    fr: 'faire quelque chose pour quelqu\'un (faveur donnée)',
+    fr: "faire quelque chose pour quelqu'un (faveur donnée)",
     jlpt_level: 'N4' as const,
+    notes: {
+      en: 'Informal equivalent: てやる. Formal equivalent: てさしあげる.',
+      fr: 'Équivalent informel : てやる. Équivalent formel : てさしあげる.',
+    },
   },
   {
     slug: 'te-aru',
@@ -991,7 +1007,7 @@ const n4GrammarPoints = [
     title: 'ていく',
     romaji: 'te iku',
     en: 'to go and do',
-    fr: 'aller faire ; progresser (en s\'éloignant)',
+    fr: "aller faire ; progresser (en s'éloignant)",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1015,7 +1031,7 @@ const n4GrammarPoints = [
     title: 'ておく・とく',
     romaji: 'te oku / toku',
     en: 'to do something for later',
-    fr: 'faire à l\'avance ; préparer pour plus tard',
+    fr: "faire à l'avance ; préparer pour plus tard",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1033,13 +1049,14 @@ const n4GrammarPoints = [
     en: 'to do something for someone',
     fr: 'faire quelque chose pour moi (faveur reçue)',
     jlpt_level: 'N4' as const,
+    notes: { en: 'Formal equivalent: てくださる.', fr: 'Équivalent formel : てくださる.' },
   },
   {
     slug: 'de-gozaimasu',
     title: 'でございます',
     romaji: 'de gozaimasu',
     en: 'there is; this is (honorific である)',
-    fr: 'c\'est ; il y a (forme honorifique de である)',
+    fr: "c'est ; il y a (forme honorifique de である)",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1055,7 +1072,7 @@ const n4GrammarPoints = [
     title: 'てすみません',
     romaji: 'te sumimasen',
     en: "I'm sorry for",
-    fr: 'je suis désolé d\'avoir fait',
+    fr: "je suis désolé d'avoir fait",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1063,7 +1080,7 @@ const n4GrammarPoints = [
     title: 'てほしい',
     romaji: 'te hoshii',
     en: 'I want you to; I need you to',
-    fr: 'je veux que tu fasses ; j\'aimerais que',
+    fr: "je veux que tu fasses ; j'aimerais que",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1095,15 +1112,16 @@ const n4GrammarPoints = [
     title: 'てもらう',
     romaji: 'te morau',
     en: 'to get somebody to do something',
-    fr: 'se faire faire quelque chose par quelqu\'un',
+    fr: "se faire faire quelque chose par quelqu'un",
     jlpt_level: 'N4' as const,
+    notes: { en: 'Formal equivalent: ていただく.', fr: 'Équivalent formel : ていただく.' },
   },
   {
     slug: 'te-yokatta',
     title: 'てよかった',
     romaji: 'te yokatta',
     en: "I'm glad that",
-    fr: 'je suis content d\'avoir fait',
+    fr: "je suis content d'avoir fait",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1113,7 +1131,10 @@ const n4GrammarPoints = [
     en: 'if; when; and',
     fr: 'si ; quand (conséquence naturelle)',
     jlpt_level: 'N4' as const,
-    notes: 'Conditional と — natural consequence',
+    notes: {
+      en: 'Conditional と — natural consequence',
+      fr: 'と conditionnel — conséquence naturelle',
+    },
   },
   {
     slug: 'to-iu-koto',
@@ -1184,7 +1205,7 @@ const n4GrammarPoints = [
     title: 'なくてもいい',
     romaji: 'nakute mo ii',
     en: "don't have to",
-    fr: 'ne pas avoir besoin de faire ; ce n\'est pas obligatoire',
+    fr: "ne pas avoir besoin de faire ; ce n'est pas obligatoire",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1250,7 +1271,7 @@ const n4GrammarPoints = [
     en: 'although; in spite of; even though',
     fr: 'bien que ; pourtant ; malgré',
     jlpt_level: 'N4' as const,
-    notes: 'Usage 1: concessive (although)',
+    notes: { en: 'Usage 1: concessive (although)', fr: 'Usage 1 : concessif (bien que)' },
   },
   {
     slug: 'no-ni-in-order-to',
@@ -1259,7 +1280,7 @@ const n4GrammarPoints = [
     en: 'in order to',
     fr: 'pour (but) ; afin de',
     jlpt_level: 'N4' as const,
-    notes: 'Usage 2: purpose',
+    notes: { en: 'Usage 2: purpose', fr: 'Usage 2 : but / objectif' },
   },
   {
     slug: 'no-you-ni-na',
@@ -1306,7 +1327,7 @@ const n4GrammarPoints = [
     title: 'はずがない',
     romaji: 'hazu ga nai',
     en: 'cannot be',
-    fr: 'il n\'est pas possible que ; ça ne peut pas être',
+    fr: "il n'est pas possible que ; ça ne peut pas être",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1346,7 +1367,7 @@ const n4GrammarPoints = [
     title: 'までに',
     romaji: 'made ni',
     en: 'by; by the time',
-    fr: 'd\'ici ; avant (limite temporelle)',
+    fr: "d'ici ; avant (limite temporelle)",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1386,7 +1407,7 @@ const n4GrammarPoints = [
     title: 'ようと思う',
     romaji: 'you to omou',
     en: 'I think I will',
-    fr: 'je pense faire ; j\'ai l\'intention de',
+    fr: "je pense faire ; j'ai l'intention de",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1402,7 +1423,7 @@ const n4GrammarPoints = [
     title: 'ようにする',
     romaji: 'you ni suru',
     en: 'to try to; to make sure that',
-    fr: 'veiller à ce que ; s\'efforcer de',
+    fr: "veiller à ce que ; s'efforcer de",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1444,16 +1465,16 @@ const n4GrammarPoints = [
     en: 'to be able to do something',
     fr: 'forme potentielle (pouvoir faire)',
     jlpt_level: 'N4' as const,
-    notes: 'Usage 1: potential',
+    notes: { en: 'Usage 1: potential', fr: 'Usage 1 : potentiel' },
   },
   {
     slug: 'rareru-passive',
     title: 'られる',
     romaji: 'rareru',
     en: 'to do (by someone)',
-    fr: 'forme passive (être fait par quelqu\'un)',
+    fr: "forme passive (être fait par quelqu'un)",
     jlpt_level: 'N4' as const,
-    notes: 'Usage 2: passive',
+    notes: { en: 'Usage 2: passive', fr: 'Usage 2 : passif' },
   },
   {
     slug: 'eru-potential',
@@ -1492,7 +1513,7 @@ const n4GrammarPoints = [
     title: '〜がいい',
     romaji: 'ga ii',
     en: 'it is good; you should',
-    fr: 'c\'est bien de ; tu devrais',
+    fr: "c'est bien de ; tu devrais",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1502,14 +1523,14 @@ const n4GrammarPoints = [
     en: 'for the sake of; in order to',
     fr: 'pour ; afin de (but)',
     jlpt_level: 'N4' as const,
-    notes: 'Usage 1: purpose',
+    notes: { en: 'Usage 1: purpose', fr: 'Usage 1 : but / objectif' },
   },
   {
     slug: 'to-iu-called',
     title: 'という',
     romaji: 'to iu',
     en: 'called; named',
-    fr: 'appelé ; nommé ; qui s\'appelle',
+    fr: "appelé ; nommé ; qui s'appelle",
     jlpt_level: 'N4' as const,
   },
   {
@@ -1519,7 +1540,7 @@ const n4GrammarPoints = [
     en: 'between',
     fr: 'entre (deux choses)',
     jlpt_level: 'N4' as const,
-    notes: 'Usage 2: between (two things)',
+    notes: { en: 'Usage 2: between (two things)', fr: 'Usage 2 : entre (deux choses)' },
   },
   {
     slug: 'aida-while',
@@ -1528,7 +1549,7 @@ const n4GrammarPoints = [
     en: 'while; during',
     fr: 'pendant que ; durant',
     jlpt_level: 'N4' as const,
-    notes: 'Usage 1: while / during',
+    notes: { en: 'Usage 1: while / during', fr: 'Usage 1 : pendant / durant' },
   },
 ];
 
@@ -1574,7 +1595,7 @@ const n3GrammarPoints = [
     title: '一方で',
     romaji: 'ippou de',
     en: 'on one hand; on the other hand',
-    fr: 'd\'un côté... de l\'autre',
+    fr: "d'un côté... de l'autre",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1638,7 +1659,7 @@ const n3GrammarPoints = [
     title: 'ぎみ',
     romaji: 'gimi',
     en: '-like; -looking',
-    fr: 'qui a l\'air de ; légèrement',
+    fr: "qui a l'air de ; légèrement",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1680,7 +1701,10 @@ const n3GrammarPoints = [
     en: 'probably; around',
     fr: 'à peu près ; tellement que',
     jlpt_level: 'N3' as const,
-    notes: 'N3 usage: expressing degree / approximation with emphasis',
+    notes: {
+      en: 'N3 usage: expressing degree / approximation with emphasis',
+      fr: 'Usage N3 : exprimer un degré / une approximation avec emphase',
+    },
   },
   {
     slug: 'kesshite-nai',
@@ -1695,7 +1719,7 @@ const n3GrammarPoints = [
     title: 'こそ',
     romaji: 'koso',
     en: 'certainly (emphasises the previous word)',
-    fr: 'c\'est précisément ; c\'est bien (emphase)',
+    fr: "c'est précisément ; c'est bien (emphase)",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1705,14 +1729,14 @@ const n3GrammarPoints = [
     en: '(must) do',
     fr: 'obligation de faire (instruction)',
     jlpt_level: 'N3' as const,
-    notes: 'N3 usage: obligation / instruction',
+    notes: { en: 'N3 usage: obligation / instruction', fr: 'Usage N3 : obligation / instruction' },
   },
   {
     slug: 'koto-ka',
     title: 'ことか',
     romaji: 'koto ka',
     en: 'how…? what…!',
-    fr: 'comme... ! ; que c\'est... !',
+    fr: "comme... ! ; que c'est... !",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1736,7 +1760,7 @@ const n3GrammarPoints = [
     title: 'ことに',
     romaji: 'koto ni',
     en: '-ly',
-    fr: 'heureusement ; malheureusement (adverbe d\'attitude)',
+    fr: "heureusement ; malheureusement (adverbe d'attitude)",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1744,7 +1768,7 @@ const n3GrammarPoints = [
     title: 'ことはない',
     romaji: 'koto wa nai',
     en: 'there is no need to; never happens',
-    fr: 'il n\'est pas nécessaire de ; ne jamais arriver',
+    fr: "il n'est pas nécessaire de ; ne jamais arriver",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1752,7 +1776,7 @@ const n3GrammarPoints = [
     title: 'さえ',
     romaji: 'sae',
     en: 'even',
-    fr: 'même ; jusqu\'à (emphase)',
+    fr: "même ; jusqu'à (emphase)",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1768,7 +1792,7 @@ const n3GrammarPoints = [
     title: 'しかない',
     romaji: 'shika nai',
     en: 'have no choice but',
-    fr: 'n\'avoir d\'autre choix que de',
+    fr: "n'avoir d'autre choix que de",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1784,7 +1808,7 @@ const n3GrammarPoints = [
     title: 'ずにはいられない',
     romaji: 'zu ni wa irarenai',
     en: "can't help but feel; can't help but do",
-    fr: 'ne pas pouvoir s\'empêcher de',
+    fr: "ne pas pouvoir s'empêcher de",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1818,7 +1842,10 @@ const n3GrammarPoints = [
     en: 'as much as',
     fr: 'autant que possible ; dans la mesure de',
     jlpt_level: 'N3' as const,
-    notes: 'N3 usage 2: to the extent / as much as',
+    notes: {
+      en: 'N3 usage 2: to the extent / as much as',
+      fr: 'Usage N3 2 : dans la mesure de / autant que',
+    },
   },
   {
     slug: 'ta-kekka',
@@ -1865,7 +1892,7 @@ const n3GrammarPoints = [
     title: 'たとたん',
     romaji: 'ta totan',
     en: 'as soon as; just (now)',
-    fr: 'à l\'instant même où ; dès que',
+    fr: "à l'instant même où ; dès que",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1883,7 +1910,7 @@ const n3GrammarPoints = [
     en: 'because of; as a result of',
     fr: 'à cause de ; en raison de (cause)',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 2: cause / reason',
+    notes: { en: 'Usage 2: cause / reason', fr: 'Usage 2 : cause / raison' },
   },
   {
     slug: 'tara-ii-should',
@@ -1892,25 +1919,25 @@ const n3GrammarPoints = [
     en: 'should',
     fr: 'tu devrais ; il faudrait (conseil)',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 1: giving advice',
+    notes: { en: 'Usage 1: giving advice', fr: 'Usage 1 : donner un conseil' },
   },
   {
     slug: 'tara-ii-hope',
     title: 'たらいい・といい',
     romaji: 'tara ii / to ii',
     en: 'I hope',
-    fr: 'j\'espère que ; si seulement',
+    fr: "j'espère que ; si seulement",
     jlpt_level: 'N3' as const,
-    notes: 'Usage 2: expressing hope',
+    notes: { en: 'Usage 2: expressing hope', fr: 'Usage 2 : exprimer un espoir' },
   },
   {
     slug: 'tara-ii-nice-if',
     title: 'たらいい・といい',
     romaji: 'tara ii / to ii',
     en: 'it would be nice if',
-    fr: 'ce serait bien si ; j\'aimerais que',
+    fr: "ce serait bien si ; j'aimerais que",
     jlpt_level: 'N3' as const,
-    notes: 'Usage 3: expressing a wish',
+    notes: { en: 'Usage 3: expressing a wish', fr: 'Usage 3 : exprimer un souhait' },
   },
   {
     slug: 'darake-covered',
@@ -1919,7 +1946,7 @@ const n3GrammarPoints = [
     en: 'covered (all over)',
     fr: 'couvert de (partout)',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 1: covered with something',
+    notes: { en: 'Usage 1: covered with something', fr: 'Usage 1 : couvert de quelque chose' },
   },
   {
     slug: 'darake-full-of',
@@ -1928,14 +1955,17 @@ const n3GrammarPoints = [
     en: 'full of',
     fr: 'plein de ; rempli de (erreurs, problèmes)',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 2: full of (errors, problems, etc.)',
+    notes: {
+      en: 'Usage 2: full of (errors, problems, etc.)',
+      fr: 'Usage 2 : plein de (erreurs, problèmes, etc.)',
+    },
   },
   {
     slug: 'tsui-de-ni',
     title: 'ついでに',
     romaji: 'tsuide ni',
     en: 'taking the opportunity; while (you) are at it',
-    fr: 'en profitant de l\'occasion ; tant qu\'on y est',
+    fr: "en profitant de l'occasion ; tant qu'on y est",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1943,7 +1973,7 @@ const n3GrammarPoints = [
     title: 'っけ',
     romaji: 'tte ke',
     en: 'what is… again?',
-    fr: 'c\'était quoi déjà ? (rappel)',
+    fr: "c'était quoi déjà ? (rappel)",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1959,7 +1989,7 @@ const n3GrammarPoints = [
     title: 'っぽい',
     romaji: 'ppoi',
     en: '-ish; -like',
-    fr: '-esque ; qui ressemble à ; avoir l\'air',
+    fr: "-esque ; qui ressemble à ; avoir l'air",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1967,7 +1997,7 @@ const n3GrammarPoints = [
     title: 'つまり',
     romaji: 'tsumari',
     en: 'in other words; that is to say',
-    fr: 'autrement dit ; c\'est-à-dire',
+    fr: "autrement dit ; c'est-à-dire",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1983,7 +2013,7 @@ const n3GrammarPoints = [
     title: 'て初めて',
     romaji: 'te hajimete',
     en: 'not until; only after… did I',
-    fr: 'c\'est seulement après avoir fait que ; pour la première fois après',
+    fr: "c'est seulement après avoir fait que ; pour la première fois après",
     jlpt_level: 'N3' as const,
   },
   {
@@ -1991,7 +2021,7 @@ const n3GrammarPoints = [
     title: 'てもかまわない',
     romaji: 'te mo kamawanai',
     en: 'no problem',
-    fr: 'ça ne pose pas de problème ; c\'est permis',
+    fr: "ça ne pose pas de problème ; c'est permis",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2001,7 +2031,7 @@ const n3GrammarPoints = [
     en: "I've heard that; it seems that",
     fr: "j'ai entendu dire que ; il semblerait que (conclusion)",
     jlpt_level: 'N3' as const,
-    notes: 'N3 usage: hearsay / conclusion',
+    notes: { en: 'N3 usage: hearsay / conclusion', fr: 'Usage N3 : ouï-dire / conclusion' },
   },
   {
     slug: 'to-iu-to',
@@ -2016,9 +2046,9 @@ const n3GrammarPoints = [
     title: 'というのは',
     romaji: 'to iu no wa',
     en: 'means; is',
-    fr: 'signifie ; c\'est-à-dire (définition)',
+    fr: "signifie ; c'est-à-dire (définition)",
     jlpt_level: 'N3' as const,
-    notes: 'Usage 1: definition',
+    notes: { en: 'Usage 1: definition', fr: 'Usage 1 : définition' },
   },
   {
     slug: 'to-iu-no-wa-because',
@@ -2027,7 +2057,7 @@ const n3GrammarPoints = [
     en: 'because',
     fr: 'parce que ; la raison est que',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 2: reason',
+    notes: { en: 'Usage 2: reason', fr: 'Usage 2 : raison' },
   },
   {
     slug: 'to-iu-no-wa-in-particular',
@@ -2036,7 +2066,7 @@ const n3GrammarPoints = [
     en: 'in particular',
     fr: 'en particulier ; surtout',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 3: emphasis',
+    notes: { en: 'Usage 3: emphasis', fr: 'Usage 3 : emphase' },
   },
   {
     slug: 'to-iu-yori',
@@ -2051,7 +2081,7 @@ const n3GrammarPoints = [
     title: 'といっても',
     romaji: 'to itte mo',
     en: 'although one says',
-    fr: 'même si on dit ; bien que l\'on dise',
+    fr: "même si on dit ; bien que l'on dise",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2091,7 +2121,7 @@ const n3GrammarPoints = [
     title: 'としたら・とすれば',
     romaji: 'to shitara / to sureba',
     en: 'if it were the case that; if we assume',
-    fr: 'si l\'on suppose que ; dans l\'hypothèse où',
+    fr: "si l'on suppose que ; dans l'hypothèse où",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2107,7 +2137,7 @@ const n3GrammarPoints = [
     title: 'としない・とはしない',
     romaji: 'to shinai / to wa shinai',
     en: 'not try to; not make an effort to',
-    fr: 'ne pas chercher à faire ; ne pas s\'efforcer de',
+    fr: "ne pas chercher à faire ; ne pas s'efforcer de",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2117,7 +2147,7 @@ const n3GrammarPoints = [
     en: 'try to',
     fr: 'essayer de faire ; tenter de',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 1: attempt',
+    notes: { en: 'Usage 1: attempt', fr: 'Usage 1 : tentative' },
   },
   {
     slug: 'to-suru-about-to',
@@ -2126,7 +2156,7 @@ const n3GrammarPoints = [
     en: 'be about to',
     fr: 'être sur le point de',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 2: on the verge of',
+    notes: { en: 'Usage 2: on the verge of', fr: 'Usage 2 : sur le point de' },
   },
   {
     slug: 'tochuu-ni-de',
@@ -2149,7 +2179,7 @@ const n3GrammarPoints = [
     title: 'とは限らない',
     romaji: 'to wa kagiranai',
     en: 'not necessarily so; is not always true',
-    fr: 'pas nécessairement ; ce n\'est pas toujours vrai',
+    fr: "pas nécessairement ; ce n'est pas toujours vrai",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2165,7 +2195,7 @@ const n3GrammarPoints = [
     title: 'ないことはない',
     romaji: 'nai koto wa nai',
     en: 'can; is not impossible',
-    fr: 'ce n\'est pas impossible ; on peut',
+    fr: "ce n'est pas impossible ; on peut",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2183,7 +2213,7 @@ const n3GrammarPoints = [
     en: 'although; despite',
     fr: 'bien que ; malgré (concession)',
     jlpt_level: 'N3' as const,
-    notes: 'N3 usage: concessive (despite)',
+    notes: { en: 'N3 usage: concessive (despite)', fr: 'Usage N3 : concessif (malgré)' },
   },
   {
     slug: 'nazenara',
@@ -2254,7 +2284,7 @@ const n3GrammarPoints = [
     title: 'にしては',
     romaji: 'ni shite wa',
     en: "for; considering it's",
-    fr: 'pour ; étant donné que c\'est',
+    fr: "pour ; étant donné que c'est",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2270,7 +2300,7 @@ const n3GrammarPoints = [
     title: 'に対して',
     romaji: 'ni taishite',
     en: 'regarding; with regards to',
-    fr: 'envers ; par rapport à ; à l\'égard de',
+    fr: "envers ; par rapport à ; à l'égard de",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2278,7 +2308,7 @@ const n3GrammarPoints = [
     title: 'に違いない',
     romaji: 'ni chigainai',
     en: "I'm sure; no doubt that",
-    fr: 'cela ne fait aucun doute ; c\'est forcément',
+    fr: "cela ne fait aucun doute ; c'est forcément",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2318,7 +2348,7 @@ const n3GrammarPoints = [
     title: 'によると・によれば',
     romaji: 'ni yoru to / ni yoreba',
     en: 'according to',
-    fr: 'selon ; d\'après',
+    fr: "selon ; d'après",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2350,7 +2380,7 @@ const n3GrammarPoints = [
     title: 'ばよかった',
     romaji: 'ba yokatta',
     en: 'should have; it would have been better if',
-    fr: 'j\'aurais dû faire ; c\'eût été mieux si',
+    fr: "j'aurais dû faire ; c'eût été mieux si",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2360,7 +2390,7 @@ const n3GrammarPoints = [
     en: 'suddenly',
     fr: 'soudainement ; tout à coup',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 1: suddenly',
+    notes: { en: 'Usage 1: suddenly', fr: 'Usage 1 : soudainement' },
   },
   {
     slug: 'futo-accidentally',
@@ -2369,7 +2399,10 @@ const n3GrammarPoints = [
     en: 'accidentally; unexpectedly',
     fr: 'sans le vouloir ; par hasard ; sans y penser',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 2: accidentally / without thinking',
+    notes: {
+      en: 'Usage 2: accidentally / without thinking',
+      fr: 'Usage 2 : accidentellement / sans y penser',
+    },
   },
   {
     slug: 'furi-wo-suru',
@@ -2416,7 +2449,7 @@ const n3GrammarPoints = [
     title: 'ほど〜ない',
     romaji: 'hodo ~ nai',
     en: 'is not as… as',
-    fr: 'n\'est pas aussi... que',
+    fr: "n'est pas aussi... que",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2432,7 +2465,7 @@ const n3GrammarPoints = [
     title: 'まま',
     romaji: 'mama',
     en: 'as it is',
-    fr: 'tel quel ; en l\'état',
+    fr: "tel quel ; en l'état",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2450,7 +2483,7 @@ const n3GrammarPoints = [
     en: 'towards (direction)',
     fr: 'en direction de ; orienté vers',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 1: direction',
+    notes: { en: 'Usage 1: direction', fr: 'Usage 1 : direction' },
   },
   {
     slug: 'muki-suitable',
@@ -2459,14 +2492,14 @@ const n3GrammarPoints = [
     en: 'suitable for',
     fr: 'adapté à ; destiné à',
     jlpt_level: 'N3' as const,
-    notes: 'Usage 2: suitable for',
+    notes: { en: 'Usage 2: suitable for', fr: 'Usage 2 : adapté à' },
   },
   {
     slug: 'muke',
     title: '向け',
     romaji: 'muke',
     en: 'intended for; aimed at',
-    fr: 'destiné à ; à l\'intention de',
+    fr: "destiné à ; à l'intention de",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2498,7 +2531,7 @@ const n3GrammarPoints = [
     title: 'ものだ',
     romaji: 'mono da',
     en: 'used to do something; should do something',
-    fr: 'avait l\'habitude de ; c\'est ce qu\'on fait normalement',
+    fr: "avait l'habitude de ; c'est ce qu'on fait normalement",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2506,7 +2539,7 @@ const n3GrammarPoints = [
     title: 'ような気がする',
     romaji: 'you na ki ga suru',
     en: 'have a feeling that; think that',
-    fr: 'avoir l\'impression que ; sentir que',
+    fr: "avoir l'impression que ; sentir que",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2516,14 +2549,14 @@ const n3GrammarPoints = [
     en: 'in order to; so that',
     fr: 'pour que ; afin que (but)',
     jlpt_level: 'N3' as const,
-    notes: 'N3 usage: purpose / aim',
+    notes: { en: 'N3 usage: purpose / aim', fr: 'Usage N3 : but / objectif' },
   },
   {
     slug: 'wake-ga-nai',
     title: 'わけがない',
     romaji: 'wake ga nai',
     en: 'there is no way that',
-    fr: 'il n\'est pas possible que ; impossible que',
+    fr: "il n'est pas possible que ; impossible que",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2531,7 +2564,7 @@ const n3GrammarPoints = [
     title: 'わけだ',
     romaji: 'wake da',
     en: "for that reason; no wonder; as you'd expect",
-    fr: 'c\'est pourquoi ; pas étonnant ; logiquement',
+    fr: "c'est pourquoi ; pas étonnant ; logiquement",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2539,7 +2572,7 @@ const n3GrammarPoints = [
     title: 'わけではない',
     romaji: 'wake de wa nai',
     en: "it doesn't mean that; it is not the case",
-    fr: 'cela ne signifie pas que ; ce n\'est pas que',
+    fr: "cela ne signifie pas que ; ce n'est pas que",
     jlpt_level: 'N3' as const,
   },
   {
@@ -2610,7 +2643,7 @@ const n2GrammarPoints = [
     title: 'いきなり',
     romaji: 'ikinari',
     en: 'suddenly; all of a sudden',
-    fr: 'tout d\'un coup ; sans prévenir',
+    fr: "tout d'un coup ; sans prévenir",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2620,7 +2653,7 @@ const n2GrammarPoints = [
     en: 'over',
     fr: 'plus de ; au-delà de',
     jlpt_level: 'N2' as const,
-    notes: 'Usage 1: more than; over',
+    notes: { en: 'Usage 1: more than; over', fr: 'Usage 1 : plus de ; au-delà de' },
   },
   {
     slug: 'ijou-because',
@@ -2629,7 +2662,7 @@ const n2GrammarPoints = [
     en: 'because; now that',
     fr: 'puisque ; maintenant que',
     jlpt_level: 'N2' as const,
-    notes: 'Usage 2: now that; since',
+    notes: { en: 'Usage 2: now that; since', fr: 'Usage 2 : maintenant que ; puisque' },
   },
   {
     slug: 'ijou-ni',
@@ -2652,7 +2685,7 @@ const n2GrammarPoints = [
     title: 'いわゆる',
     romaji: 'iwayuru',
     en: 'so-called; so to speak',
-    fr: 'ce qu\'on appelle ; soi-disant',
+    fr: "ce qu'on appelle ; soi-disant",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2732,7 +2765,7 @@ const n2GrammarPoints = [
     title: 'かいがある',
     romaji: 'kai ga aru',
     en: "it's worth one's effort to do something",
-    fr: 'ça vaut la peine de faire ; mérite l\'effort',
+    fr: "ça vaut la peine de faire ; mérite l'effort",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2740,7 +2773,7 @@ const n2GrammarPoints = [
     title: 'かえって',
     romaji: 'kaette',
     en: 'on the contrary; rather; surprisingly',
-    fr: 'au contraire ; bien au contraire ; à l\'inverse',
+    fr: "au contraire ; bien au contraire ; à l'inverse",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2804,7 +2837,7 @@ const n2GrammarPoints = [
     title: 'からこそ',
     romaji: 'kara koso',
     en: 'precisely because',
-    fr: 'c\'est précisément parce que',
+    fr: "c'est précisément parce que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2820,7 +2853,7 @@ const n2GrammarPoints = [
     title: 'からすると・からすれば',
     romaji: 'kara suru to / kara sureba',
     en: 'judging from; considering',
-    fr: 'à en juger par ; si l\'on considère',
+    fr: "à en juger par ; si l'on considère",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2828,7 +2861,7 @@ const n2GrammarPoints = [
     title: 'からといって',
     romaji: 'kara to itte',
     en: 'just because',
-    fr: 'ce n\'est pas parce que... que',
+    fr: "ce n'est pas parce que... que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2852,7 +2885,7 @@ const n2GrammarPoints = [
     title: '気',
     romaji: 'ki',
     en: 'feel like',
-    fr: 'avoir l\'impression de ; avoir envie de',
+    fr: "avoir l'impression de ; avoir envie de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2860,7 +2893,7 @@ const n2GrammarPoints = [
     title: '逆に',
     romaji: 'gyaku ni',
     en: 'on the contrary',
-    fr: 'au contraire ; à l\'inverse',
+    fr: "au contraire ; à l'inverse",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2868,7 +2901,7 @@ const n2GrammarPoints = [
     title: 'げ',
     romaji: 'ge',
     en: 'giving the appearance of',
-    fr: 'avoir l\'air de ; sembler (apparence)',
+    fr: "avoir l'air de ; sembler (apparence)",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2884,7 +2917,7 @@ const n2GrammarPoints = [
     title: 'ことだから',
     romaji: 'koto dakara',
     en: 'it is exactly because',
-    fr: 'c\'est bien parce que ; ça lui ressemble bien',
+    fr: "c'est bien parce que ; ça lui ressemble bien",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2916,7 +2949,7 @@ const n2GrammarPoints = [
     title: 'ことにはならない',
     romaji: 'koto ni wa naranai',
     en: "just because… doesn't mean…",
-    fr: 'ça ne veut pas dire que ; ce n\'est pas parce que',
+    fr: "ça ne veut pas dire que ; ce n'est pas parce que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2932,7 +2965,7 @@ const n2GrammarPoints = [
     title: '際に',
     romaji: 'sai ni',
     en: 'at the time; in case of',
-    fr: 'lors de ; à l\'occasion de',
+    fr: "lors de ; à l'occasion de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -2956,7 +2989,7 @@ const n2GrammarPoints = [
     title: 'ざるを得ない',
     romaji: 'zaru wo enai',
     en: "can't help doing; have no choice but",
-    fr: 'ne pas pouvoir s\'empêcher de ; n\'avoir d\'autre choix que',
+    fr: "ne pas pouvoir s'empêcher de ; n'avoir d'autre choix que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3012,7 +3045,7 @@ const n2GrammarPoints = [
     title: 'すなわち',
     romaji: 'sunawachi',
     en: 'in other words',
-    fr: 'autrement dit ; c\'est-à-dire',
+    fr: "autrement dit ; c'est-à-dire",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3020,7 +3053,7 @@ const n2GrammarPoints = [
     title: 'ずに済む',
     romaji: 'zu ni sumu',
     en: 'get by without doing something',
-    fr: 's\'en tirer sans faire ; éviter de',
+    fr: "s'en tirer sans faire ; éviter de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3044,7 +3077,7 @@ const n2GrammarPoints = [
     title: 'そういえば',
     romaji: 'sou ieba',
     en: 'come to think of it',
-    fr: 'maintenant que j\'y pense ; à propos',
+    fr: "maintenant que j'y pense ; à propos",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3052,7 +3085,7 @@ const n2GrammarPoints = [
     title: 'そうすると',
     romaji: 'sou suru to',
     en: 'having done that',
-    fr: 'si l\'on fait ainsi ; dans ce cas',
+    fr: "si l'on fait ainsi ; dans ce cas",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3092,7 +3125,7 @@ const n2GrammarPoints = [
     title: 'それなら',
     romaji: 'sorenara',
     en: "then; if that's the case",
-    fr: 'dans ce cas ; si c\'est ainsi',
+    fr: "dans ce cas ; si c'est ainsi",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3132,7 +3165,7 @@ const n2GrammarPoints = [
     title: 'だけに',
     romaji: 'dake ni',
     en: '…being the case; precisely because',
-    fr: 'précisément parce que ; c\'est bien pour ça',
+    fr: "précisément parce que ; c'est bien pour ça",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3148,7 +3181,7 @@ const n2GrammarPoints = [
     title: 'だけは',
     romaji: 'dake wa',
     en: 'to do all that one can',
-    fr: 'faire tout ce qu\'on peut',
+    fr: "faire tout ce qu'on peut",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3156,7 +3189,7 @@ const n2GrammarPoints = [
     title: 'だけましだ',
     romaji: 'dake mashi da',
     en: 'one should feel grateful for',
-    fr: 'on peut s\'estimer heureux ; au moins',
+    fr: "on peut s'estimer heureux ; au moins",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3212,7 +3245,7 @@ const n2GrammarPoints = [
     title: 'っこない',
     romaji: 'kko nai',
     en: 'no chance of; … is definitely not possible',
-    fr: 'impossible que ; il n\'y a aucune chance que',
+    fr: "impossible que ; il n'y a aucune chance que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3236,7 +3269,7 @@ const n2GrammarPoints = [
     title: 'つもりで',
     romaji: 'tsumori de',
     en: 'with the intention of doing',
-    fr: 'avec l\'intention de ; en se disant que',
+    fr: "avec l'intention de ; en se disant que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3260,7 +3293,7 @@ const n2GrammarPoints = [
     title: 'てからでないと',
     romaji: 'te kara de nai to',
     en: 'unless; until',
-    fr: 'à moins de ; pas avant d\'avoir fait',
+    fr: "à moins de ; pas avant d'avoir fait",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3268,7 +3301,7 @@ const n2GrammarPoints = [
     title: 'てこそ',
     romaji: 'te koso',
     en: 'now that; since',
-    fr: 'c\'est seulement en faisant que ; grâce à',
+    fr: "c'est seulement en faisant que ; grâce à",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3276,7 +3309,7 @@ const n2GrammarPoints = [
     title: 'でしかない',
     romaji: 'de shika nai',
     en: 'merely; nothing but; no more than',
-    fr: 'ne... que ; rien d\'autre que ; simplement',
+    fr: "ne... que ; rien d'autre que ; simplement",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3284,7 +3317,7 @@ const n2GrammarPoints = [
     title: 'てしょうがない',
     romaji: 'te shou ga nai',
     en: 'very; extremely',
-    fr: 'tellement... qu\'on n\'en peut plus ; à l\'extrême',
+    fr: "tellement... qu'on n'en peut plus ; à l'extrême",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3292,7 +3325,7 @@ const n2GrammarPoints = [
     title: 'てたまらない',
     romaji: 'te tamaranai',
     en: "very; extremely; can't help but do",
-    fr: 'insupportablement ; ne pas pouvoir s\'empêcher',
+    fr: "insupportablement ; ne pas pouvoir s'empêcher",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3300,7 +3333,7 @@ const n2GrammarPoints = [
     title: 'てでも',
     romaji: 'te demo',
     en: 'even if one has to; by all means',
-    fr: 'même s\'il faut ; coûte que coûte',
+    fr: "même s'il faut ; coûte que coûte",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3308,7 +3341,7 @@ const n2GrammarPoints = [
     title: 'て当然だ',
     romaji: 'te touzen da',
     en: 'natural; as a matter of course',
-    fr: 'c\'est naturel que ; il va de soi que',
+    fr: "c'est naturel que ; il va de soi que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3316,7 +3349,7 @@ const n2GrammarPoints = [
     title: 'てならない',
     romaji: 'te naranai',
     en: 'very; extremely',
-    fr: 'tellement... ; on ne peut s\'empêcher de',
+    fr: "tellement... ; on ne peut s'empêcher de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3324,7 +3357,7 @@ const n2GrammarPoints = [
     title: 'ては',
     romaji: 'te wa',
     en: 'if; since; one after another',
-    fr: 'si ; l\'un après l\'autre (répétition)',
+    fr: "si ; l'un après l'autre (répétition)",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3388,7 +3421,7 @@ const n2GrammarPoints = [
     title: 'というものだ',
     romaji: 'to iu mono da',
     en: 'something like…; something called…',
-    fr: 'quelque chose comme... ; c\'est ce qu\'on appelle',
+    fr: "quelque chose comme... ; c'est ce qu'on appelle",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3428,7 +3461,7 @@ const n2GrammarPoints = [
     title: 'とか',
     romaji: 'toka',
     en: 'I heard that…',
-    fr: 'il paraît que ; j\'ai entendu dire que',
+    fr: "il paraît que ; j'ai entendu dire que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3444,7 +3477,7 @@ const n2GrammarPoints = [
     title: 'ところだった',
     romaji: 'tokoro datta',
     en: 'was just about to do something',
-    fr: 'j\'étais sur le point de faire',
+    fr: "j'étais sur le point de faire",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3452,7 +3485,7 @@ const n2GrammarPoints = [
     title: 'どころではない',
     romaji: 'dokoro de wa nai',
     en: 'this is not the time for…',
-    fr: 'ce n\'est vraiment pas le moment de',
+    fr: "ce n'est vraiment pas le moment de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3508,7 +3541,7 @@ const n2GrammarPoints = [
     title: 'とも',
     romaji: 'tomo',
     en: 'even if; no matter',
-    fr: 'même si ; quoi qu\'il en soit',
+    fr: "même si ; quoi qu'il en soit",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3524,7 +3557,7 @@ const n2GrammarPoints = [
     title: 'ないではいられない',
     romaji: 'nai de wa irarenai',
     en: "can't help but feel; can't help but do",
-    fr: 'ne pas pouvoir s\'empêcher de',
+    fr: "ne pas pouvoir s'empêcher de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3548,7 +3581,7 @@ const n2GrammarPoints = [
     title: 'なくはない',
     romaji: 'naku wa nai',
     en: "it's not that…; can; may be",
-    fr: 'ce n\'est pas que... non ; il n\'est pas impossible que',
+    fr: "ce n'est pas que... non ; il n'est pas impossible que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3556,7 +3589,7 @@ const n2GrammarPoints = [
     title: 'なにも〜ない',
     romaji: 'nani mo ~ nai',
     en: 'no need to',
-    fr: 'ce n\'est pas la peine de ; inutile de',
+    fr: "ce n'est pas la peine de ; inutile de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3564,7 +3597,7 @@ const n2GrammarPoints = [
     title: 'にあたり',
     romaji: 'ni atari',
     en: 'at the time; on the occasion of',
-    fr: 'à l\'occasion de ; lors de (formel)',
+    fr: "à l'occasion de ; lors de (formel)",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3612,7 +3645,7 @@ const n2GrammarPoints = [
     title: 'に限る',
     romaji: 'ni kagiru',
     en: "nothing better than; there's nothing like",
-    fr: 'rien de tel que ; le mieux c\'est',
+    fr: "rien de tel que ; le mieux c'est",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3620,7 +3653,7 @@ const n2GrammarPoints = [
     title: 'に決まっている',
     romaji: 'ni kimatte iru',
     en: "I'm sure that…",
-    fr: 'c\'est forcément ; je suis sûr que',
+    fr: "c'est forcément ; je suis sûr que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3628,7 +3661,7 @@ const n2GrammarPoints = [
     title: 'に加えて',
     romaji: 'ni kuwaete',
     en: 'in addition to',
-    fr: 'en plus de ; s\'ajoutant à',
+    fr: "en plus de ; s'ajoutant à",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3636,7 +3669,7 @@ const n2GrammarPoints = [
     title: 'に越したことはない',
     romaji: 'ni koshita koto wa nai',
     en: "it's best that; there's nothing better than",
-    fr: 'mieux vaut ; il n\'y a rien de mieux que',
+    fr: "mieux vaut ; il n'y a rien de mieux que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3660,7 +3693,7 @@ const n2GrammarPoints = [
     title: 'に際して',
     romaji: 'ni saishite',
     en: 'on the occasion of; at the time of',
-    fr: 'à l\'occasion de ; au moment de (formel)',
+    fr: "à l'occasion de ; au moment de (formel)",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3684,7 +3717,7 @@ const n2GrammarPoints = [
     title: 'にしたら',
     romaji: 'ni shitara',
     en: 'from the point of view of',
-    fr: 'de son point de vue ; pour quelqu\'un comme',
+    fr: "de son point de vue ; pour quelqu'un comme",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3700,7 +3733,7 @@ const n2GrammarPoints = [
     title: 'にしろ・にせよ',
     romaji: 'ni shiro / ni seyo',
     en: 'though; even if; whether… or',
-    fr: 'bien que ; même si ; qu\'il s\'agisse de',
+    fr: "bien que ; même si ; qu'il s'agisse de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3724,7 +3757,7 @@ const n2GrammarPoints = [
     title: 'に相違ない',
     romaji: 'ni soui nai',
     en: 'without a doubt; certain; sure',
-    fr: 'sans aucun doute ; c\'est forcément',
+    fr: "sans aucun doute ; c'est forcément",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3780,7 +3813,7 @@ const n2GrammarPoints = [
     title: 'に反して',
     romaji: 'ni hanshite',
     en: 'against; contrary to',
-    fr: 'contrairement à ; à l\'encontre de',
+    fr: "contrairement à ; à l'encontre de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3788,7 +3821,7 @@ const n2GrammarPoints = [
     title: 'にほかならない',
     romaji: 'ni hoka naranai',
     en: 'nothing but; none other than',
-    fr: 'n\'est rien d\'autre que ; c\'est bel et bien',
+    fr: "n'est rien d'autre que ; c'est bel et bien",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3828,7 +3861,7 @@ const n2GrammarPoints = [
     title: '抜く',
     romaji: 'nuku',
     en: 'to do something to the end',
-    fr: 'aller jusqu\'au bout ; faire jusqu\'à la fin',
+    fr: "aller jusqu'au bout ; faire jusqu'à la fin",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3860,7 +3893,7 @@ const n2GrammarPoints = [
     title: 'のもとで',
     romaji: 'no moto de',
     en: 'under',
-    fr: 'sous ; sous l\'autorité de',
+    fr: "sous ; sous l'autorité de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3868,7 +3901,7 @@ const n2GrammarPoints = [
     title: 'のももっともだ',
     romaji: 'no mo mottomo da',
     en: 'no wonder; … is only natural',
-    fr: 'c\'est bien naturel que ; pas étonnant que',
+    fr: "c'est bien naturel que ; pas étonnant que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3878,7 +3911,7 @@ const n2GrammarPoints = [
     en: 'about; approximately',
     fr: 'environ ; à peu près',
     jlpt_level: 'N2' as const,
-    notes: 'N2 usage 2: approximately',
+    notes: { en: 'N2 usage 2: approximately', fr: 'Usage N2 2 : environ ; à peu près' },
   },
   {
     slug: 'bakari-da',
@@ -3909,7 +3942,7 @@ const n2GrammarPoints = [
     title: 'はともかく',
     romaji: 'wa tomokaku',
     en: 'whether or not',
-    fr: 'qu\'il s\'agisse ou non de ; laissant de côté',
+    fr: "qu'il s'agisse ou non de ; laissant de côté",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3933,7 +3966,7 @@ const n2GrammarPoints = [
     title: '反面',
     romaji: 'hanmen',
     en: 'on the other hand',
-    fr: 'd\'un autre côté ; en revanche',
+    fr: "d'un autre côté ; en revanche",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3941,7 +3974,7 @@ const n2GrammarPoints = [
     title: 'ふうに',
     romaji: 'fuu ni',
     en: 'in a way (this way/that way/what way)',
-    fr: 'de cette façon ; d\'une telle manière',
+    fr: "de cette façon ; d'une telle manière",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3965,7 +3998,7 @@ const n2GrammarPoints = [
     title: 'まい',
     romaji: 'mai',
     en: "won't; intend not to",
-    fr: 'ne pas avoir l\'intention de ; ne... jamais',
+    fr: "ne pas avoir l'intention de ; ne... jamais",
     jlpt_level: 'N2' as const,
   },
   {
@@ -3997,7 +4030,7 @@ const n2GrammarPoints = [
     title: 'もう少しで',
     romaji: 'mou sukoshi de',
     en: 'almost; nearly',
-    fr: 'presque ; il s\'en est fallu de peu',
+    fr: "presque ; il s'en est fallu de peu",
     jlpt_level: 'N2' as const,
   },
   {
@@ -4037,7 +4070,7 @@ const n2GrammarPoints = [
     title: 'ものだから',
     romaji: 'mono dakara',
     en: 'because; the reason is',
-    fr: 'parce que ; c\'est que (justification)',
+    fr: "parce que ; c'est que (justification)",
     jlpt_level: 'N2' as const,
   },
   {
@@ -4085,7 +4118,7 @@ const n2GrammarPoints = [
     title: 'ようがない・ようもない',
     romaji: 'you ga nai / you mo nai',
     en: "there's no way to; it's impossible to",
-    fr: 'il n\'y a aucun moyen de ; impossible de',
+    fr: "il n'y a aucun moyen de ; impossible de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -4093,7 +4126,7 @@ const n2GrammarPoints = [
     title: '要するに',
     romaji: 'you suru ni',
     en: 'the point is',
-    fr: 'en résumé ; l\'essentiel est que',
+    fr: "en résumé ; l'essentiel est que",
     jlpt_level: 'N2' as const,
   },
   {
@@ -4109,7 +4142,7 @@ const n2GrammarPoints = [
     title: 'よりほかない',
     romaji: 'yori hoka nai',
     en: 'to have no choice but',
-    fr: 'n\'avoir d\'autre choix que de',
+    fr: "n'avoir d'autre choix que de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -4149,7 +4182,7 @@ const n2GrammarPoints = [
     title: 'を契機に',
     romaji: 'wo keiki ni',
     en: 'as a good opportunity to; as a result of',
-    fr: 'en profitant de l\'occasion de ; à la suite de',
+    fr: "en profitant de l'occasion de ; à la suite de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -4181,7 +4214,7 @@ const n2GrammarPoints = [
     title: 'を除いて',
     romaji: 'wo nozoite',
     en: 'except; with the exception of',
-    fr: 'sauf ; à l\'exception de',
+    fr: "sauf ; à l'exception de",
     jlpt_level: 'N2' as const,
   },
   {
@@ -4228,7 +4261,7 @@ const n1GrammarPoints = [
     title: 'あくまでも',
     romaji: 'akumademo',
     en: 'to the end; to the utmost degree',
-    fr: 'jusqu\'au bout ; absolument ; coûte que coûte',
+    fr: "jusqu'au bout ; absolument ; coûte que coûte",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4236,7 +4269,7 @@ const n1GrammarPoints = [
     title: '案の定',
     romaji: 'an no jou',
     en: 'just as one thought',
-    fr: 'comme prévu ; comme on s\'y attendait',
+    fr: "comme prévu ; comme on s'y attendait",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4244,7 +4277,7 @@ const n1GrammarPoints = [
     title: 'あらかじめ',
     romaji: 'arakajime',
     en: 'beforehand; in advance',
-    fr: 'à l\'avance ; au préalable',
+    fr: "à l'avance ; au préalable",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4252,7 +4285,7 @@ const n1GrammarPoints = [
     title: 'あっての',
     romaji: 'atte no',
     en: 'to owe everything to',
-    fr: 'qui n\'existe que grâce à ; possible uniquement grâce à',
+    fr: "qui n'existe que grâce à ; possible uniquement grâce à",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4268,7 +4301,7 @@ const n1GrammarPoints = [
     title: 'ばこそ',
     romaji: 'ba koso',
     en: 'only because',
-    fr: 'c\'est justement parce que ; uniquement parce que',
+    fr: "c'est justement parce que ; uniquement parce que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4276,7 +4309,7 @@ const n1GrammarPoints = [
     title: 'ばそれまでだ',
     romaji: 'ba sore made da',
     en: "if… then it's over",
-    fr: 'si... c\'est fini ; si... tout est perdu',
+    fr: "si... c'est fini ; si... tout est perdu",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4308,7 +4341,7 @@ const n1GrammarPoints = [
     title: 'びる',
     romaji: 'biru',
     en: 'seeming to be',
-    fr: 'avoir l\'air de ; sembler',
+    fr: "avoir l'air de ; sembler",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4324,7 +4357,7 @@ const n1GrammarPoints = [
     title: 'ぶる',
     romaji: 'buru',
     en: 'behaving like',
-    fr: 'faire semblant d\'être ; se comporter comme',
+    fr: "faire semblant d'être ; se comporter comme",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4348,7 +4381,7 @@ const n1GrammarPoints = [
     title: 'であれ〜であれ',
     romaji: 'de are ~ de are',
     en: 'whether A or B',
-    fr: 'que ce soit A ou B ; qu\'il s\'agisse de A ou de B',
+    fr: "que ce soit A ou B ; qu'il s'agisse de A ou de B",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4372,7 +4405,7 @@ const n1GrammarPoints = [
     title: 'でなくてなんだろう',
     romaji: 'de nakute nandaRou',
     en: 'must be; is definitely',
-    fr: 'si ce n\'est pas X, qu\'est-ce que c\'est ? ; c\'est forcément',
+    fr: "si ce n'est pas X, qu'est-ce que c'est ? ; c'est forcément",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4388,7 +4421,7 @@ const n1GrammarPoints = [
     title: 'ではあるまいか',
     romaji: 'de wa arumai ka',
     en: "I wonder if it's not",
-    fr: 'ne serait-ce pas... ? ; je me demande si ce n\'est pas',
+    fr: "ne serait-ce pas... ? ; je me demande si ce n'est pas",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4396,7 +4429,7 @@ const n1GrammarPoints = [
     title: 'ではあるまいし',
     romaji: 'de wa arumai shi',
     en: "it's not like; it isn't as if",
-    fr: 'ce n\'est pas comme si ; on n\'est pas',
+    fr: "ce n'est pas comme si ; on n'est pas",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4404,7 +4437,7 @@ const n1GrammarPoints = [
     title: 'ではすまない',
     romaji: 'de wa sumanai',
     en: "it doesn't end with just",
-    fr: 'cela ne s\'arrêtera pas à ; les conséquences iront au-delà de',
+    fr: "cela ne s'arrêtera pas à ; les conséquences iront au-delà de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4420,7 +4453,7 @@ const n1GrammarPoints = [
     title: 'がてら',
     romaji: 'gatera',
     en: 'on the same occasion',
-    fr: 'à l\'occasion de ; en même temps que ; profitant de',
+    fr: "à l'occasion de ; en même temps que ; profitant de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4436,7 +4469,7 @@ const n1GrammarPoints = [
     title: 'が最後',
     romaji: 'ga saigo',
     en: 'once something occurs; something else happens',
-    fr: 'une fois que... c\'est sans retour ; dès que... il se passe inévitablement',
+    fr: "une fois que... c'est sans retour ; dès que... il se passe inévitablement",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4476,7 +4509,7 @@ const n1GrammarPoints = [
     title: 'ほどのことはない',
     romaji: 'hodo no koto wa nai',
     en: 'not worth; no need to',
-    fr: 'ce n\'est pas la peine de ; il n\'y a pas lieu de',
+    fr: "ce n'est pas la peine de ; il n'y a pas lieu de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4484,7 +4517,7 @@ const n1GrammarPoints = [
     title: 'ほかに〜ない',
     romaji: 'hoka ni ~ nai',
     en: 'no other',
-    fr: 'il n\'y a pas d\'autre ; rien d\'autre que',
+    fr: "il n'y a pas d'autre ; rien d'autre que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4492,7 +4525,7 @@ const n1GrammarPoints = [
     title: 'ほうがましだ',
     romaji: 'hou ga mashi da',
     en: 'I would rather',
-    fr: 'j\'aimerais mieux ; il vaut mieux que',
+    fr: "j'aimerais mieux ; il vaut mieux que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4500,7 +4533,7 @@ const n1GrammarPoints = [
     title: 'いかなる',
     romaji: 'ikanaru',
     en: 'any kind of',
-    fr: 'quel que soit ; n\'importe quel (formel)',
+    fr: "quel que soit ; n'importe quel (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4532,7 +4565,7 @@ const n1GrammarPoints = [
     title: 'いかにも',
     romaji: 'ikanimo',
     en: 'indeed; really',
-    fr: 'vraiment ; tout à fait ; c\'est bien ça',
+    fr: "vraiment ; tout à fait ; c'est bien ça",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4548,7 +4581,7 @@ const n1GrammarPoints = [
     title: 'いずれにせよ',
     romaji: 'izure ni seyo',
     en: 'at any rate; in any case',
-    fr: 'quoi qu\'il en soit ; de toute façon',
+    fr: "quoi qu'il en soit ; de toute façon",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4556,7 +4589,7 @@ const n1GrammarPoints = [
     title: 'じみた',
     romaji: 'jimita',
     en: 'to look like',
-    fr: 'avoir l\'air de ; ressembler à (avec une connotation légèrement négative)',
+    fr: "avoir l'air de ; ressembler à (avec une connotation légèrement négative)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4564,7 +4597,7 @@ const n1GrammarPoints = [
     title: '限りだ',
     romaji: 'kagiri da',
     en: 'I feel so',
-    fr: 'je suis extrêmement (émotion) ; c\'est au plus haut point',
+    fr: "je suis extrêmement (émotion) ; c'est au plus haut point",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4604,7 +4637,7 @@ const n1GrammarPoints = [
     title: 'かれ〜かれ',
     romaji: 'kare ~ kare',
     en: 'or',
-    fr: 'que ce soit A ou B ; d\'une façon ou d\'une autre',
+    fr: "que ce soit A ou B ; d'une façon ou d'une autre",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4612,7 +4645,7 @@ const n1GrammarPoints = [
     title: 'かたがた',
     romaji: 'katagata',
     en: 'while; for the purpose of',
-    fr: 'à l\'occasion de ; tout en ; profitant de l\'occasion pour (formel)',
+    fr: "à l'occasion de ; tout en ; profitant de l'occasion pour (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4652,7 +4685,7 @@ const n1GrammarPoints = [
     title: 'きりがない',
     romaji: 'kiri ga nai',
     en: "there's no end to",
-    fr: 'il n\'y a pas de fin à ; c\'est sans fin',
+    fr: "il n'y a pas de fin à ; c'est sans fin",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4700,7 +4733,7 @@ const n1GrammarPoints = [
     title: 'ことのないよう',
     romaji: 'koto no nai you',
     en: 'so as not to',
-    fr: 'pour ne pas que ; afin d\'éviter que',
+    fr: "pour ne pas que ; afin d'éviter que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4716,7 +4749,7 @@ const n1GrammarPoints = [
     title: 'くらいなら',
     romaji: 'kurai nara',
     en: 'rather than',
-    fr: 'plutôt que de ; j\'aimerais mieux ne pas',
+    fr: "plutôt que de ; j'aimerais mieux ne pas",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4724,7 +4757,7 @@ const n1GrammarPoints = [
     title: 'くらいのものだ',
     romaji: 'kurai no mono da',
     en: 'only',
-    fr: 'c\'est la seule chose que ; il n\'y a que',
+    fr: "c'est la seule chose que ; il n'y a que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4732,7 +4765,7 @@ const n1GrammarPoints = [
     title: 'までだ',
     romaji: 'made da',
     en: 'only',
-    fr: 'il ne reste qu\'à ; on n\'a qu\'à (résignation ou détermination)',
+    fr: "il ne reste qu'à ; on n'a qu'à (résignation ou détermination)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4740,7 +4773,7 @@ const n1GrammarPoints = [
     title: 'までもない',
     romaji: 'made mo nai',
     en: "it's not necessary to",
-    fr: 'ce n\'est pas la peine de ; inutile de',
+    fr: "ce n'est pas la peine de ; inutile de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4780,7 +4813,7 @@ const n1GrammarPoints = [
     title: 'めく',
     romaji: 'meku',
     en: 'to show signs of',
-    fr: 'avoir un air de ; donner l\'impression de',
+    fr: "avoir un air de ; donner l'impression de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4812,7 +4845,7 @@ const n1GrammarPoints = [
     title: 'ものて',
     romaji: 'mono de',
     en: 'because; for that reason',
-    fr: 'parce que ; c\'est pour cette raison que (explication)',
+    fr: "parce que ; c'est pour cette raison que (explication)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4860,7 +4893,7 @@ const n1GrammarPoints = [
     title: 'ながらに・ながらの',
     romaji: 'nagara ni / nagara no',
     en: 'while; during',
-    fr: 'dans l\'état même de ; tel quel depuis toujours',
+    fr: "dans l'état même de ; tel quel depuis toujours",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4876,7 +4909,7 @@ const n1GrammarPoints = [
     title: 'ないではすまない・ずにはすまない',
     romaji: 'nai de wa sumanai / zu ni wa sumanai',
     en: 'must',
-    fr: 'on ne peut pas s\'en tirer sans ; il faut obligatoirement',
+    fr: "on ne peut pas s'en tirer sans ; il faut obligatoirement",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4884,7 +4917,7 @@ const n1GrammarPoints = [
     title: 'ないまでも',
     romaji: 'nai made mo',
     en: "even if something isn't done",
-    fr: 'même si ce n\'est pas possible... au moins ; sinon... du moins',
+    fr: "même si ce n'est pas possible... au moins ; sinon... du moins",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4892,7 +4925,7 @@ const n1GrammarPoints = [
     title: 'ないものか',
     romaji: 'nai mono ka',
     en: "can't we…?; can't I…?",
-    fr: 'ne pourrait-on pas... ? ; j\'aimerais tant que... (souhait)',
+    fr: "ne pourrait-on pas... ? ; j'aimerais tant que... (souhait)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4900,7 +4933,7 @@ const n1GrammarPoints = [
     title: 'ないものでもない',
     romaji: 'nai mono demo nai',
     en: '(something) is not entirely impossible',
-    fr: 'ce n\'est pas impossible ; ça pourrait se faire',
+    fr: "ce n'est pas impossible ; ça pourrait se faire",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4916,7 +4949,7 @@ const n1GrammarPoints = [
     title: 'なくして',
     romaji: 'naku shite',
     en: 'without',
-    fr: 'sans ; en l\'absence de (formel)',
+    fr: "sans ; en l'absence de (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4924,7 +4957,7 @@ const n1GrammarPoints = [
     title: '何しろ',
     romaji: 'nani shiro',
     en: 'in any case; as you know',
-    fr: 'de toute façon ; de toute manière ; quoi qu\'il en soit',
+    fr: "de toute façon ; de toute manière ; quoi qu'il en soit",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4948,7 +4981,7 @@ const n1GrammarPoints = [
     title: 'ならいざしらず',
     romaji: 'nara iza shirazu',
     en: "I don't know about A; but B",
-    fr: 'passe encore pour A, mais B... ; c\'est une chose pour A, mais pour B',
+    fr: "passe encore pour A, mais B... ; c'est une chose pour A, mais pour B",
     jlpt_level: 'N1' as const,
   },
   {
@@ -4996,7 +5029,7 @@ const n1GrammarPoints = [
     title: 'にあたらない',
     romaji: 'ni ataranai',
     en: "it's not worth; there's no need to",
-    fr: 'ce n\'est pas la peine de ; il n\'y a pas lieu de',
+    fr: "ce n'est pas la peine de ; il n'y a pas lieu de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5012,7 +5045,7 @@ const n1GrammarPoints = [
     title: 'にひきかえ',
     romaji: 'ni hikikae',
     en: 'in contrast to',
-    fr: 'à l\'opposé de ; contrairement à ; en revanche',
+    fr: "à l'opposé de ; contrairement à ; en revanche",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5020,7 +5053,7 @@ const n1GrammarPoints = [
     title: 'に至るまで',
     romaji: 'ni itaru made',
     en: 'until; as far as',
-    fr: 'jusqu\'à ; jusqu\'au moindre (portée étendue)',
+    fr: "jusqu'à ; jusqu'au moindre (portée étendue)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5036,7 +5069,7 @@ const n1GrammarPoints = [
     title: 'に言わせれば',
     romaji: 'ni iwasereba',
     en: 'if you ask; if one may say',
-    fr: 'selon ; de l\'avis de ; si l\'on demande à',
+    fr: "selon ; de l'avis de ; si l'on demande à",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5052,7 +5085,7 @@ const n1GrammarPoints = [
     title: 'にかたくない',
     romaji: 'ni katakunai',
     en: "it's not hard to",
-    fr: 'il n\'est pas difficile de ; on peut facilement imaginer que',
+    fr: "il n'est pas difficile de ; on peut facilement imaginer que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5068,7 +5101,7 @@ const n1GrammarPoints = [
     title: 'にもほどがある',
     romaji: 'ni mo hodo ga aru',
     en: 'to have a limit; to go too far',
-    fr: 'il y a des limites ! ; c\'est excessif',
+    fr: "il y a des limites ! ; c'est excessif",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5100,7 +5133,7 @@ const n1GrammarPoints = [
     title: 'にしたって',
     romaji: 'ni shitatte',
     en: 'even; even if',
-    fr: 'même pour ; même si c\'est ; quel que soit',
+    fr: "même pour ; même si c'est ; quel que soit",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5108,7 +5141,7 @@ const n1GrammarPoints = [
     title: 'にして',
     romaji: 'ni shite',
     en: 'only; in (time span)',
-    fr: 'rien qu\'en ; seulement avec ; en (durée seulement)',
+    fr: "rien qu'en ; seulement avec ; en (durée seulement)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5164,7 +5197,7 @@ const n1GrammarPoints = [
     title: 'には及ばない',
     romaji: 'ni wa oyobanai',
     en: "there's no need to",
-    fr: 'il n\'est pas nécessaire de ; pas besoin de (formel)',
+    fr: "il n'est pas nécessaire de ; pas besoin de (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5180,7 +5213,7 @@ const n1GrammarPoints = [
     title: 'んばかりに',
     romaji: 'n bakari ni',
     en: 'as if; as though',
-    fr: 'comme si sur le point de ; d\'une façon qui laisse croire que',
+    fr: "comme si sur le point de ; d'une façon qui laisse croire que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5196,7 +5229,7 @@ const n1GrammarPoints = [
     title: 'の至り',
     romaji: 'no itari',
     en: 'utmost',
-    fr: 'le comble de ; l\'extrême de (formel, sentiment intense)',
+    fr: "le comble de ; l'extrême de (formel, sentiment intense)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5204,7 +5237,7 @@ const n1GrammarPoints = [
     title: 'の極み',
     romaji: 'no kiwami',
     en: 'utmost',
-    fr: 'le summum de ; l\'apogée de (formel)',
+    fr: "le summum de ; l'apogée de (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5228,7 +5261,7 @@ const n1GrammarPoints = [
     title: 'を踏まえて',
     romaji: 'wo fumaete',
     en: 'based on',
-    fr: 'en s\'appuyant sur ; en tenant compte de ; sur la base de',
+    fr: "en s'appuyant sur ; en tenant compte de ; sur la base de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5268,7 +5301,7 @@ const n1GrammarPoints = [
     title: 'を皮切りに',
     romaji: 'wo kawakiri ni',
     en: 'starting with',
-    fr: 'en commençant par ; à partir de (début d\'une série)',
+    fr: "en commençant par ; à partir de (début d'une série)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5276,7 +5309,7 @@ const n1GrammarPoints = [
     title: 'を機に',
     romaji: 'wo ki ni',
     en: 'as an opportunity to',
-    fr: 'en saisissant l\'occasion de ; profitant de',
+    fr: "en saisissant l'occasion de ; profitant de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5284,7 +5317,7 @@ const n1GrammarPoints = [
     title: 'を禁じえない',
     romaji: 'wo kinji enai',
     en: "can't help but",
-    fr: 'ne peut s\'empêcher de ; ne peut retenir (formel)',
+    fr: "ne peut s'empêcher de ; ne peut retenir (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5302,7 +5335,7 @@ const n1GrammarPoints = [
     en: 'by means of',
     fr: 'au moyen de ; par (formel)',
     jlpt_level: 'N1' as const,
-    notes: 'Usage 1: by means of',
+    notes: { en: 'Usage 1: by means of', fr: 'Usage 1 : au moyen de ; par' },
   },
   {
     slug: 'wo-motte-time',
@@ -5311,7 +5344,7 @@ const n1GrammarPoints = [
     en: 'at the time',
     fr: 'à partir de ; à compter de (date, formel)',
     jlpt_level: 'N1' as const,
-    notes: 'Usage 2: at the time of',
+    notes: { en: 'Usage 2: at the time of', fr: 'Usage 2 : à partir de (date, formel)' },
   },
   {
     slug: 'wo-oite',
@@ -5350,7 +5383,7 @@ const n1GrammarPoints = [
     title: '折に',
     romaji: 'ori ni',
     en: 'when; on the occasion',
-    fr: 'lors de ; à l\'occasion de ; quand l\'occasion se présente',
+    fr: "lors de ; à l'occasion de ; quand l'occasion se présente",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5398,7 +5431,7 @@ const n1GrammarPoints = [
     title: 'さも',
     romaji: 'samo',
     en: 'truly; really',
-    fr: 'vraiment ; comme si vraiment ; d\'un air convaincu',
+    fr: "vraiment ; comme si vraiment ; d'un air convaincu",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5422,7 +5455,7 @@ const n1GrammarPoints = [
     title: 'ただ〜のみだ',
     romaji: 'tada ~ nomi da',
     en: 'can do nothing but',
-    fr: 'il ne reste qu\'à ; on ne peut que (formel)',
+    fr: "il ne reste qu'à ; on ne peut que (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5438,7 +5471,7 @@ const n1GrammarPoints = [
     title: 'ためしがない',
     romaji: 'tameshi ga nai',
     en: '(something) is never the case',
-    fr: 'ça n\'arrive jamais ; on ne voit jamais (habitude négative)',
+    fr: "ça n'arrive jamais ; on ne voit jamais (habitude négative)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5454,7 +5487,7 @@ const n1GrammarPoints = [
     title: 'た瞬間に',
     romaji: 'ta shunkan ni',
     en: 'the moment',
-    fr: 'à l\'instant même où ; au moment où',
+    fr: "à l'instant même où ; au moment où",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5462,7 +5495,7 @@ const n1GrammarPoints = [
     title: 'てっきり',
     romaji: 'tekkiri',
     en: 'surely; certainly',
-    fr: 'j\'étais sûr que ; je pensais vraiment que (attente déçue)',
+    fr: "j'étais sûr que ; je pensais vraiment que (attente déçue)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5470,7 +5503,7 @@ const n1GrammarPoints = [
     title: 'たところで',
     romaji: 'ta tokoro de',
     en: 'even if one does something',
-    fr: 'même si l\'on fait ; ça ne servirait à rien de',
+    fr: "même si l'on fait ; ça ne servirait à rien de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5494,7 +5527,7 @@ const n1GrammarPoints = [
     title: 'てまで',
     romaji: 'te made',
     en: 'even',
-    fr: 'aller jusqu\'à faire ; même en faisant (excessif)',
+    fr: "aller jusqu'à faire ; même en faisant (excessif)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5510,7 +5543,7 @@ const n1GrammarPoints = [
     title: 'てもどうにもならない',
     romaji: 'te mo dou ni mo naranai',
     en: "it's no use",
-    fr: 'ça ne sert à rien ; c\'est peine perdue',
+    fr: "ça ne sert à rien ; c'est peine perdue",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5518,7 +5551,7 @@ const n1GrammarPoints = [
     title: 'ても始まらない',
     romaji: 'te mo hajimaranai',
     en: "it's no use",
-    fr: 'ça ne mène à rien ; c\'est inutile de',
+    fr: "ça ne mène à rien ; c'est inutile de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5526,7 +5559,7 @@ const n1GrammarPoints = [
     title: 'ても差し支えない',
     romaji: 'te mo sashitsukaenai',
     en: "can; it's okay if",
-    fr: 'il n\'y a aucun inconvénient à ; c\'est permis de',
+    fr: "il n'y a aucun inconvénient à ; c'est permis de",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5542,7 +5575,7 @@ const n1GrammarPoints = [
     title: 'ってば',
     romaji: 'tte ba',
     en: 'I said; I told you to',
-    fr: 'je t\'ai dit ; mais enfin ! (impatience ou insistance)',
+    fr: "je t'ai dit ; mais enfin ! (impatience ou insistance)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5566,7 +5599,7 @@ const n1GrammarPoints = [
     title: 'とあれば',
     romaji: 'to areba',
     en: "if; if it's the case that",
-    fr: 'si c\'est le cas ; si telle est la situation',
+    fr: "si c'est le cas ; si telle est la situation",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5582,7 +5615,7 @@ const n1GrammarPoints = [
     title: 'とばかりに',
     romaji: 'to bakari ni',
     en: 'as if; as though',
-    fr: 'comme pour dire ; d\'un air qui semblait dire',
+    fr: "comme pour dire ; d'un air qui semblait dire",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5616,7 +5649,10 @@ const n1GrammarPoints = [
     en: 'all; every',
     fr: 'tout ; chaque (sens de totalité)',
     jlpt_level: 'N1' as const,
-    notes: 'N1 usage: every; all (e.g. every kind of)',
+    notes: {
+      en: 'N1 usage: every; all (e.g. every kind of)',
+      fr: 'Usage N1 : tout ; chaque (ex. : toutes sortes de)',
+    },
   },
   {
     slug: 'to-iu-ka',
@@ -5631,7 +5667,7 @@ const n1GrammarPoints = [
     title: 'というか〜というか',
     romaji: 'to iu ka ~ to iu ka',
     en: "(I'm not sure if it's) A or B",
-    fr: 'si l\'on peut dire A ou B ; difficile à qualifier entre A et B',
+    fr: "si l'on peut dire A ou B ; difficile à qualifier entre A et B",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5655,7 +5691,7 @@ const n1GrammarPoints = [
     title: 'というわけだ',
     romaji: 'to iu wake da',
     en: 'this means',
-    fr: 'c\'est pourquoi ; voilà pourquoi ; cela signifie donc',
+    fr: "c'est pourquoi ; voilà pourquoi ; cela signifie donc",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5663,7 +5699,7 @@ const n1GrammarPoints = [
     title: 'というわけではない',
     romaji: 'to iu wake de wa nai',
     en: "it's not that; it doesn't mean that",
-    fr: 'ce n\'est pas que ; ça ne veut pas dire que',
+    fr: "ce n'est pas que ; ça ne veut pas dire que",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5679,7 +5715,7 @@ const n1GrammarPoints = [
     title: 'ときたら',
     romaji: 'toki tara',
     en: 'when it comes to; concerning',
-    fr: 'quand il s\'agit de ; pour ce qui est de (légère critique)',
+    fr: "quand il s'agit de ; pour ce qui est de (légère critique)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5687,7 +5723,7 @@ const n1GrammarPoints = [
     title: 'ときている',
     romaji: 'toki te iru',
     en: 'because',
-    fr: 'et en plus ; c\'est justement parce que (aggravation)',
+    fr: "et en plus ; c'est justement parce que (aggravation)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5703,7 +5739,7 @@ const n1GrammarPoints = [
     title: 'ところから',
     romaji: 'tokoro kara',
     en: 'from the fact that',
-    fr: 'du fait que ; c\'est parce que (déduction à partir d\'un fait)',
+    fr: "du fait que ; c'est parce que (déduction à partir d'un fait)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5719,7 +5755,7 @@ const n1GrammarPoints = [
     title: 'とみるや',
     romaji: 'to miru ya',
     en: 'at the sight of; upon seeing',
-    fr: 'à peine avait-il vu que ; dès qu\'il aperçut',
+    fr: "à peine avait-il vu que ; dès qu'il aperçut",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5735,7 +5771,7 @@ const n1GrammarPoints = [
     title: 'ともなると・ともなれば',
     romaji: 'tomo naru to / tomo nareba',
     en: 'when; once (something happens)',
-    fr: 'quand on en arrive à ; lorsqu\'on atteint ce stade',
+    fr: "quand on en arrive à ; lorsqu'on atteint ce stade",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5751,7 +5787,7 @@ const n1GrammarPoints = [
     title: 'と思いきや',
     romaji: 'to omoi kiya',
     en: 'I thought',
-    fr: 'je pensais que... mais en fait ; contrairement à ce qu\'on croyait',
+    fr: "je pensais que... mais en fait ; contrairement à ce qu'on croyait",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5783,7 +5819,7 @@ const n1GrammarPoints = [
     title: 'としたって・としたところで',
     romaji: 'to shitatte / to shita tokoro de',
     en: 'even if',
-    fr: 'même si l\'on fait ; quand bien même',
+    fr: "même si l'on fait ; quand bien même",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5815,7 +5851,7 @@ const n1GrammarPoints = [
     title: 'とは',
     romaji: 'to wa',
     en: 'indicates word or phrase being defined',
-    fr: 'indique la définition d\'un mot ou d\'une expression',
+    fr: "indique la définition d'un mot ou d'une expression",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5855,7 +5891,7 @@ const n1GrammarPoints = [
     title: 'はさておき',
     romaji: 'wa satooki',
     en: 'setting aside',
-    fr: 'laissant de côté ; pour l\'instant on oublie',
+    fr: "laissant de côté ; pour l'instant on oublie",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5895,7 +5931,7 @@ const n1GrammarPoints = [
     title: '(よ)うか〜まいか',
     romaji: '(yo)u ka ~ mai ka',
     en: 'whether or not',
-    fr: 'si l\'on doit ou non ; hésitation entre faire ou ne pas faire',
+    fr: "si l'on doit ou non ; hésitation entre faire ou ne pas faire",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5903,7 +5939,7 @@ const n1GrammarPoints = [
     title: '(よ)うものなら',
     romaji: '(yo)u mono nara',
     en: 'if one chooses to',
-    fr: 'si jamais on osait ; si l\'on se permettait (conséquences graves)',
+    fr: "si jamais on osait ; si l'on se permettait (conséquences graves)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5911,7 +5947,7 @@ const n1GrammarPoints = [
     title: '(よ)うにも〜ない',
     romaji: '(yo)u ni mo ~ nai',
     en: "even if one tries to do something; it can't be done",
-    fr: 'même si l\'on voulait... impossible ; on voudrait bien mais on ne peut pas',
+    fr: "même si l'on voulait... impossible ; on voudrait bien mais on ne peut pas",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5927,7 +5963,7 @@ const n1GrammarPoints = [
     title: 'ゆえに',
     romaji: 'yueni',
     en: 'therefore; consequently',
-    fr: 'par conséquent ; c\'est pourquoi (formel)',
+    fr: "par conséquent ; c'est pourquoi (formel)",
     jlpt_level: 'N1' as const,
   },
   {
@@ -5943,7 +5979,7 @@ const n1GrammarPoints = [
     title: 'ずじまい',
     romaji: 'zu jimai',
     en: 'never',
-    fr: 'finir sans avoir fait ; n\'avoir jamais pu faire',
+    fr: "finir sans avoir fait ; n'avoir jamais pu faire",
     jlpt_level: 'N1' as const,
   },
   {
@@ -6590,7 +6626,11 @@ async function main() {
   ];
   console.log(`Seeding ${allGrammarPoints.length} grammar points...`);
   for (const gp of allGrammarPoints) {
-    const { en, fr, notes, ...gpData } = gp as typeof gp & { en: string; fr: string; notes?: string };
+    const { en, fr, notes, ...gpData } = gp as typeof gp & {
+      en: string;
+      fr: string;
+      notes?: { en: string; fr: string };
+    };
     const upserted = await prisma.grammar_points.upsert({
       where: { slug: gp.slug },
       update: { title: gp.title, romaji: gp.romaji, jlpt_level: gp.jlpt_level },
@@ -6599,10 +6639,11 @@ async function main() {
     const meanings: Record<string, string> = { en, fr };
     for (const locale of ['en', 'fr']) {
       const meaning = meanings[locale];
+      const localeNotes = notes?.[locale as 'en' | 'fr'] ?? null;
       await prisma.grammar_point_translations.upsert({
         where: { grammar_point_id_locale: { grammar_point_id: upserted.id, locale } },
-        update: { meaning, notes: notes ?? null },
-        create: { grammar_point_id: upserted.id, locale, meaning, notes: notes ?? null },
+        update: { meaning, notes: localeNotes },
+        create: { grammar_point_id: upserted.id, locale, meaning, notes: localeNotes },
       });
     }
   }
