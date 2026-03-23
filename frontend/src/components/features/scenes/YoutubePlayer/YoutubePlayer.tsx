@@ -1,6 +1,9 @@
 'use client';
 
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react';
+import { useTranslations } from 'next-intl';
+import { Button, Stack, Text } from '@mantine/core';
+import { useConsent } from '@/contexts/ConsentContext';
 import { loadYouTubeApi, type YTPlayer } from '@/lib/youtube';
 
 const YT_PLAYING = 1;
@@ -17,6 +20,8 @@ export interface YoutubePlayerHandle {
 
 export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>(
   ({ videoId, startTime, endTime }, ref) => {
+    const t = useTranslations('YoutubePlayer');
+    const { isYoutubeAccepted, showPreferences } = useConsent();
     const uid = useId().replace(/:/g, '');
     const elementId = `yt-player-${uid}`;
     const playerRef = useRef<YTPlayer | null>(null);
@@ -29,6 +34,8 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
     }));
 
     useEffect(() => {
+      if (!isYoutubeAccepted) return;
+
       let cancelled = false;
 
       loadYouTubeApi().then(() => {
@@ -38,6 +45,7 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
 
         new window.YT.Player(elementId, {
           videoId,
+          host: 'https://www.youtube-nocookie.com',
           playerVars: {
             start: startTime,
             end: endTime,
@@ -69,8 +77,8 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
           return;
         }
 
-        const t = player.getCurrentTime();
-        if (t < startTime || t > endTime) {
+        const currentTime = player.getCurrentTime();
+        if (currentTime < startTime || currentTime > endTime) {
           player.seekTo(startTime, true);
         }
       }, 500);
@@ -86,7 +94,20 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
         playerRef.current = null;
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [videoId, startTime, endTime]);
+    }, [videoId, startTime, endTime, isYoutubeAccepted]);
+
+    if (!isYoutubeAccepted) {
+      return (
+        <Stack justify="center" align="center">
+          <Text size="sm" c="dimmed" ta="center">
+            {t('cookiesRequired')}
+          </Text>
+          <Button size="xs" variant="light" onClick={showPreferences}>
+            {t('managePreferences')}
+          </Button>
+        </Stack>
+      );
+    }
 
     return <div id={elementId} style={{ width: '100%', height: '100%' }} />;
   }

@@ -1,10 +1,12 @@
 import '@mantine/core/styles.css';
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
 
 import React from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { Layout } from '@/components/layout/Layout/Layout';
+import { ConsentProvider } from '@/contexts/ConsentContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { theme } from '@/theme';
 
@@ -36,9 +38,11 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <MantineProvider theme={theme}>
-            <SettingsProvider>
-              <Layout>{children}</Layout>
-            </SettingsProvider>
+            <ConsentProvider>
+              <SettingsProvider>
+                <Layout>{children}</Layout>
+              </SettingsProvider>
+            </ConsentProvider>
           </MantineProvider>
         </NextIntlClientProvider>
       </body>

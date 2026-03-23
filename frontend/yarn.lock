@@ -9366,6 +9366,7 @@ __metadata:
     ts-jest: "npm:^29.4.4"
     typescript: "npm:5.9.3"
     typescript-eslint: "npm:^8.46.0"
+    vanilla-cookieconsent: "npm:^3.1.0"
   languageName: unknown
   linkType: soft
 
@@ -13126,6 +13127,13 @@ __metadata:
     "@types/istanbul-lib-coverage": "npm:^2.0.1"
     convert-source-map: "npm:^2.0.0"
   checksum: 10c0/968bcf1c7c88c04df1ffb463c179558a2ec17aa49e49376120504958239d9e9dad5281aa05f2a78542b8557f2be0b0b4c325710262f3b838b40d703d5ed30c23
+  languageName: node
+  linkType: hard
+
+"vanilla-cookieconsent@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "vanilla-cookieconsent@npm:3.1.0"
+  checksum: 10c0/f344d9786ea74850ec4274d85c9049b4d36b3ff368ddb4a0e446bad2dc0ccfad03542e97f40f7eb103b9e06d8b4d5381f63f8f0f80d898f80c5bf3e96e877382
   languageName: node
   linkType: hard
 
