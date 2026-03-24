@@ -354,7 +354,7 @@ Always distinguish based on what precedes で: if it follows a na-adjective or n
 
 **Disambiguation `no-possessive` vs `no-subject`**: if の connects two nouns as attribute/possession → `no-possessive`. If の is inside a relative clause and can be swapped for が → `no-subject`.
 
-**Do NOT tag の inside**: のに (use `noni-although`), ので (use `node-because`), のだ/んだ (use `n-da`), ものの、ものだ etc.
+**Do NOT tag の inside**: のに (use `noni-although`), ので (use `node-because`), のだ/んだ (use `no-da-explanatory`), ものの、ものだ etc.
 
 #### か — question particle
 
@@ -390,7 +390,7 @@ Each occurrence gets its own entry. matched_form = the exact form found:
 
 **じゃ as contracted では**: じゃ is the colloquial contraction of では **only when immediately followed by a negative** (ない, なかった, ありません, etc.). Example: じゃない = ではない → `de-wa-nai`. Do NOT treat じゃ as a copula contraction inside unrelated words (じゃま, etc.).
 
-**Do NOT tag だ inside**: んだ (→ `n-da`), だから, だって, だけ, ただ, まだ, etc.
+**Do NOT tag だ inside**: んだ (→ `no-da-explanatory`), だから, だって, だけ, ただ, まだ, etc.
 
 #### `ta-past` — plain past tense
 
@@ -552,9 +552,9 @@ matched_form = verb masu-stem + ながら: 歩きながら、食べながら.
 
 Each たり/だり occurrence is a **separate entry**. matched_form = full verb in たり form from stem start: 食べたり、飲んだり.
 
-#### `n-da` — explanatory んだ/のだ
+#### `no-da-explanatory` — explanatory んだ/のだ
 
-matched_form = the full んだ/のだ form and variants: んだ、のだ、んです、のです、んだった、んじゃない. Span covers ん/の + だ/です.
+matched_form = the full んだ/のだ form and variants: んだ、のだ、んです、のです、んだった、んじゃない、なのだ、なのか、んだろう. Span covers ん/の + だ/です (and preceding な for なのだ/なのか forms).
 
 #### `no-koto-nominalizer` — nominalizer の or こと
 
