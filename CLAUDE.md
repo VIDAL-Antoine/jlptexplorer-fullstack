@@ -446,6 +446,8 @@ Use only when て connects clauses without being followed by いる/ある/etc. 
 
 **When the te-form feeds into a `te-kuru` or `te-iku` construction**: the te-form verb's grammar point (e.g. `naru`, `suru`, etc.) and any conjugation on the kuru/iku part (e.g. `e-ro-imperative`) all share the **same full span** as `te-kuru`/`te-iku`. The te-form is inseparable from the construction — you cannot substitute the continuative (-i) form. Example: `なって来い` → `naru` + `te-kuru` + `e-ro-imperative` all share matched_form = `なって来い`.
 
+**For compound する verbs in te-kuru/te-iku**: the span starts at し (the する part), NOT at the preceding noun. Example: 宣戦布告して来た → matched_form = `して来た` (NOT `宣戦布告して来た`). Consistent with the `suru` rule ("matched_form starts at the する part").
+
 #### `rareru-potential` — potential form
 
 matched_form = full potential form from verb stem:
@@ -597,6 +599,42 @@ When だけ is immediately followed by で, tag as **`dake-de`** (a single gramm
 
 matched_form = adjective stem + さ: 大きさ、強さ、美しさ. Do NOT confuse with sentence-final さ particle.
 
+#### `sugiru` — too much / excessively
+
+matched_form = **full form including the stem**: adjective stem or verb masu-stem + すぎる. Do NOT tag すぎる alone.
+
+| Type        | Pattern              | matched_form example |
+| ----------- | -------------------- | -------------------- |
+| い-adjective | stem (drop い) + すぎる | 良すぎる、高すぎる   |
+| な-adjective | stem + すぎる         | 静かすぎる           |
+| Verb        | masu-stem + すぎる    | 食べすぎる、飲みすぎる |
+
+Including the stem is intentional — it makes the conjugation pattern (い-adj loses い, verb uses masu-stem) visible to the learner.
+
+#### `te-shimau` — acabar de / lamentablemente
+
+matched_form = **full form from verb stem** through しまう/しまった and contracted variants (ちゃう/ちゃった、じゃう/じゃった).
+
+| Form              | matched_form example   |
+| ----------------- | ---------------------- |
+| Plain             | 食べてしまう           |
+| Past              | 食べてしまった         |
+| Contracted plain  | 食べちゃう             |
+| Contracted past   | 食べちゃった、終わっちゃった |
+| Voiced contracted | 飲んじゃった           |
+
+When in past form, also tag `ta-past` on the **same span and matched_form**. Example: 終わっちゃった → two entries: `te-shimau` + `ta-past`, both matched_form = `終わっちゃった`.
+
+#### `te-tamaranai` — unbearably / can't help but
+
+matched_form = **full form from adjective/verb stem** through たまらない. The て is part of the fixed construction and inseparable from たまらない.
+
+| Type        | matched_form example     |
+| ----------- | ------------------------ |
+| い-adjective | adj stem + くてたまらない → 憎くてたまらない |
+| Verb        | verb te-form + たまらない → 見てたまらない |
+
+Do NOT add a separate `nai-negative` or `i-adjective-te-form` entry — compound construction rule applies.
 
 #### `suru` — compound する verb
 
