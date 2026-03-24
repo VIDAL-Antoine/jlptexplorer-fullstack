@@ -11,52 +11,35 @@ export function buildSegments(text: string, annotations: TranscriptLineGrammarPo
     return [{ type: 'plain', text }];
   }
 
-  // Group overlapping annotations by their span
-  const spanMap = new Map<string, TranscriptLineGrammarPoint[]>();
-  for (const annotation of withSpans) {
-    const key = `${annotation.start_index}:${annotation.end_index}`;
-    if (!spanMap.has(key)) {
-      spanMap.set(key, []);
-    }
-    spanMap.get(key)!.push(annotation);
+  // Collect all unique boundary points from every annotation start/end
+  const boundarySet = new Set<number>([0, text.length]);
+  for (const a of withSpans) {
+    boundarySet.add(a.start_index!);
+    boundarySet.add(a.end_index!);
   }
+  const boundaries = Array.from(boundarySet).sort((a, b) => a - b);
 
-  // Collect unique spans sorted by start_index, largest span first for same start
-  const spans = Array.from(spanMap.entries())
-    .map(([key, anns]) => {
-      const [start, end] = key.split(':').map(Number);
-      return { start, end, annotations: anns };
-    })
-    .sort((a, b) => a.start - b.start || b.end - a.end);
-
+  // For each sub-interval [boundaries[i], boundaries[i+1]], collect annotations that fully cover it
   const segments: Segment[] = [];
-  let cursor = 0;
+  for (let i = 0; i < boundaries.length - 1; i++) {
+    const start = boundaries[i];
+    const end = boundaries[i + 1];
+    const segmentText = text.slice(start, end);
+    if (!segmentText.length) continue;
 
-  for (const span of spans) {
-    if (span.start >= cursor) {
-      if (span.start > cursor) {
-        segments.push({ type: 'plain', text: text.slice(cursor, span.start) });
-      }
-      segments.push({
-        type: 'annotated',
-        text: text.slice(span.start, span.end),
-        annotations: span.annotations,
-      });
-      cursor = span.end;
+    const covering = withSpans.filter((a) => a.start_index! <= start && a.end_index! >= end);
+
+    if (covering.length > 0) {
+      segments.push({ type: 'annotated', text: segmentText, annotations: covering });
     } else {
-      // Overlapping span: merge its annotations into the last annotated segment
+      // Merge consecutive plain segments
       const last = segments[segments.length - 1];
-      if (last?.type === 'annotated') {
-        last.annotations.push(...span.annotations);
-      }
-      if (span.end > cursor) {
-        cursor = span.end;
+      if (last?.type === 'plain') {
+        last.text += segmentText;
+      } else {
+        segments.push({ type: 'plain', text: segmentText });
       }
     }
-  }
-
-  if (cursor < text.length) {
-    segments.push({ type: 'plain', text: text.slice(cursor) });
   }
 
   return segments;
