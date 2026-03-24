@@ -1148,8 +1148,8 @@ const n4GrammarPoints = [
     slug: 'to-omou',
     title: 'と思う',
     romaji: 'to omou',
-    en: 'I think; you think',
-    fr: 'je pense que ; croire que',
+    en: 'to think; to believe',
+    fr: 'penser que ; croire que',
     jlpt_level: 'N4' as const,
   },
   {
@@ -1174,6 +1174,14 @@ const n4GrammarPoints = [
     romaji: 'tokoro',
     en: 'about to; on the verge of',
     fr: 'sur le point de faire',
+    jlpt_level: 'N4' as const,
+  },
+  {
+    slug: 'no-da-explanatory',
+    title: 'んだ・のだ',
+    romaji: 'n da / no da',
+    en: 'explanatory; the reason is; the thing is',
+    fr: "tournure explicative ; c'est que ; en fait",
     jlpt_level: 'N4' as const,
   },
   {
