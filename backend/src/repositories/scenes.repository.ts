@@ -93,7 +93,7 @@ export async function findScenesPage(
     prisma.scenes.findMany({
       where,
       include: buildSceneInclude(locale),
-      orderBy: [{ source_id: 'asc' }, { episode_number: 'asc' }, { start_time: 'asc' }],
+      orderBy: [{ source_id: 'asc' }, { episode_number: 'asc' }, { youtube_video_id: 'asc' }, { start_time: 'asc' }],
       skip: (page - 1) * limit,
       take: limit,
     }),
