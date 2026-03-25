@@ -10,7 +10,7 @@ import {
   Card,
   Collapse,
   Group,
-  Stack,
+  ScrollArea,
   Text,
   Title,
   Tooltip,
@@ -100,7 +100,7 @@ export function SceneCard({
       </Button>
 
       <Collapse in={opened}>
-        <Stack gap="xs">
+        <ScrollArea.Autosize mah={640}>
           {scene.transcript_lines.map((line) => {
             const grammarPoints = line.transcript_line_grammar_points;
             const hasGrammar = currentGrammarPointIds
@@ -214,7 +214,7 @@ export function SceneCard({
               </Box>
             );
           })}
-        </Stack>
+        </ScrollArea.Autosize>
       </Collapse>
     </Card>
   );
