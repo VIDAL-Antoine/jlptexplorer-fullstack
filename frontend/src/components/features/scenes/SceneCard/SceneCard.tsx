@@ -100,7 +100,7 @@ export function SceneCard({
       </Button>
 
       <Collapse in={opened}>
-        <ScrollArea.Autosize mah={640}>
+        <ScrollArea.Autosize mah={640} type="auto">
           {scene.transcript_lines.map((line) => {
             const grammarPoints = line.transcript_line_grammar_points;
             const hasGrammar = currentGrammarPointIds
