@@ -13,27 +13,24 @@ export async function findSources(locale: string, type?: source_type) {
 export async function findSourceBySlug(slug: string, locale: string) {
   return prisma.sources.findUnique({
     where: { slug },
-    include: {
-      translations: { where: { locale } },
-      scenes: {
-        select: {
-          transcript_lines: {
-            select: {
-              transcript_line_grammar_points: {
-                include: {
-                  grammar_points: { include: { translations: { where: { locale } } } },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    include: { translations: { where: { locale } } },
   });
 }
 
-export async function findSourceIdBySlug(slug: string) {
-  return prisma.sources.findUnique({ where: { slug }, select: { id: true } });
+export async function findSourceMeta(sourceId: number, locale: string) {
+  const [scenesCount, grammarPoints] = await Promise.all([
+    prisma.scenes.count({ where: { source_id: sourceId } }),
+    prisma.grammar_points.findMany({
+      where: {
+        transcript_line_grammar_points: {
+          some: { transcript_lines: { scenes: { source_id: sourceId } } },
+        },
+      },
+      include: { translations: { where: { locale } } },
+      orderBy: [{ jlpt_level: 'asc' }, { title: 'asc' }],
+    }),
+  ]);
+  return { scenesCount, grammarPoints };
 }
 
 export async function findSourceScenes(

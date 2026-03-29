@@ -65,7 +65,7 @@ export async function updateSpeaker(
     descriptions?: Record<string, string>;
   },
 ) {
-  const existing = await speakersRepository.findSpeakerIdBySlug(paramSlug);
+  const existing = await speakersRepository.findSpeakerBySlug(paramSlug, 'en');
   if (!existing) {
     return null;
   }
@@ -89,7 +89,7 @@ export async function patchSpeaker(
     descriptions?: Record<string, string>;
   },
 ) {
-  const existing = await speakersRepository.findSpeakerIdBySlug(paramSlug);
+  const existing = await speakersRepository.findSpeakerBySlug(paramSlug, 'en');
   if (!existing) {
     return null;
   }

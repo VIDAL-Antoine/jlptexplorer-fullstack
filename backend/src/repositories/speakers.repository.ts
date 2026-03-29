@@ -29,10 +29,6 @@ export async function findSpeakerBySlug(slug: string, locale: string) {
   });
 }
 
-export async function findSpeakerIdBySlug(slug: string) {
-  return prisma.speakers.findUnique({ where: { slug }, select: { id: true } });
-}
-
 export async function findSpeakersBySlugIn(slugs: string[]) {
   return prisma.speakers.findMany({
     where: { slug: { in: slugs } },

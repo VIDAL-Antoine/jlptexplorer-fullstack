@@ -128,7 +128,7 @@ export async function createScene(body: {
     transcript_lines,
   } = body;
 
-  const source = await sourcesRepository.findSourceIdBySlug(source_slug);
+  const source = await sourcesRepository.findSourceBySlug(source_slug, 'en');
   if (!source) {
     throw Object.assign(new Error(`Unknown source slug: ${source_slug}`), { statusCode: 400 });
   }
@@ -173,7 +173,7 @@ export async function updateScene(
     transcript_lines,
   } = body;
 
-  const source = await sourcesRepository.findSourceIdBySlug(source_slug);
+  const source = await sourcesRepository.findSourceBySlug(source_slug, 'en');
   if (!source) {
     throw Object.assign(new Error(`Unknown source slug: ${source_slug}`), { statusCode: 400 });
   }
@@ -217,7 +217,7 @@ export async function patchScene(
 
   let source_id: number | undefined;
   if (body.source_slug !== undefined) {
-    const source = await sourcesRepository.findSourceIdBySlug(body.source_slug);
+    const source = await sourcesRepository.findSourceBySlug(body.source_slug, 'en');
     if (!source) {
       throw Object.assign(new Error(`Unknown source slug: ${body.source_slug}`), {
         statusCode: 400,

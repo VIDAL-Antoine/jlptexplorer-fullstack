@@ -44,10 +44,6 @@ export async function findGrammarPointBySlug(slug: string, locale: string) {
   });
 }
 
-export async function findGrammarPointIdBySlug(slug: string) {
-  return prisma.grammar_points.findUnique({ where: { slug }, select: { id: true } });
-}
-
 export async function findGrammarPointsBySlugIn(slugs: string[]) {
   return prisma.grammar_points.findMany({
     where: { slug: { in: slugs } },

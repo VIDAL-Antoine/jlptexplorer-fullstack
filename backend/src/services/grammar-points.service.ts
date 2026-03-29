@@ -55,7 +55,7 @@ export async function getGrammarPointScenes(
   locale: string,
   options: { sourceSlugs: string[]; page: number; limit: number },
 ) {
-  const grammarPoint = await grammarPointsRepository.findGrammarPointIdBySlug(slug);
+  const grammarPoint = await grammarPointsRepository.findGrammarPointBySlug(slug, 'en');
   if (!grammarPoint) {
     return null;
   }
@@ -100,7 +100,7 @@ export async function updateGrammarPoint(
     translations: { locale: string; meaning: string; notes?: string }[];
   },
 ) {
-  const existing = await grammarPointsRepository.findGrammarPointIdBySlug(paramSlug);
+  const existing = await grammarPointsRepository.findGrammarPointBySlug(paramSlug, 'en');
   if (!existing) {
     return null;
   }
@@ -119,7 +119,7 @@ export async function patchGrammarPoint(
     translations?: { locale: string; meaning?: string; notes?: string }[];
   },
 ) {
-  const existing = await grammarPointsRepository.findGrammarPointIdBySlug(paramSlug);
+  const existing = await grammarPointsRepository.findGrammarPointBySlug(paramSlug, 'en');
   if (!existing) {
     return null;
   }

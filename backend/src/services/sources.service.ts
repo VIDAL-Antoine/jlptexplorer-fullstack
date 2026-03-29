@@ -27,29 +27,12 @@ export async function getSource(slug: string, locale: string) {
     return null;
   }
 
-  const grammarPoints = Array.from(
-    new Map(
-      source.scenes
-        .flatMap((s) => s.transcript_lines)
-        .flatMap((l) => l.transcript_line_grammar_points)
-        .map((tlgp) => tlgp.grammar_points)
-        .filter((gp): gp is NonNullable<typeof gp> => gp !== null)
-        .map((gp) => [gp.id, flattenGrammarPoint(gp)]),
-    ).values(),
-  );
+  const { scenesCount, grammarPoints } = await sourcesRepository.findSourceMeta(source.id, locale);
 
   return {
-    ...flattenSource({
-      id: source.id,
-      slug: source.slug,
-      type: source.type,
-      cover_image_url: source.cover_image_url,
-      japanese_title: source.japanese_title,
-      created_at: source.created_at,
-      translations: source.translations,
-    }),
-    scenes_count: source.scenes.length,
-    grammar_points: grammarPoints,
+    ...flattenSource(source),
+    scenes_count: scenesCount,
+    grammar_points: grammarPoints.map(flattenGrammarPoint),
   };
 }
 
@@ -58,7 +41,7 @@ export async function getSourceScenes(
   locale: string,
   options: { grammarPointSlugs: string[]; grammarMatch: 'scene' | 'transcript_line'; page: number; limit: number },
 ) {
-  const source = await sourcesRepository.findSourceIdBySlug(slug);
+  const source = await sourcesRepository.findSourceBySlug(slug, locale);
   if (!source) {
     return null;
   }
@@ -102,7 +85,7 @@ export async function updateSource(
     translations: Record<string, string>;
   },
 ) {
-  const existing = await sourcesRepository.findSourceIdBySlug(paramSlug);
+  const existing = await sourcesRepository.findSourceBySlug(paramSlug, 'en');
   if (!existing) {
     return null;
   }
@@ -124,7 +107,7 @@ export async function patchSource(
     translations?: Record<string, string>;
   },
 ) {
-  const existing = await sourcesRepository.findSourceIdBySlug(paramSlug);
+  const existing = await sourcesRepository.findSourceBySlug(paramSlug, 'en');
   if (!existing) {
     return null;
   }
