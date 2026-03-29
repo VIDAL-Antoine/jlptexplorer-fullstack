@@ -25,7 +25,7 @@ export function buildSegments(text: string, annotations: TranscriptLineGrammarPo
     const start = boundaries[i];
     const end = boundaries[i + 1];
     const segmentText = text.slice(start, end);
-    if (!segmentText.length) continue;
+    if (!segmentText.length) {continue;}
 
     const covering = withSpans.filter((a) => a.start_index! <= start && a.end_index! >= end);
 
