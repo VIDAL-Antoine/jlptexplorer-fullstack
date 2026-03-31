@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { sourceType } from '@/schemas/sources.schema';
-import { grammarPointResponse, sourceResponse, sceneResponse, errorResponse } from './primitives';
+import { sourceType } from '@/schemas/sources.schema.js';
+import { grammarPointResponse, sourceResponse, sceneResponse, errorResponse } from './primitives.js';
 
 export { errorResponse, sourceResponse };
 

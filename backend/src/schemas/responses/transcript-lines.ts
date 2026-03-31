@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { jlptLevel } from '@/schemas/grammar-points.schema';
-import { errorResponse, sourceResponse, speakerResponse, transcriptLineGrammarPointResponse } from './primitives';
+import { jlptLevel } from '@/schemas/grammar-points.schema.js';
+import { errorResponse, sourceResponse, speakerResponse, transcriptLineGrammarPointResponse } from './primitives.js';
 
 export { errorResponse };
 

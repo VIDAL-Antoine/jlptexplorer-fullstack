@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import * as grammarPointsService from '@/services/grammar-points.service';
-import type { LocaleParams } from '@/schemas/common.schema';
+import * as grammarPointsService from '@/services/grammar-points.service.js';
+import type { LocaleParams } from '@/schemas/common.schema.js';
 import type {
   GrammarPointBody,
   GrammarPointPatchBody,
@@ -8,7 +8,7 @@ import type {
   GrammarPointAdminParams,
   ListGrammarPointsQuery,
   GrammarPointScenesQuery,
-} from '@/schemas/grammar-points.schema';
+} from '@/schemas/grammar-points.schema.js';
 
 export async function listGrammarPoints(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListGrammarPointsQuery }>,

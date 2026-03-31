@@ -1,5 +1,5 @@
-import { flattenSpeaker, flattenSource, flattenGrammarPoint } from '@/utils/flatten';
-import * as speakersRepository from '@/repositories/speakers.repository';
+import { flattenSpeaker, flattenSource, flattenGrammarPoint } from '@/utils/flatten.js';
+import * as speakersRepository from '@/repositories/speakers.repository.js';
 
 export async function listSpeakers(
   locale: string,

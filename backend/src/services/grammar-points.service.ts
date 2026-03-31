@@ -1,5 +1,5 @@
-import { flattenGrammarPoint, flattenScene, flattenSource } from '@/utils/flatten';
-import * as grammarPointsRepository from '@/repositories/grammar-points.repository';
+import { flattenGrammarPoint, flattenScene, flattenSource } from '@/utils/flatten.js';
+import * as grammarPointsRepository from '@/repositories/grammar-points.repository.js';
 import type { jlpt_level } from '@prisma/client';
 
 export async function listGrammarPoints(

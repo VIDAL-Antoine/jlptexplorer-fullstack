@@ -7,14 +7,14 @@ import {
   updateTranslationsBody,
   updateTranslationsParams,
   listScenesQuery,
-} from '@/schemas/scenes.schema';
-import { localeParams } from '@/schemas/common.schema';
+} from '@/schemas/scenes.schema.js';
+import { localeParams } from '@/schemas/common.schema.js';
 import {
   errorResponse,
   sceneResponse,
   listScenesResponse,
   sceneWriteResponse,
-} from '@/schemas/responses/scenes';
+} from '@/schemas/responses/scenes.js';
 import {
   listScenes,
   getScene,
@@ -23,7 +23,7 @@ import {
   patchScene,
   deleteScene,
   updateTranslations,
-} from '@/controllers/scenes.controller';
+} from '@/controllers/scenes.controller.js';
 
 const TAGS = ['scenes'];
 

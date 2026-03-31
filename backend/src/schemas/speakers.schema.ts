@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { slugField } from './common.schema';
+import { slugField } from './common.schema.js';
 
 export const listSpeakersQuery = z.object({
   slug: z.string().optional(),

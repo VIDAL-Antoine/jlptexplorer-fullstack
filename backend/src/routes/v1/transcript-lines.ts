@@ -6,14 +6,14 @@ import {
   transcriptLineParams,
   transcriptLineAdminParams,
   listTranscriptLinesQuery,
-} from '@/schemas/transcript-lines.schema';
-import { localeParams } from '@/schemas/common.schema';
+} from '@/schemas/transcript-lines.schema.js';
+import { localeParams } from '@/schemas/common.schema.js';
 import {
   errorResponse,
   transcriptLineReadResponse,
   listTranscriptLinesResponse,
   transcriptLineWriteResponse,
-} from '@/schemas/responses/transcript-lines';
+} from '@/schemas/responses/transcript-lines.js';
 import {
   listTranscriptLines,
   getTranscriptLine,
@@ -21,7 +21,7 @@ import {
   updateTranscriptLine,
   patchTranscriptLine,
   deleteTranscriptLine,
-} from '@/controllers/transcript-lines.controller';
+} from '@/controllers/transcript-lines.controller.js';
 
 const TAGS = ['transcript-lines'];
 

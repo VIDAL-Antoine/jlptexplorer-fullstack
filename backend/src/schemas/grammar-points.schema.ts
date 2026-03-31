@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localeParams, paginationQuery, slugField, slugParams } from './common.schema';
+import { localeParams, paginationQuery, slugField, slugParams } from './common.schema.js';
 
 export const jlptLevel = z.enum(['N5', 'N4', 'N3', 'N2', 'N1', 'Other']);
 

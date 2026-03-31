@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { paginationQuery, slugField } from './common.schema';
+import { paginationQuery, slugField } from './common.schema.js';
 
 export const sourceType = z.enum(['game', 'anime', 'movie', 'series', 'music']);
 

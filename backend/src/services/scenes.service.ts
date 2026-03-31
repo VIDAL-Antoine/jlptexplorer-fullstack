@@ -1,10 +1,10 @@
-import { parseTime } from '@/utils/parse-time';
-import { flattenScene, flattenSceneAll, flattenSource, flattenGrammarPoint } from '@/utils/flatten';
-import * as scenesRepository from '@/repositories/scenes.repository';
-import * as sourcesRepository from '@/repositories/sources.repository';
-import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository';
-import { findSpeakersBySlugIn } from '@/repositories/speakers.repository';
-import type { TranscriptLineInput } from '@/schemas/scenes.schema';
+import { parseTime } from '@/utils/parse-time.js';
+import { flattenScene, flattenSceneAll, flattenSource, flattenGrammarPoint } from '@/utils/flatten.js';
+import * as scenesRepository from '@/repositories/scenes.repository.js';
+import * as sourcesRepository from '@/repositories/sources.repository.js';
+import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository.js';
+import { findSpeakersBySlugIn } from '@/repositories/speakers.repository.js';
+import type { TranscriptLineInput } from '@/schemas/scenes.schema.js';
 
 async function resolveGrammarPointSlugs(
   lines: TranscriptLineInput[],

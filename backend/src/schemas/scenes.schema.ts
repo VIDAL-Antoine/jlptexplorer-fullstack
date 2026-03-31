@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localeParams, idParams } from './common.schema';
+import { localeParams, idParams } from './common.schema.js';
 
 export const listScenesQuery = z.object({
   sources: z.string().optional(),

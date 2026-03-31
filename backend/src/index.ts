@@ -2,18 +2,18 @@ import 'dotenv/config';
 import fastify, { type FastifyError } from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import { Prisma } from '@prisma/client';
-import { registerCors } from '@/plugins/cors';
-import { registerSwagger } from '@/plugins/swagger';
-import { registerApiKeyAuth } from '@/plugins/api-key';
-import { sourcesPublicRoutes, sourcesAdminRoutes } from '@/routes/v1/sources';
-import { scenesPublicRoutes, scenesAdminRoutes } from '@/routes/v1/scenes';
-import { grammarPointsPublicRoutes, grammarPointsAdminRoutes } from '@/routes/v1/grammar-points';
-import { speakersPublicRoutes, speakersAdminRoutes } from '@/routes/v1/speakers';
+import { registerCors } from '@/plugins/cors.js';
+import { registerSwagger } from '@/plugins/swagger.js';
+import { registerApiKeyAuth } from '@/plugins/api-key.js';
+import { sourcesPublicRoutes, sourcesAdminRoutes } from '@/routes/v1/sources.js';
+import { scenesPublicRoutes, scenesAdminRoutes } from '@/routes/v1/scenes.js';
+import { grammarPointsPublicRoutes, grammarPointsAdminRoutes } from '@/routes/v1/grammar-points.js';
+import { speakersPublicRoutes, speakersAdminRoutes } from '@/routes/v1/speakers.js';
 import {
   transcriptLinesPublicRoutes,
   transcriptLinesAdminRoutes,
-} from '@/routes/v1/transcript-lines';
-import { transcriptLineGrammarPointsAdminRoutes } from '@/routes/v1/transcript-line-grammar-points';
+} from '@/routes/v1/transcript-lines.js';
+import { transcriptLineGrammarPointsAdminRoutes } from '@/routes/v1/transcript-line-grammar-points.js';
 
 async function start() {
   const server = fastify({ logger: true });

@@ -3,16 +3,16 @@ import {
   transcriptLineGrammarPointCreateBody,
   transcriptLineGrammarPointPatchBody,
   transcriptLineGrammarPointParams,
-} from '@/schemas/transcript-line-grammar-points.schema';
+} from '@/schemas/transcript-line-grammar-points.schema.js';
 import {
   errorResponse,
   tlgpWriteResponse,
-} from '@/schemas/responses/transcript-line-grammar-points';
+} from '@/schemas/responses/transcript-line-grammar-points.js';
 import {
   createTranscriptLineGrammarPoint,
   patchTranscriptLineGrammarPoint,
   deleteTranscriptLineGrammarPoint,
-} from '@/controllers/transcript-line-grammar-points.controller';
+} from '@/controllers/transcript-line-grammar-points.controller.js';
 
 const TAGS = ['transcript-line-grammar-points'];
 

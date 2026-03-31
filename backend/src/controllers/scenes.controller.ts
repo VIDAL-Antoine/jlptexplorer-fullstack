@@ -1,12 +1,12 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import * as scenesService from '@/services/scenes.service';
-import type { LocaleParams } from '@/schemas/common.schema';
+import * as scenesService from '@/services/scenes.service.js';
+import type { LocaleParams } from '@/schemas/common.schema.js';
 import type {
   SceneBody,
   ScenePatchBody,
   UpdateTranslationsBody,
   ListScenesQuery,
-} from '@/schemas/scenes.schema';
+} from '@/schemas/scenes.schema.js';
 
 export async function listScenes(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListScenesQuery }>,

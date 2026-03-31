@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { errorResponse } from './primitives';
+import { errorResponse } from './primitives.js';
 
 export { errorResponse };
 

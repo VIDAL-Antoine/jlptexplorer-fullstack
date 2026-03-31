@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma';
-import { buildSceneInclude } from '@/repositories/scenes.repository';
+import { prisma } from '@/config/prisma.js';
+import { buildSceneInclude } from '@/repositories/scenes.repository.js';
 import type { source_type } from '@prisma/client';
 
 export async function findSources(locale: string, type?: source_type) {

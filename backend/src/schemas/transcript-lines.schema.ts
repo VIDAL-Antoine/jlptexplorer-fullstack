@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { localeParams, idParams } from './common.schema';
-import { grammarPointAnnotation, transcriptLineInput } from './scenes.schema';
+import { localeParams, idParams } from './common.schema.js';
+import { grammarPointAnnotation, transcriptLineInput } from './scenes.schema.js';
 
 export const transcriptLineCreateBody = transcriptLineInput.extend({
   scene_id: z.number().int().positive(),

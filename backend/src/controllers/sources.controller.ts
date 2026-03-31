@@ -1,12 +1,12 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import * as sourcesService from '@/services/sources.service';
-import type { LocaleParams } from '@/schemas/common.schema';
+import * as sourcesService from '@/services/sources.service.js';
+import type { LocaleParams } from '@/schemas/common.schema.js';
 import type {
   SourceBody,
   SourcePatchBody,
   ListSourcesQuery,
   SourceSceneQuery,
-} from '@/schemas/sources.schema';
+} from '@/schemas/sources.schema.js';
 
 export async function listSources(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListSourcesQuery }>,

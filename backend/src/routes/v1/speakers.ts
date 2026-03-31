@@ -1,13 +1,13 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { listSpeakersQuery, speakerBody, speakerPatchBody } from '@/schemas/speakers.schema';
-import { localeParams, slugParams } from '@/schemas/common.schema';
+import { listSpeakersQuery, speakerBody, speakerPatchBody } from '@/schemas/speakers.schema.js';
+import { localeParams, slugParams } from '@/schemas/common.schema.js';
 import {
   errorResponse,
   listSpeakersResponse,
   getSpeakerResponse,
   speakerWriteResponse,
-} from '@/schemas/responses/speakers';
+} from '@/schemas/responses/speakers.js';
 import {
   listSpeakers,
   getSpeaker,
@@ -15,7 +15,7 @@ import {
   updateSpeaker,
   patchSpeaker,
   deleteSpeaker,
-} from '@/controllers/speakers.controller';
+} from '@/controllers/speakers.controller.js';
 
 const TAGS = ['speakers'];
 const localeSlugParams = localeParams.extend({ slug: z.string() });

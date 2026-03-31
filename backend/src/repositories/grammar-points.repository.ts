@@ -1,5 +1,5 @@
-import { prisma } from '@/config/prisma';
-import { buildSceneInclude } from '@/repositories/scenes.repository';
+import { prisma } from '@/config/prisma.js';
+import { buildSceneInclude } from '@/repositories/scenes.repository.js';
 import type { jlpt_level } from '@prisma/client';
 
 export async function findGrammarPoints(

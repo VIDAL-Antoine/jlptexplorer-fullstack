@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import * as speakersService from '@/services/speakers.service';
-import type { LocaleParams } from '@/schemas/common.schema';
-import type { SpeakerBody, SpeakerPatchBody, ListSpeakersQuery } from '@/schemas/speakers.schema';
+import * as speakersService from '@/services/speakers.service.js';
+import type { LocaleParams } from '@/schemas/common.schema.js';
+import type { SpeakerBody, SpeakerPatchBody, ListSpeakersQuery } from '@/schemas/speakers.schema.js';
 
 export async function listSpeakers(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListSpeakersQuery }>,

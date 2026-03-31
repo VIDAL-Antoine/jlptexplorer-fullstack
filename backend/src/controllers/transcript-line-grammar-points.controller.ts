@@ -1,9 +1,9 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import * as service from '@/services/transcript-line-grammar-points.service';
+import * as service from '@/services/transcript-line-grammar-points.service.js';
 import type {
   TranscriptLineGrammarPointCreateBody,
   TranscriptLineGrammarPointPatchBody,
-} from '@/schemas/transcript-line-grammar-points.schema';
+} from '@/schemas/transcript-line-grammar-points.schema.js';
 
 export async function createTranscriptLineGrammarPoint(
   request: FastifyRequest<{ Body: TranscriptLineGrammarPointCreateBody }>,

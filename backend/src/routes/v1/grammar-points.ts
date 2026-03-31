@@ -6,15 +6,15 @@ import {
   grammarPointParams,
   grammarPointAdminParams,
   grammarPointScenesQuery,
-} from '@/schemas/grammar-points.schema';
-import { localeParams } from '@/schemas/common.schema';
+} from '@/schemas/grammar-points.schema.js';
+import { localeParams } from '@/schemas/common.schema.js';
 import {
   errorResponse,
   grammarPointAdminResponse,
   listGrammarPointsResponse,
   getGrammarPointResponse,
   getGrammarPointScenesResponse,
-} from '@/schemas/responses/grammar-points';
+} from '@/schemas/responses/grammar-points.js';
 import {
   listGrammarPoints,
   getGrammarPoint,
@@ -23,7 +23,7 @@ import {
   updateGrammarPoint,
   patchGrammarPoint,
   deleteGrammarPoint,
-} from '@/controllers/grammar-points.controller';
+} from '@/controllers/grammar-points.controller.js';
 
 const TAGS = ['grammar-points'];
 

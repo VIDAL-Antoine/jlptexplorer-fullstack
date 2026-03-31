@@ -1,10 +1,10 @@
-import * as repo from '@/repositories/transcript-line-grammar-points.repository';
-import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository';
-import { findTranscriptLineByIdAll } from '@/repositories/transcript-lines.repository';
+import * as repo from '@/repositories/transcript-line-grammar-points.repository.js';
+import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository.js';
+import { findTranscriptLineByIdAll } from '@/repositories/transcript-lines.repository.js';
 import type {
   TranscriptLineGrammarPointCreateBody,
   TranscriptLineGrammarPointPatchBody,
-} from '@/schemas/transcript-line-grammar-points.schema';
+} from '@/schemas/transcript-line-grammar-points.schema.js';
 
 async function resolveGrammarPointSlug(slug: string): Promise<number> {
   const points = await findGrammarPointsBySlugIn([slug]);

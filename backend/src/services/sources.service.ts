@@ -1,5 +1,5 @@
-import { flattenSource, flattenGrammarPoint, flattenScene } from '@/utils/flatten';
-import * as sourcesRepository from '@/repositories/sources.repository';
+import { flattenSource, flattenGrammarPoint, flattenScene } from '@/utils/flatten.js';
+import * as sourcesRepository from '@/repositories/sources.repository.js';
 import type { source_type } from '@prisma/client';
 
 export async function listSources(

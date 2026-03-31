@@ -1,10 +1,13 @@
-import { parseTime } from '@/utils/parse-time';
-import { flattenTranscriptLineFull, flattenTranscriptLineAll } from '@/utils/flatten';
-import * as transcriptLinesRepository from '@/repositories/transcript-lines.repository';
-import * as scenesRepository from '@/repositories/scenes.repository';
-import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository';
-import { findSpeakersBySlugIn } from '@/repositories/speakers.repository';
-import type { TranscriptLineCreateBody, TranscriptLineUpdateBody } from '@/schemas/transcript-lines.schema';
+import { parseTime } from '@/utils/parse-time.js';
+import { flattenTranscriptLineFull, flattenTranscriptLineAll } from '@/utils/flatten.js';
+import * as transcriptLinesRepository from '@/repositories/transcript-lines.repository.js';
+import * as scenesRepository from '@/repositories/scenes.repository.js';
+import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.repository.js';
+import { findSpeakersBySlugIn } from '@/repositories/speakers.repository.js';
+import type {
+  TranscriptLineCreateBody,
+  TranscriptLineUpdateBody,
+} from '@/schemas/transcript-lines.schema.js';
 
 async function resolveGrammarPointSlugs(slugs: string[]): Promise<Map<string, number>> {
   if (!slugs.length) {
@@ -95,7 +98,12 @@ export async function createTranscriptLine(body: TranscriptLineCreateBody) {
       ? {
           transcript_line_grammar_points: {
             create: grammar_points.map(
-              ({ slug, start_index, end_index, matched_form }: {
+              ({
+                slug,
+                start_index,
+                end_index,
+                matched_form,
+              }: {
                 slug: string;
                 start_index?: number;
                 end_index?: number;
@@ -131,7 +139,12 @@ export async function updateTranscriptLine(id: number, body: TranscriptLineUpdat
   ]);
 
   const resolvedGrammarPoints = (grammar_points ?? []).map(
-    ({ slug, start_index, end_index, matched_form }: {
+    ({
+      slug,
+      start_index,
+      end_index,
+      matched_form,
+    }: {
       slug: string;
       start_index?: number;
       end_index?: number;
@@ -154,10 +167,12 @@ export async function updateTranscriptLine(id: number, body: TranscriptLineUpdat
         ? {
             translations: {
               deleteMany: {},
-              create: Object.entries(translations).map(([locale, translation]: [string, string]) => ({
-                locale,
-                translation,
-              })),
+              create: Object.entries(translations).map(
+                ([locale, translation]: [string, string]) => ({
+                  locale,
+                  translation,
+                }),
+              ),
             },
           }
         : { translations: { deleteMany: {} } }),

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { jlptLevel } from '@/schemas/grammar-points.schema';
-import { sourceType } from '@/schemas/sources.schema';
+import { jlptLevel } from '@/schemas/grammar-points.schema.js';
+import { sourceType } from '@/schemas/sources.schema.js';
 
 export const errorResponse = z.object({ error: z.string() });
 

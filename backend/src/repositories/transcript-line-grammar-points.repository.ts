@@ -1,4 +1,4 @@
-import { prisma } from '@/config/prisma';
+import { prisma } from '@/config/prisma.js';
 
 export async function findTranscriptLineGrammarPointById(id: number) {
   return prisma.transcript_line_grammar_points.findUnique({ where: { id } });

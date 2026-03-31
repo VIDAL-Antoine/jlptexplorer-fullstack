@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { speakerResponse, sourceResponse, grammarPointResponse, errorResponse } from './primitives';
+import { speakerResponse, sourceResponse, grammarPointResponse, errorResponse } from './primitives.js';
 
 export { errorResponse, speakerResponse };
 

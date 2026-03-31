@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { jlptLevel } from '@/schemas/grammar-points.schema';
-import { sourceType } from '@/schemas/sources.schema';
-import { grammarPointResponse, sourceResponse, sceneResponse, errorResponse } from './primitives';
+import { jlptLevel } from '@/schemas/grammar-points.schema.js';
+import { sourceType } from '@/schemas/sources.schema.js';
+import { grammarPointResponse, sourceResponse, sceneResponse, errorResponse } from './primitives.js';
 
 export { errorResponse, sceneResponse };
 

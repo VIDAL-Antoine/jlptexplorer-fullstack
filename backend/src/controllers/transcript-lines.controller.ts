@@ -1,12 +1,12 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import * as transcriptLinesService from '@/services/transcript-lines.service';
-import type { LocaleParams } from '@/schemas/common.schema';
+import * as transcriptLinesService from '@/services/transcript-lines.service.js';
+import type { LocaleParams } from '@/schemas/common.schema.js';
 import type {
   TranscriptLineCreateBody,
   TranscriptLineUpdateBody,
   TranscriptLinePatchBody,
   ListTranscriptLinesQuery,
-} from '@/schemas/transcript-lines.schema';
+} from '@/schemas/transcript-lines.schema.js';
 
 export async function listTranscriptLines(
   request: FastifyRequest<{ Params: LocaleParams; Querystring: ListTranscriptLinesQuery }>,

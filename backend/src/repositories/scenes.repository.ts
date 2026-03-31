@@ -1,4 +1,4 @@
-import { prisma } from '@/config/prisma';
+import { prisma } from '@/config/prisma.js';
 import type { Prisma } from '@prisma/client';
 
 export function buildSceneInclude(locale: string) {

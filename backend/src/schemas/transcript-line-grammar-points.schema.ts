@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { idParams } from './common.schema';
+import { idParams } from './common.schema.js';
 
 export const transcriptLineGrammarPointCreateBody = z.object({
   transcript_line_id: z.number().int().positive(),

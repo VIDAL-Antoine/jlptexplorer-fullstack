@@ -1,14 +1,14 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { listSourcesQuery, sourceBody, sourcePatchBody, sourceSceneQuery } from '@/schemas/sources.schema';
-import { localeParams, slugParams } from '@/schemas/common.schema';
+import { listSourcesQuery, sourceBody, sourcePatchBody, sourceSceneQuery } from '@/schemas/sources.schema.js';
+import { localeParams, slugParams } from '@/schemas/common.schema.js';
 import {
   errorResponse,
   listSourcesResponse,
   getSourceResponse,
   getSourceScenesResponse,
   sourceWriteResponse,
-} from '@/schemas/responses/sources';
+} from '@/schemas/responses/sources.js';
 import {
   listSources,
   getSource,
@@ -17,7 +17,7 @@ import {
   updateSource,
   patchSource,
   deleteSource,
-} from '@/controllers/sources.controller';
+} from '@/controllers/sources.controller.js';
 
 const TAGS = ['sources'];
 const localeSlugParams = localeParams.extend({ slug: z.string() });
