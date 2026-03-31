@@ -21,6 +21,8 @@ export async function transcriptLineGrammarPointsAdminRoutes(server: FastifyInst
     '/',
     {
       schema: {
+        operationId: 'createTranscriptLineGrammarPoint',
+        summary: 'Link a grammar point to a transcript line',
         tags: TAGS,
         body: transcriptLineGrammarPointCreateBody,
         response: { 201: tlgpWriteResponse, 400: errorResponse },
@@ -32,6 +34,8 @@ export async function transcriptLineGrammarPointsAdminRoutes(server: FastifyInst
     '/:id',
     {
       schema: {
+        operationId: 'patchTranscriptLineGrammarPoint',
+        summary: 'Update a transcript line grammar point link',
         tags: TAGS,
         params: transcriptLineGrammarPointParams,
         body: transcriptLineGrammarPointPatchBody,
@@ -44,6 +48,8 @@ export async function transcriptLineGrammarPointsAdminRoutes(server: FastifyInst
     '/:id',
     {
       schema: {
+        operationId: 'deleteTranscriptLineGrammarPoint',
+        summary: 'Remove a grammar point link from a transcript line',
         tags: TAGS,
         params: transcriptLineGrammarPointParams,
         response: { 404: errorResponse, 400: errorResponse },

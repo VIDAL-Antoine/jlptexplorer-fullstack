@@ -27,6 +27,8 @@ export async function sourcesPublicRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'listSources',
+        summary: 'List sources',
         tags: TAGS,
         params: localeParams,
         querystring: listSourcesQuery,
@@ -39,6 +41,8 @@ export async function sourcesPublicRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'getSource',
+        summary: 'Get a source by slug',
         tags: TAGS,
         params: localeSlugParams,
         response: { 200: getSourceResponse, 404: errorResponse },
@@ -50,6 +54,8 @@ export async function sourcesPublicRoutes(server: FastifyInstance) {
     '/:slug/scenes',
     {
       schema: {
+        operationId: 'getSourceScenes',
+        summary: 'List scenes for a source',
         tags: TAGS,
         params: localeSlugParams,
         querystring: sourceSceneQuery,
@@ -65,6 +71,8 @@ export async function sourcesAdminRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'createSource',
+        summary: 'Create a source',
         tags: TAGS,
         body: sourceBody,
         response: { 201: sourceWriteResponse },
@@ -76,6 +84,8 @@ export async function sourcesAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'updateSource',
+        summary: 'Replace a source',
         tags: TAGS,
         params: slugParams,
         body: sourceBody,
@@ -88,6 +98,8 @@ export async function sourcesAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'patchSource',
+        summary: 'Partially update a source',
         tags: TAGS,
         params: slugParams,
         body: sourcePatchBody,
@@ -100,6 +112,8 @@ export async function sourcesAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'deleteSource',
+        summary: 'Delete a source',
         tags: TAGS,
         params: slugParams,
         response: { 404: errorResponse },

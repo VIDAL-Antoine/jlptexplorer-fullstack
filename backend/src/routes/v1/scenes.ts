@@ -32,6 +32,8 @@ export async function scenesPublicRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'listScenes',
+        summary: 'List scenes',
         tags: TAGS,
         params: localeParams,
         querystring: listScenesQuery,
@@ -44,6 +46,8 @@ export async function scenesPublicRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'getScene',
+        summary: 'Get a scene by ID',
         tags: TAGS,
         params: sceneParams,
         response: { 200: sceneResponse, 404: errorResponse },
@@ -55,6 +59,8 @@ export async function scenesPublicRoutes(server: FastifyInstance) {
     '/:id/translations',
     {
       schema: {
+        operationId: 'updateSceneTranslations',
+        summary: 'Update scene translations',
         tags: TAGS,
         params: updateTranslationsParams,
         body: updateTranslationsBody,
@@ -70,6 +76,8 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'createScene',
+        summary: 'Create a scene',
         tags: TAGS,
         body: sceneBody,
         response: { 201: sceneWriteResponse, 400: errorResponse },
@@ -81,6 +89,8 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'updateScene',
+        summary: 'Replace a scene',
         tags: TAGS,
         params: adminSceneParams,
         body: sceneBody,
@@ -93,6 +103,8 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'patchScene',
+        summary: 'Partially update a scene',
         tags: TAGS,
         params: adminSceneParams,
         body: scenePatchBody,
@@ -105,6 +117,8 @@ export async function scenesAdminRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'deleteScene',
+        summary: 'Delete a scene',
         tags: TAGS,
         params: adminSceneParams,
         response: { 400: errorResponse },

@@ -30,6 +30,8 @@ export async function transcriptLinesPublicRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'listTranscriptLines',
+        summary: 'List transcript lines',
         tags: TAGS,
         params: localeParams,
         querystring: listTranscriptLinesQuery,
@@ -42,6 +44,8 @@ export async function transcriptLinesPublicRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'getTranscriptLine',
+        summary: 'Get a transcript line by ID',
         tags: TAGS,
         params: transcriptLineParams,
         response: { 200: transcriptLineReadResponse, 404: errorResponse },
@@ -56,6 +60,8 @@ export async function transcriptLinesAdminRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'createTranscriptLine',
+        summary: 'Create a transcript line',
         tags: TAGS,
         body: transcriptLineCreateBody,
         response: { 201: transcriptLineWriteResponse, 400: errorResponse },
@@ -67,6 +73,8 @@ export async function transcriptLinesAdminRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'updateTranscriptLine',
+        summary: 'Replace a transcript line',
         tags: TAGS,
         params: transcriptLineAdminParams,
         body: transcriptLineUpdateBody,
@@ -79,6 +87,8 @@ export async function transcriptLinesAdminRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'patchTranscriptLine',
+        summary: 'Partially update a transcript line',
         tags: TAGS,
         params: transcriptLineAdminParams,
         body: transcriptLinePatchBody,
@@ -91,6 +101,8 @@ export async function transcriptLinesAdminRoutes(server: FastifyInstance) {
     '/:id',
     {
       schema: {
+        operationId: 'deleteTranscriptLine',
+        summary: 'Delete a transcript line',
         tags: TAGS,
         params: transcriptLineAdminParams,
         response: { 404: errorResponse, 400: errorResponse },

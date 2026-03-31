@@ -25,6 +25,8 @@ export async function speakersPublicRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'listSpeakers',
+        summary: 'List speakers',
         tags: TAGS,
         params: localeParams,
         querystring: listSpeakersQuery,
@@ -37,6 +39,8 @@ export async function speakersPublicRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'getSpeaker',
+        summary: 'Get a speaker by slug',
         tags: TAGS,
         params: localeSlugParams,
         response: { 200: getSpeakerResponse, 404: errorResponse },
@@ -51,6 +55,8 @@ export async function speakersAdminRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'createSpeaker',
+        summary: 'Create a speaker',
         tags: TAGS,
         body: speakerBody,
         response: { 201: speakerWriteResponse },
@@ -62,6 +68,8 @@ export async function speakersAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'updateSpeaker',
+        summary: 'Replace a speaker',
         tags: TAGS,
         params: slugParams,
         body: speakerBody,
@@ -74,6 +82,8 @@ export async function speakersAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'patchSpeaker',
+        summary: 'Partially update a speaker',
         tags: TAGS,
         params: slugParams,
         body: speakerPatchBody,
@@ -86,6 +96,8 @@ export async function speakersAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'deleteSpeaker',
+        summary: 'Delete a speaker',
         tags: TAGS,
         params: slugParams,
         response: { 404: errorResponse },

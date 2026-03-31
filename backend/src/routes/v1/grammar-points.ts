@@ -32,6 +32,8 @@ export async function grammarPointsPublicRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'listGrammarPoints',
+        summary: 'List grammar points',
         tags: TAGS,
         params: localeParams,
         querystring: listGrammarPointsQuery,
@@ -44,6 +46,8 @@ export async function grammarPointsPublicRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'getGrammarPoint',
+        summary: 'Get a grammar point by slug',
         tags: TAGS,
         params: grammarPointParams,
         response: { 200: getGrammarPointResponse, 404: errorResponse },
@@ -55,6 +59,8 @@ export async function grammarPointsPublicRoutes(server: FastifyInstance) {
     '/:slug/scenes',
     {
       schema: {
+        operationId: 'getGrammarPointScenes',
+        summary: 'List scenes for a grammar point',
         tags: TAGS,
         params: grammarPointParams,
         querystring: grammarPointScenesQuery,
@@ -70,6 +76,8 @@ export async function grammarPointsAdminRoutes(server: FastifyInstance) {
     '/',
     {
       schema: {
+        operationId: 'createGrammarPoint',
+        summary: 'Create a grammar point',
         tags: TAGS,
         body: grammarPointBody,
         response: { 201: grammarPointAdminResponse },
@@ -81,6 +89,8 @@ export async function grammarPointsAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'updateGrammarPoint',
+        summary: 'Replace a grammar point',
         tags: TAGS,
         params: grammarPointAdminParams,
         body: grammarPointBody,
@@ -93,6 +103,8 @@ export async function grammarPointsAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'patchGrammarPoint',
+        summary: 'Partially update a grammar point',
         tags: TAGS,
         params: grammarPointAdminParams,
         body: grammarPointPatchBody,
@@ -105,6 +117,8 @@ export async function grammarPointsAdminRoutes(server: FastifyInstance) {
     '/:slug',
     {
       schema: {
+        operationId: 'deleteGrammarPoint',
+        summary: 'Delete a grammar point',
         tags: TAGS,
         params: grammarPointAdminParams,
         response: { 404: errorResponse },
