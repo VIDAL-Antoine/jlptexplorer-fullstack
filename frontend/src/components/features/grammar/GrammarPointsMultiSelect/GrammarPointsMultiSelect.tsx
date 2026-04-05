@@ -36,6 +36,7 @@ export function GrammarPointsMultiSelect({ grammarPoints, value, onChange, place
       searchable
       clearable
       w="100%"
+      maxDropdownHeight={640}
       renderOption={({ option }) => {
         const gp = gpBySlug[option.value];
         const color = gp

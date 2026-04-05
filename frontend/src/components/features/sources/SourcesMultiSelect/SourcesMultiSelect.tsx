@@ -39,6 +39,7 @@ export function SourcesMultiSelect({ sources, value, onChange, placeholder }: Pr
       searchable
       clearable
       w="100%"
+      maxDropdownHeight={640}
       renderOption={({ option }) => {
         const Icon = getSourceTypeIcon(slugToType[option.value] as Source['type']);
         return (
