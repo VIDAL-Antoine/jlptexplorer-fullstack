@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { idParams } from './common.schema.js';
 
+export const listTranscriptLineGrammarPointsQuery = z.object({
+  transcript_line_id: z.string().optional(),
+});
+
 export const transcriptLineGrammarPointCreateBody = z.object({
   transcript_line_id: z.number().int().positive(),
   grammar_point_slug: z.string(),
@@ -18,6 +22,9 @@ export const transcriptLineGrammarPointPatchBody = z.object({
 
 export const transcriptLineGrammarPointParams = idParams;
 
+export type ListTranscriptLineGrammarPointsQuery = z.infer<
+  typeof listTranscriptLineGrammarPointsQuery
+>;
 export type TranscriptLineGrammarPointCreateBody = z.infer<
   typeof transcriptLineGrammarPointCreateBody
 >;

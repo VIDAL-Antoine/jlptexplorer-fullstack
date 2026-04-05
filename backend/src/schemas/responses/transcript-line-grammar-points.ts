@@ -3,7 +3,6 @@ import { errorResponse } from './primitives.js';
 
 export { errorResponse };
 
-// create/patch: raw junction record, no nested grammar_points
 export const tlgpWriteResponse = z.object({
   id: z.number().int(),
   transcript_line_id: z.number().int(),
@@ -12,3 +11,5 @@ export const tlgpWriteResponse = z.object({
   end_index: z.number().int().nullable(),
   matched_form: z.string().nullable(),
 });
+
+export const listTlgpResponse = z.array(tlgpWriteResponse);

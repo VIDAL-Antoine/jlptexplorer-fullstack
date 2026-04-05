@@ -14,6 +14,14 @@ async function resolveGrammarPointSlug(slug: string): Promise<number> {
   return points[0].id;
 }
 
+export async function listTranscriptLineGrammarPoints(filters: { transcriptLineId?: number }) {
+  return repo.findAllTranscriptLineGrammarPoints(filters);
+}
+
+export async function getTranscriptLineGrammarPointById(id: number) {
+  return repo.findTranscriptLineGrammarPointById(id);
+}
+
 export async function createTranscriptLineGrammarPoint(body: TranscriptLineGrammarPointCreateBody) {
   const { transcript_line_id, grammar_point_slug, start_index, end_index, matched_form } = body;
 

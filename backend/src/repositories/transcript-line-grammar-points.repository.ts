@@ -1,5 +1,14 @@
 import { prisma } from '@/config/prisma.js';
 
+export async function findAllTranscriptLineGrammarPoints(filters: {
+  transcriptLineId?: number;
+}) {
+  return prisma.transcript_line_grammar_points.findMany({
+    where: filters.transcriptLineId !== undefined ? { transcript_line_id: filters.transcriptLineId } : {},
+    orderBy: [{ transcript_line_id: 'asc' }, { start_index: 'asc' }],
+  });
+}
+
 export async function findTranscriptLineGrammarPointById(id: number) {
   return prisma.transcript_line_grammar_points.findUnique({ where: { id } });
 }
