@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import {
   transcriptLineGrammarPointCreateBody,
+  transcriptLineGrammarPointUpdateBody,
   transcriptLineGrammarPointPatchBody,
   transcriptLineGrammarPointParams,
   listTranscriptLineGrammarPointsQuery,
@@ -14,6 +15,7 @@ import {
   listTranscriptLineGrammarPoints,
   getTranscriptLineGrammarPointById,
   createTranscriptLineGrammarPoint,
+  updateTranscriptLineGrammarPoint,
   patchTranscriptLineGrammarPoint,
   deleteTranscriptLineGrammarPoint,
 } from '@/controllers/transcript-line-grammar-points.controller.js';
@@ -59,6 +61,20 @@ export async function transcriptLineGrammarPointsAdminRoutes(server: FastifyInst
       },
     },
     createTranscriptLineGrammarPoint,
+  );
+  server.put(
+    '/:id',
+    {
+      schema: {
+        operationId: 'updateTranscriptLineGrammarPoint',
+        summary: 'Replace a transcript line grammar point link',
+        tags: TAGS,
+        params: transcriptLineGrammarPointParams,
+        body: transcriptLineGrammarPointUpdateBody,
+        response: { 200: tlgpWriteResponse, 404: errorResponse, 400: errorResponse },
+      },
+    },
+    updateTranscriptLineGrammarPoint,
   );
   server.patch(
     '/:id',

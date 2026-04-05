@@ -29,7 +29,7 @@ export async function updateTranscriptLineGrammarPoint(
     grammar_point_id?: number;
     start_index?: number;
     end_index?: number;
-    matched_form?: string;
+    matched_form?: string | null;
   },
 ) {
   return prisma.transcript_line_grammar_points.update({ where: { id }, data });

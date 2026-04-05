@@ -2,6 +2,7 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as service from '@/services/transcript-line-grammar-points.service.js';
 import type {
   TranscriptLineGrammarPointCreateBody,
+  TranscriptLineGrammarPointUpdateBody,
   TranscriptLineGrammarPointPatchBody,
   ListTranscriptLineGrammarPointsQuery,
 } from '@/schemas/transcript-line-grammar-points.schema.js';
@@ -37,6 +38,21 @@ export async function createTranscriptLineGrammarPoint(
 ) {
   const result = await service.createTranscriptLineGrammarPoint(request.body);
   return reply.status(201).send(result);
+}
+
+export async function updateTranscriptLineGrammarPoint(
+  request: FastifyRequest<{ Params: { id: string }; Body: TranscriptLineGrammarPointUpdateBody }>,
+  reply: FastifyReply,
+) {
+  const id = parseInt(request.params.id, 10);
+  if (isNaN(id)) {
+    return reply.status(400).send({ error: 'Invalid id' });
+  }
+  const result = await service.updateTranscriptLineGrammarPoint(id, request.body);
+  if (!result) {
+    return reply.status(404).send({ error: 'Transcript line grammar point not found' });
+  }
+  return result;
 }
 
 export async function patchTranscriptLineGrammarPoint(

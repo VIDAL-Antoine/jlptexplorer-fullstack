@@ -3,6 +3,7 @@ import { findGrammarPointsBySlugIn } from '@/repositories/grammar-points.reposit
 import { findTranscriptLineByIdAll } from '@/repositories/transcript-lines.repository.js';
 import type {
   TranscriptLineGrammarPointCreateBody,
+  TranscriptLineGrammarPointUpdateBody,
   TranscriptLineGrammarPointPatchBody,
 } from '@/schemas/transcript-line-grammar-points.schema.js';
 
@@ -40,6 +41,26 @@ export async function createTranscriptLineGrammarPoint(body: TranscriptLineGramm
     start_index,
     end_index,
     ...(matched_form !== undefined ? { matched_form } : {}),
+  });
+}
+
+export async function updateTranscriptLineGrammarPoint(
+  id: number,
+  body: TranscriptLineGrammarPointUpdateBody,
+) {
+  const existing = await repo.findTranscriptLineGrammarPointById(id);
+  if (!existing) {
+    return null;
+  }
+
+  const { grammar_point_slug, start_index, end_index, matched_form } = body;
+  const grammarPointId = await resolveGrammarPointSlug(grammar_point_slug);
+
+  return repo.updateTranscriptLineGrammarPoint(id, {
+    grammar_point_id: grammarPointId,
+    start_index,
+    end_index,
+    matched_form: matched_form ?? null,
   });
 }
 
