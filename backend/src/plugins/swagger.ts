@@ -37,6 +37,22 @@ export async function registerSwagger(server: FastifyInstance) {
     uiConfig: {
       docExpansion: 'list',
       deepLinking: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      operationsSorter: (a: any, b: any) => {
+        const methodOrder: Record<string, number> = {
+          get: 0,
+          post: 1,
+          put: 2,
+          patch: 3,
+          delete: 4,
+        };
+        const methodDiff =
+          (methodOrder[a.get('method')] ?? 9) - (methodOrder[b.get('method')] ?? 9);
+        if (methodDiff !== 0) {
+          return methodDiff;
+        }
+        return a.get('path').localeCompare(b.get('path'));
+      },
     },
   });
 }
