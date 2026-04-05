@@ -20,7 +20,7 @@ export default function GrammarPointPage() {
   const searchParams = useSearchParams();
   const t = useTranslations('GrammarPointPage');
 
-  const sourceFilterRaw = searchParams.get('source') ?? '';
+  const sourceFilterRaw = searchParams.get('sources') ?? '';
   const sourceFilter = sourceFilterRaw ? sourceFilterRaw.split(',') : [];
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
@@ -37,7 +37,7 @@ export default function GrammarPointPage() {
   function updateParams(sources: string[], newPage: number) {
     const params = new URLSearchParams();
     if (sources.length > 0) {
-      params.set('source', sources.join(','));
+      params.set('sources', sources.join(','));
     }
     if (newPage > 1) {
       params.set('page', String(newPage));
