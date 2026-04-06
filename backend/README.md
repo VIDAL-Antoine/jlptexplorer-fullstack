@@ -6,11 +6,10 @@ Fastify REST API for JLPTExplorer, serving grammar points, scenes, sources, spea
 
 - **Framework:** Fastify 5
 - **ORM:** Prisma 7 + `@prisma/adapter-pg` (PostgreSQL)
-- **Validation:** Zod + fastify-type-provider-zod
+- **Validation:** Zod
 - **API docs:** Swagger UI (available at `/docs` in dev)
-- **Language:** TypeScript (CommonJS, compiled to `dist/`)
+- **Language:** TypeScript
 - **Package manager:** npm
-- **Dev runner:** tsx watch
 
 ## Getting started
 
@@ -20,7 +19,10 @@ npm install
 
 # 2. Set up environment
 cp .env.example .env
-# Edit .env and set DATABASE_URL to your local PostgreSQL connection string
+# Edit .env variables:
+#   DATABASE_URL   - PostgreSQL connection string (used by Prisma)
+#   FRONTEND_URL   - origin allowed by CORS
+#   ADMIN_API_KEY  - secret key required in the X-Api-Key header for admin routes
 
 # 3. Generate Prisma client
 npm run db:generate
@@ -45,8 +47,6 @@ npm run db:migrate   # create and apply a migration
 npm run db:push      # push schema changes without migration (dev only)
 npm run db:studio    # open Prisma Studio
 ```
-
-> Use `npm run db:*` instead of `npx prisma` directly to ensure the local Prisma version is used.
 
 ## Structure
 
