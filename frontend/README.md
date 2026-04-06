@@ -4,13 +4,11 @@ Next.js frontend for JLPTExplorer. Displays grammar points illustrated by YouTub
 
 ## Stack
 
-- **Framework:** Next.js 16 (App Router) + React 19
-- **UI:** Mantine 8 + Tabler Icons
+- **Framework:** Next.js (App Router) + React
+- **UI:** Mantine
 - **i18n:** next-intl (English + French, routes under `app/[lang]/`)
-- **Language:** TypeScript 5.9
-- **Package manager:** yarn 4
-- **Testing:** Jest + React Testing Library
-- **Storybook:** component development
+- **Language:** TypeScript
+- **Package manager:** yarn
 
 ## Getting started
 
@@ -31,9 +29,6 @@ yarn dev            # http://localhost:3000
 ```bash
 yarn dev             # start dev server (http://localhost:3000)
 yarn build           # production build
-yarn test            # lint + typecheck + jest
-yarn jest            # run tests only
-yarn storybook       # component dev server
 ```
 
 ## Structure
