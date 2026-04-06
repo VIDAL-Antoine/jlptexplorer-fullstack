@@ -4,13 +4,13 @@ A Japanese grammar learning app (inspired by Bunpro) focused on contextual examp
 
 ## Stack
 
-- **Frontend:** Next.js 16 + React 19 + Mantine 8 + next-intl — `yarn`
-- **Backend:** Fastify 5 + Prisma 7 + PostgreSQL + Zod — `npm`
+- **Frontend:** Next.js + React + Mantine + next-intl — `yarn`
+- **Backend:** Fastify + Prisma + Zod — `npm`
 - **Database:** PostgreSQL
 
 ## Getting started
 
 Each package has its own README with full setup instructions:
 
-- [`backend/`](./backend) — start here, sets up the database and API
-- [`frontend/`](./frontend) — start after the backend is running
+- [`backend/`](./backend) — sets up the database and API
+- [`frontend/`](./frontend) — sets up the UI
