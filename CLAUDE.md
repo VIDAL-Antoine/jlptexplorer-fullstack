@@ -174,7 +174,8 @@ type(scope): description
 
 - Lowercase, no period at end
 - **Types:** `feat`, `fix`, `refactor`, `chore`, `docs`
-- **Scopes:** `frontend`, `backend` (omit if both are affected)
+- **Scopes:** `frontend`, `backend` (omit for root-only changes)
+- **One commit per scope** — never mix frontend, backend, and root changes in a single commit. If a task touches multiple scopes, create one commit per scope.
 
 ### Branches
 
