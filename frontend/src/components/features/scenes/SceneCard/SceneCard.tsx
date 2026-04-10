@@ -13,7 +13,6 @@ import {
   ScrollArea,
   Text,
   Title,
-  Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { AnnotatedText } from '@/components/features/grammar/AnnotatedText/AnnotatedText';
@@ -144,17 +143,15 @@ export function SceneCard({
               >
                 <Group gap="xs" align="baseline" mb={2}>
                   {line.start_time !== null && line.start_time !== undefined && (
-                    <Tooltip label={t('seekTo', { time: formatTime(line.start_time) })} withArrow>
-                      <Text
-                        size="xs"
-                        c="dimmed"
-                        ff="monospace"
-                        style={{ cursor: 'pointer', flexShrink: 0 }}
-                        onClick={() => playerRef.current?.seekTo(line.start_time!)}
-                      >
-                        {formatTime(line.start_time)}
-                      </Text>
-                    </Tooltip>
+                    <Text
+                      size="xs"
+                      c="dimmed"
+                      ff="monospace"
+                      style={{ cursor: 'pointer', flexShrink: 0 }}
+                      onClick={() => playerRef.current?.seekTo(line.start_time!)}
+                    >
+                      {formatTime(line.start_time)}
+                    </Text>
                   )}
                   {line.speakers && (
                     <Text size="xs" fw={700} c="dimmed">

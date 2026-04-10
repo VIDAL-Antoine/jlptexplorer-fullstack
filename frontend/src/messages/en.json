@@ -70,8 +70,7 @@
     "all": "All"
   },
   "SceneCard": {
-    "transcript": "Transcript",
-    "seekTo": "Seek to {time}"
+    "transcript": "Transcript"
   },
   "HomePage": {
     "tagline": "Japanese grammar in context — from JLPT N5 to JLPT N1",

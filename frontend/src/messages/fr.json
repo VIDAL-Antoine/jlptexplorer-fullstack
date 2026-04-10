@@ -70,8 +70,7 @@
     "all": "Tous"
   },
   "SceneCard": {
-    "transcript": "Transcription",
-    "seekTo": "Aller à {time}"
+    "transcript": "Transcription"
   },
   "HomePage": {
     "tagline": "La grammaire japonaise avec du contexte — du JLPT N5 au JLPT N1",
