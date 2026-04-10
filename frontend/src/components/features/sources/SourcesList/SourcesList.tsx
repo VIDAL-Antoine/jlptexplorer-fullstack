@@ -23,6 +23,7 @@ import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
 import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
+import { routes } from '@/lib/routes';
 import { getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
 
@@ -133,7 +134,7 @@ export function SourcesList() {
               radius="md"
               withBorder
               component={Link}
-              href={`/sources/${source.slug}`}
+              href={routes.sources.detail(source.slug)}
             >
               <Card.Section pos="relative">
                 <AspectRatio ratio={2 / 3}>

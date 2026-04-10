@@ -25,6 +25,7 @@ import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { type SceneWithDetails } from '@/lib/api';
+import { routes } from '@/lib/routes';
 import { deduplicateAndSortGrammarPoints } from '@/utils/grammarPoints';
 import { getLocalizedName, getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
@@ -92,7 +93,7 @@ export function SceneCard({
         <Group mb="xs" align="flex-start" justify="space-between" wrap="nowrap">
           <Anchor
             component={Link}
-            href={`/sources/${scene.sources.slug}`}
+            href={routes.sources.detail(scene.sources.slug)}
             underline="never"
             c="inherit"
           >
@@ -100,7 +101,7 @@ export function SceneCard({
           </Anchor>
           <Anchor
             component={Link}
-            href={`/sources?type=${scene.sources.type}`}
+            href={routes.sources.list(scene.sources.type)}
             mt={4}
             lh={0}
             style={{ flexShrink: 0 }}

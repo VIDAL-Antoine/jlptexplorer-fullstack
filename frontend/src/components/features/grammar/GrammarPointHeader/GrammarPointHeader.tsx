@@ -2,6 +2,7 @@ import { Badge, Group, Stack, Text, Title } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { Link } from '@/i18n/navigation';
 import { type GrammarPointDetail } from '@/lib/api/types';
+import { routes } from '@/lib/routes';
 
 type Props = {
   grammarPoint: GrammarPointDetail;
@@ -17,7 +18,7 @@ export function GrammarPointHeader({ grammarPoint, tScenes }: Props) {
           color={JLPT_LEVEL_COLORS[grammarPoint.jlpt_level]}
           size="lg"
           component={Link}
-          href={`/grammar-points?jlpt_level=${grammarPoint.jlpt_level}`}
+          href={routes.grammarPoints.list(grammarPoint.jlpt_level)}
           style={{ cursor: 'pointer' }}
         >
           {grammarPoint.jlpt_level}

@@ -22,6 +22,7 @@ import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
 import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
+import { routes } from '@/lib/routes';
 
 const LEVELS = Object.keys(JLPT_LEVEL_COLORS);
 const PAGE_SIZE = 100;
@@ -140,7 +141,7 @@ export function GrammarPointsList() {
                   radius="md"
                   withBorder
                   component={Link}
-                  href={`/grammar-points/${gp.slug}`}
+                  href={routes.grammarPoints.detail(gp.slug)}
                   td="none"
                 >
                   <Group justify="space-between" wrap="nowrap" align="flex-start">

@@ -3,6 +3,7 @@ import { Anchor, Badge, Box, Group, HoverCard, Stack, Text } from '@mantine/core
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { Link } from '@/i18n/navigation';
 import { type TranscriptLineGrammarPoint } from '@/lib/api';
+import { routes } from '@/lib/routes';
 import { buildSegments } from '@/utils/annotations';
 
 interface AnnotatedTextProps {
@@ -82,14 +83,14 @@ export function AnnotatedText({
                         color={gpColor}
                         variant="light"
                         component={Link}
-                        href={`/grammar-points?jlpt_level=${gp.jlpt_level}`}
+                        href={routes.grammarPoints.list(gp.jlpt_level)}
                         style={{ cursor: 'pointer', flexShrink: 0 }}
                       >
                         {gp.jlpt_level}
                       </Badge>
                       <Anchor
                         component={Link}
-                        href={`/grammar-points/${gp.slug}`}
+                        href={routes.grammarPoints.detail(gp.slug)}
                         c={`var(--mantine-color-${gpColor}-6)`}
                         underline="hover"
                         style={{ display: 'flex', alignItems: 'center', gap: 4 }}
