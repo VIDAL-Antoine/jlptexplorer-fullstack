@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import {
@@ -45,6 +45,26 @@ export function SceneCard({
 }: SceneCardProps) {
   const t = useTranslations('SceneCard');
   const [opened, { toggle }] = useDisclosure(defaultOpened);
+  const [activeIds, setActiveIds] = useState<Set<number>>(
+    () => new Set(currentGrammarPointIds ?? [])
+  );
+
+  useEffect(() => {
+    setActiveIds(new Set(currentGrammarPointIds ?? []));
+  }, [currentGrammarPointIds]);
+
+  const toggleGrammarPoint = (id: number) => {
+    setActiveIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   const {
     speakerNameLang,
     sourceTitleLang,
@@ -103,9 +123,8 @@ export function SceneCard({
         <ScrollArea.Autosize mah={360} type="auto">
           {scene.transcript_lines.map((line) => {
             const grammarPoints = line.transcript_line_grammar_points;
-            const hasGrammar = currentGrammarPointIds
-              ? grammarPoints.some((tlgp) => currentGrammarPointIds.includes(tlgp.grammar_point_id))
-              : grammarPoints.length > 0;
+            const hasGrammar =
+              activeIds.size > 0 && grammarPoints.some((tlgp) => activeIds.has(tlgp.grammar_point_id));
 
             return (
               <Box
@@ -145,7 +164,7 @@ export function SceneCard({
                   <AnnotatedText
                     text={line.japanese_text}
                     annotations={line.transcript_line_grammar_points}
-                    currentGrammarPointIds={currentGrammarPointIds}
+                    currentGrammarPointIds={Array.from(activeIds)}
                     script={grammarPointTranscriptScript}
                   />
                 </Text>
@@ -156,59 +175,27 @@ export function SceneCard({
                 )}
                 {grammarPoints.length > 0 && (
                   <Group gap="xs" mt="xs">
-                    {(() => {
-                      const currentRanges = currentGrammarPointIds
-                        ? grammarPoints
-                            .filter(
-                              (t) =>
-                                currentGrammarPointIds.includes(t.grammar_point_id) &&
-                                t.start_index !== null &&
-                                t.end_index !== null
-                            )
-                            .map((t) => ({ start: t.start_index!, end: t.end_index! }))
-                        : [];
-
-                      const overlapsCurrentRange = (start: number, end: number) =>
-                        currentRanges.some((r) => start < r.end && r.start < end);
-
-                      const siblingIds = new Set(
-                        grammarPoints
-                          .filter(
-                            (t) =>
-                              !currentGrammarPointIds?.includes(t.grammar_point_id) &&
-                              t.start_index !== null &&
-                              t.end_index !== null &&
-                              overlapsCurrentRange(t.start_index!, t.end_index!)
-                          )
-                          .map((t) => t.grammar_point_id)
+                    {deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) => {
+                      if (!tlgp.grammar_points) {
+                        return null;
+                      }
+                      const isActive = activeIds.has(tlgp.grammar_point_id);
+                      return (
+                        <Badge
+                          key={tlgp.id}
+                          size="xs"
+                          color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
+                          variant={isActive ? 'filled' : 'light'}
+                          tt="lowercase"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => toggleGrammarPoint(tlgp.grammar_point_id)}
+                        >
+                          {grammarPointTranscriptScript === 'romaji'
+                            ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
+                            : tlgp.grammar_points.title}
+                        </Badge>
                       );
-
-                      return deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) => {
-                        if (!tlgp.grammar_points) {
-                          return null;
-                        }
-                        const isPrimary = currentGrammarPointIds?.includes(tlgp.grammar_point_id);
-                        const isSibling = !isPrimary && siblingIds.has(tlgp.grammar_point_id);
-                        const variant = isPrimary ? 'filled' : isSibling ? 'outline' : 'light';
-
-                        return (
-                          <Badge
-                            key={tlgp.id}
-                            size="xs"
-                            color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
-                            variant={variant}
-                            tt="lowercase"
-                            component={Link}
-                            href={`/grammar-points/${tlgp.grammar_points.slug}`}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            {grammarPointTranscriptScript === 'romaji'
-                              ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
-                              : tlgp.grammar_points.title}
-                          </Badge>
-                        );
-                      });
-                    })()}
+                    })}
                   </Group>
                 )}
               </Box>
