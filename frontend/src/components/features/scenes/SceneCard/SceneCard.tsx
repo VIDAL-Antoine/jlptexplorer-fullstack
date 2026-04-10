@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronUp, IconExternalLink } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import {
   Anchor,
@@ -125,7 +125,8 @@ export function SceneCard({
           {scene.transcript_lines.map((line) => {
             const grammarPoints = line.transcript_line_grammar_points;
             const hasGrammar =
-              activeIds.size > 0 && grammarPoints.some((tlgp) => activeIds.has(tlgp.grammar_point_id));
+              activeIds.size > 0 &&
+              grammarPoints.some((tlgp) => activeIds.has(tlgp.grammar_point_id));
 
             return (
               <Box
@@ -190,6 +191,14 @@ export function SceneCard({
                           tt="lowercase"
                           style={{ cursor: 'pointer' }}
                           onClick={() => toggleGrammarPoint(tlgp.grammar_point_id)}
+                          rightSection={
+                            <Anchor
+                              component={Link}
+                              href={routes.grammarPoints.detail(tlgp.grammar_points.slug)}
+                            >
+                              <IconExternalLink size={10} />
+                            </Anchor>
+                          }
                         >
                           {grammarPointTranscriptScript === 'romaji'
                             ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
