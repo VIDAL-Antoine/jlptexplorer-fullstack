@@ -195,6 +195,7 @@ export function SceneCard({
                             <Anchor
                               component={Link}
                               href={routes.grammarPoints.detail(tlgp.grammar_points.slug)}
+                              onClick={(e) => e.stopPropagation()}
                             >
                               <IconExternalLink size={10} />
                             </Anchor>
