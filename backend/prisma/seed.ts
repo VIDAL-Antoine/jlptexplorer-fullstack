@@ -6441,7 +6441,7 @@ const scenes = [
           { slug: 'wo-object', start_index: 21, end_index: 22, matched_form: 'を' },
           { slug: 'tame-ni-purpose', start_index: 24, end_index: 27, matched_form: 'ために' },
           { slug: 'te-kuru', start_index: 27, end_index: 32, matched_form: 'やってきた' },
-          { slug: 'ta-past', start_index: 30, end_index: 32, matched_form: 'きた' },
+          { slug: 'ta-past', start_index: 27, end_index: 32, matched_form: 'やってきた' },
         ],
       },
       {
