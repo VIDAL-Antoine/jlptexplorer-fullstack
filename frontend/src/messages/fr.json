@@ -56,7 +56,7 @@
   "GrammarPointsList": {
     "searchPlaceholder": "Rechercher...",
     "all": "Tous",
-    "noScenes": "Bientôt disponible"
+    "comingSoon": "Bientôt disponible"
   },
   "SourceTypes": {
     "game": "Jeu",

@@ -3,29 +3,14 @@
 import { useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-  AspectRatio,
-  Box,
-  Card,
-  Center,
-  Chip,
-  Group,
-  Image,
-  Pagination,
-  SimpleGrid,
-  Skeleton,
-  Stack,
-  Text,
-  TextInput,
-} from '@mantine/core';
+import { Center, Chip, Group, Pagination, SimpleGrid, Stack, TextInput } from '@mantine/core';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
-import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
-import { routes } from '@/lib/routes';
-import { getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
+import { SourceCard } from './SourceCard';
+import { SourcesListSkeleton } from './SourcesListSkeleton';
 
 const VALID_SOURCE_TYPES = new Set(['game', 'anime', 'movie', 'series', 'music']);
 const PAGE_SIZE = 24;
@@ -60,28 +45,7 @@ export function SourcesList() {
   );
 
   if (!data) {
-    return (
-      <Stack mt="xl">
-        <Skeleton height={46} radius="sm" />
-        <Group gap="xs">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} height={38} width={80} radius="xl" />
-          ))}
-        </Group>
-        <SimpleGrid cols={{ base: 3, sm: 3, md: 4, lg: 8 }}>
-          {Array.from({ length: 16 }).map((_, i) => (
-            <Card key={i} shadow="sm" padding="md" radius="md" withBorder>
-              <Card.Section>
-                <AspectRatio ratio={2 / 3}>
-                  <Skeleton height="100%" radius={0} />
-                </AspectRatio>
-              </Card.Section>
-              <Skeleton height={14} mt="sm" radius="sm" />
-            </Card>
-          ))}
-        </SimpleGrid>
-      </Stack>
-    );
+    return <SourcesListSkeleton />;
   }
 
   const filtered = data.sources.filter((s) => {
@@ -124,41 +88,9 @@ export function SourcesList() {
         cols={{ base: 3, sm: 3, md: 4, lg: 8 }}
         style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.15s' }}
       >
-        {filtered.map((source) => {
-          const TypeIcon = getSourceTypeIcon(source.type);
-          return (
-            <Card
-              key={source.id}
-              shadow="sm"
-              padding="md"
-              radius="md"
-              withBorder
-              component={Link}
-              href={routes.sources.detail(source.slug)}
-            >
-              <Card.Section pos="relative">
-                <AspectRatio ratio={2 / 3}>
-                  <Image
-                    src={source.cover_image_url}
-                    alt={source.title ?? ''}
-                    fit="cover"
-                    fallbackSrc="https://placehold.co/400x600?text=No+image"
-                  />
-                </AspectRatio>
-                <Box pos="absolute" top={6} right={6} bg="rgba(0,0,0,0.5)" w={28} h={28} bdrs="50%">
-                  <Center w="100%" h="100%">
-                    <TypeIcon size={16} color="white" />
-                  </Center>
-                </Box>
-              </Card.Section>
-              <Center w="100%">
-                <Text fw={600} size="md" mt="sm">
-                  {getLocalizedTitle(source, sourceTitleLang)}
-                </Text>
-              </Center>
-            </Card>
-          );
-        })}
+        {filtered.map((source) => (
+          <SourceCard key={source.id} source={source} sourceTitleLang={sourceTitleLang} />
+        ))}
       </SimpleGrid>
 
       {data.totalPages > 1 && (

@@ -1,34 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
-import { IconChevronDown, IconChevronUp, IconExternalLink } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import {
   Anchor,
   AspectRatio,
-  Badge,
-  Box,
   Button,
   Card,
   Collapse,
   Group,
   ScrollArea,
-  Text,
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { AnnotatedText } from '@/components/features/grammar/AnnotatedText/AnnotatedText';
 import {
   YoutubePlayer,
   type YoutubePlayerHandle,
 } from '@/components/features/scenes/YoutubePlayer/YoutubePlayer';
-import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Link } from '@/i18n/navigation';
 import { type SceneWithDetails } from '@/lib/api';
 import { routes } from '@/lib/routes';
-import { deduplicateAndSortGrammarPoints } from '@/utils/grammarPoints';
-import { getLocalizedName, getLocalizedTitle } from '@/utils/i18n';
+import { getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
-import { formatTime } from '@/utils/time';
+import { TranscriptLine } from './TranscriptLine';
 
 interface SceneCardProps {
   scene: SceneWithDetails;
@@ -121,94 +115,18 @@ export function SceneCard({
 
       <Collapse in={opened}>
         <ScrollArea.Autosize mah={360} type="auto">
-          {scene.transcript_lines.map((line) => {
-            const grammarPoints = line.transcript_line_grammar_points;
-            const hasGrammar =
-              activeIds.size > 0 &&
-              grammarPoints.some((tlgp) => activeIds.has(tlgp.grammar_point_id));
-
-            return (
-              <Box
-                key={line.id}
-                p="xs"
-                bdrs="var(--mantine-radius-sm)"
-                bg={
-                  hasGrammar
-                    ? 'light-dark(var(--mantine-color-yellow-0), rgba(255, 212, 59, 0.08))'
-                    : undefined
-                }
-                style={
-                  hasGrammar ? { borderLeft: '3px solid var(--mantine-color-yellow-5)' } : undefined
-                }
-              >
-                <Group gap="xs" align="baseline" mb={2}>
-                  {line.start_time !== null && line.start_time !== undefined && (
-                    <Text
-                      size="xs"
-                      c="dimmed"
-                      ff="monospace"
-                      style={{ cursor: 'pointer', flexShrink: 0 }}
-                      onClick={() => playerRef.current?.seekTo(line.start_time!)}
-                    >
-                      {formatTime(line.start_time)}
-                    </Text>
-                  )}
-                  {line.speakers && (
-                    <Text size="xs" fw={700} c="dimmed">
-                      {getLocalizedName(line.speakers, speakerNameLang)}
-                    </Text>
-                  )}
-                </Group>
-                <Text size="md" fw={hasGrammar ? 600 : 400} lang="ja">
-                  <AnnotatedText
-                    text={line.japanese_text}
-                    annotations={line.transcript_line_grammar_points}
-                    currentGrammarPointIds={Array.from(activeIds)}
-                    script={grammarPointTranscriptScript}
-                  />
-                </Text>
-                {showDialogueTranslations && line.translation && (
-                  <Text size="sm" c="dimmed" mt={2}>
-                    {line.translation}
-                  </Text>
-                )}
-                {grammarPoints.length > 0 && (
-                  <Group gap="xs" mt="xs">
-                    {deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) => {
-                      if (!tlgp.grammar_points) {
-                        return null;
-                      }
-                      const isActive = activeIds.has(tlgp.grammar_point_id);
-                      return (
-                        <Badge
-                          key={tlgp.id}
-                          size="xs"
-                          color={JLPT_LEVEL_COLORS[tlgp.grammar_points.jlpt_level]}
-                          variant={isActive ? 'filled' : 'light'}
-                          tt="lowercase"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => toggleGrammarPoint(tlgp.grammar_point_id)}
-                          rightSection={
-                            <Anchor
-                              component={Link}
-                              href={routes.grammarPoints.detail(tlgp.grammar_points.slug)}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <IconExternalLink size={10} />
-                            </Anchor>
-                          }
-                        >
-                          {grammarPointTranscriptScript === 'romaji'
-                            ? (tlgp.grammar_points.romaji ?? tlgp.grammar_points.title)
-                            : tlgp.grammar_points.title}
-                        </Badge>
-                      );
-                    })}
-                  </Group>
-                )}
-              </Box>
-            );
-          })}
+          {scene.transcript_lines.map((line) => (
+            <TranscriptLine
+              key={line.id}
+              line={line}
+              activeIds={activeIds}
+              onToggle={toggleGrammarPoint}
+              onSeek={(time) => playerRef.current?.seekTo(time)}
+              showDialogueTranslations={showDialogueTranslations}
+              speakerNameLang={speakerNameLang}
+              script={grammarPointTranscriptScript}
+            />
+          ))}
         </ScrollArea.Autosize>
       </Collapse>
     </Card>

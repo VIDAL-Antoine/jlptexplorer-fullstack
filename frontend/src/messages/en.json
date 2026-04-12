@@ -56,7 +56,7 @@
   "GrammarPointsList": {
     "searchPlaceholder": "Search...",
     "all": "All",
-    "noScenes": "Coming soon"
+    "comingSoon": "Coming soon"
   },
   "SourceTypes": {
     "game": "Game",
