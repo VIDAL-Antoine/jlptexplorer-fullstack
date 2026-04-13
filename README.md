@@ -5,12 +5,12 @@ A Japanese grammar learning app (inspired by Bunpro) focused on contextual examp
 ## Stack
 
 - **Frontend:** Next.js + React + Mantine + next-intl — `yarn`
-- **Backend:** Fastify + Prisma + Zod — `npm`
+- **Backend:** NestJS + Prisma + class-validator — `npm`
 - **Database:** PostgreSQL
 
 ## Getting started
 
 Each package has its own README with full setup instructions:
 
-- [`backend/`](./backend) — sets up the database and API
-- [`frontend/`](./frontend) — sets up the UI
+- [`rest-jlptexplorer/`](./rest-jlptexplorer) — NestJS backend
+- [`www-jlptexplorer/`](./www-jlptexplorer) — sets up the UI
