@@ -28,19 +28,7 @@ JLPTExplorer is a Japanese grammar learning app similar to Bunpro, but focused o
 - **Validation:** class-validator + class-transformer (ValidationPipe)
 - **API docs:** Swagger UI (`@nestjs/swagger`, available at `/docs`)
 - **Auth:** ApiKeyGuard (`x-api-key` header, `timingSafeEqual`)
-- **Database:** PostgreSQL (local, same DB as Fastify backend)
-- **Language:** TypeScript (`module: nodenext`, CommonJS output)
-- **Package manager:** npm
-- **Testing:** Jest (unit tests with mocked dependencies)
-
-### Backend — NestJS (`/rest-jlptexplorer`)
-
-- **Framework:** NestJS 11 (Express platform)
-- **ORM:** Prisma 7 (same multi-file schema, `@prisma/adapter-pg`)
-- **Validation:** class-validator + class-transformer (ValidationPipe)
-- **API docs:** Swagger UI (`@nestjs/swagger`, available at `/docs`)
-- **Auth:** ApiKeyGuard (`x-api-key` header, `timingSafeEqual`)
-- **Database:** PostgreSQL (local, same DB as Fastify backend)
+- **Database:** PostgreSQL
 - **Language:** TypeScript (`module: nodenext`, CommonJS output)
 - **Package manager:** npm
 - **Testing:** Jest (unit tests with mocked dependencies)
@@ -92,7 +80,7 @@ jlptexplorer-fullstack/
 │       ├── constants/
 │       │   └── jlpt.ts                  ← JLPT level color mapping
 │       └── theme.ts                     ← Mantine theme config
-└── rest-jlptexplorer/                   ← NestJS backend
+└── rest-jlptexplorer/                   ← backend
     ├── src/
     │   ├── main.ts                      ← NestJS entry (port 8080)
     │   ├── app.module.ts                ← Root module (imports all domain modules)
@@ -139,7 +127,7 @@ jlptexplorer-fullstack/
 - **NestJS cross-module deps**: repositories are exported from their module and imported by modules that need them (e.g. `ScenesModule` imports `SourcesModule`, `GrammarPointsModule`, `SpeakersModule`)
 - **NestJS enum validation**: use Prisma enums (`jlpt_level`, `source_type`) directly in DTOs with `@IsIn(Object.values(enum))` — avoids duplicate type definitions and keeps service/DTO types aligned
 - **Path alias `@/`** available in both `www-jlptexplorer` (`src/`) and `rest-jlptexplorer` (`src/`)
-- **i18n** via next-intl: all frontend routes under `app/[lang]/`, messages in `src/messages/`
+- **i18n** via next-intl: all www-jlptexplorer routes under `app/[lang]/`, messages in `src/messages/`
 - **SettingsContext** manages 5 user preferences in localStorage: speaker name language, source title language, dialogue translations visibility, grammar point script (romaji/kana), grammar match mode (`scene` | `transcript_line`)
 - **`grammar_match`** query param on `/scenes` and `/sources`: `scene` returns scenes that have at least one grammar match anywhere in their transcript lines; `transcript_line` filters by individual line
 - `transcript_lines.japanese_text` — field was renamed from `text` to `japanese_text`
@@ -178,8 +166,8 @@ type(scope): description
 
 - Lowercase, no period at end
 - **Types:** `feat`, `fix`, `refactor`, `chore`, `docs`
-- **Scopes:** `frontend`, `backend` (omit for root-only changes)
-- **One commit per scope** — never mix frontend, backend, and root changes in a single commit. If a task touches multiple scopes, create one commit per scope.
+- **Scopes:** `www-jlptexplorer`, `rest-jlptexplorer` (omit for root-only changes)
+- **One commit per scope** — never mix www-jlptexplorer, rest-jlptexplorer, and root changes in a single commit. If a task touches multiple scopes, create one commit per scope.
 
 ### Branches
 
