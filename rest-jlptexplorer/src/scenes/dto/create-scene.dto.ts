@@ -7,6 +7,7 @@ import {
   IsArray,
   ValidateNested,
   IsObject,
+  IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -77,9 +78,11 @@ export class CreateSceneDto {
   youtube_video_id: string;
 
   @ApiProperty({ description: 'Start time in seconds or "MM:SS"' })
+  @IsNotEmpty()
   start_time: number | string;
 
   @ApiProperty({ description: 'End time in seconds or "MM:SS"' })
+  @IsNotEmpty()
   end_time: number | string;
 
   @ApiPropertyOptional()
