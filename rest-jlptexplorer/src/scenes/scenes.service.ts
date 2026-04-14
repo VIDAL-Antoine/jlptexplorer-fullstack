@@ -154,7 +154,7 @@ export class ScenesService {
           : [];
 
         return {
-          start_time: line.start_time ?? null,
+          start_time: line.start_time != null ? parseTime(line.start_time) : null,
           speaker_id,
           japanese_text: line.japanese_text,
           translations,

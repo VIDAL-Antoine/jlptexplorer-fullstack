@@ -28,11 +28,13 @@ export class CreateTranscriptLineDto {
   @Min(1)
   scene_id: number;
 
-  @ApiPropertyOptional({ example: 122, nullable: true })
+  @ApiPropertyOptional({
+    example: '0:46',
+    description: 'Time in seconds or "mm:ss" / "hh:mm:ss"',
+    nullable: true,
+  })
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  start_time?: number | null;
+  start_time?: string | number | null;
 
   @ApiPropertyOptional({ example: 1, nullable: true })
   @IsOptional()

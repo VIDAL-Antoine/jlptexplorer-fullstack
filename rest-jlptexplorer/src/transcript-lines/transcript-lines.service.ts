@@ -3,6 +3,7 @@ import { TranscriptLinesRepository } from './transcript-lines.repository';
 import { CreateTranscriptLineDto } from './dto/create-transcript-line.dto';
 import { UpdateTranscriptLineDto } from './dto/update-transcript-line.dto';
 import { QueryTranscriptLineDto } from './dto/query-transcript-line.dto';
+import { parseTime } from '../utils/parse-time';
 
 @Injectable()
 export class TranscriptLinesService {
@@ -19,12 +20,18 @@ export class TranscriptLinesService {
   }
 
   create(dto: CreateTranscriptLineDto) {
-    return this.repo.create(dto);
+    return this.repo.create({
+      ...dto,
+      start_time: dto.start_time != null ? parseTime(dto.start_time) : null,
+    });
   }
 
   async update(id: number, dto: UpdateTranscriptLineDto) {
     await this.findOne(id);
-    return this.repo.update(id, dto);
+    return this.repo.update(id, {
+      ...dto,
+      start_time: dto.start_time != null ? parseTime(dto.start_time) : null,
+    });
   }
 
   async remove(id: number) {

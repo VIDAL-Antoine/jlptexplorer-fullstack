@@ -35,11 +35,13 @@ class GrammarPointAnnotationDto {
 }
 
 class SceneTranscriptLineDto {
-  @ApiPropertyOptional({ example: 122, nullable: true })
+  @ApiPropertyOptional({
+    example: '0:46',
+    description: 'Time in seconds or "mm:ss" / "hh:mm:ss"',
+    nullable: true,
+  })
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  start_time?: number | null;
+  start_time?: string | number | null;
 
   @ApiPropertyOptional({ example: 'songoku', nullable: true })
   @IsOptional()
