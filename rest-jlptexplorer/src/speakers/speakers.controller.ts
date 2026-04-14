@@ -10,12 +10,20 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiSecurity, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiSecurity,
+  ApiOperation,
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+} from '@nestjs/swagger';
 import { SpeakersService } from './speakers.service';
 import { CreateSpeakerDto } from './dto/create-speaker.dto';
 import { UpdateSpeakerDto } from './dto/update-speaker.dto';
 import { QuerySpeakerDto } from './dto/query-speaker.dto';
 import { ApiKeyGuard } from '../common/guards/api-key.guard';
+import { SpeakerEntity, PaginatedSpeakersEntity } from './entities/speaker.entity';
 
 @ApiTags('speakers')
 @Controller('speakers')
@@ -23,12 +31,15 @@ export class SpeakersController {
   constructor(private readonly speakersService: SpeakersService) {}
 
   @ApiOperation({ summary: 'List all speakers' })
+  @ApiOkResponse({ type: PaginatedSpeakersEntity })
   @Get()
   findAll(@Query() query: QuerySpeakerDto) {
     return this.speakersService.findAll(query);
   }
 
   @ApiOperation({ summary: 'Get a speaker by slug' })
+  @ApiOkResponse({ type: SpeakerEntity })
+  @ApiNotFoundResponse()
   @Get(':slug')
   findOne(@Param('slug') slug: string) {
     return this.speakersService.findOne(slug);
@@ -37,6 +48,7 @@ export class SpeakersController {
   @UseGuards(ApiKeyGuard)
   @ApiSecurity('x-api-key')
   @ApiOperation({ summary: 'Create a speaker' })
+  @ApiCreatedResponse({ type: SpeakerEntity })
   @Post()
   create(@Body() createSpeakerDto: CreateSpeakerDto) {
     return this.speakersService.create(createSpeakerDto);
@@ -45,6 +57,8 @@ export class SpeakersController {
   @UseGuards(ApiKeyGuard)
   @ApiSecurity('x-api-key')
   @ApiOperation({ summary: 'Replace a speaker (full update)' })
+  @ApiOkResponse({ type: SpeakerEntity })
+  @ApiNotFoundResponse()
   @Put(':slug')
   replace(
     @Param('slug') slug: string,
@@ -56,6 +70,8 @@ export class SpeakersController {
   @UseGuards(ApiKeyGuard)
   @ApiSecurity('x-api-key')
   @ApiOperation({ summary: 'Partially update a speaker' })
+  @ApiOkResponse({ type: SpeakerEntity })
+  @ApiNotFoundResponse()
   @Patch(':slug')
   update(
     @Param('slug') slug: string,
@@ -67,6 +83,8 @@ export class SpeakersController {
   @UseGuards(ApiKeyGuard)
   @ApiSecurity('x-api-key')
   @ApiOperation({ summary: 'Delete a speaker' })
+  @ApiOkResponse({ type: SpeakerEntity })
+  @ApiNotFoundResponse()
   @Delete(':slug')
   remove(@Param('slug') slug: string) {
     return this.speakersService.remove(slug);

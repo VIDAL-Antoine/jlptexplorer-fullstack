@@ -73,7 +73,7 @@ export class TranscriptLinesRepository {
     return this.prisma.transcript_lines.create({
       data: {
         scene_id: dto.scene_id,
-        start_time: dto.start_time ?? null,
+        start_time: (dto.start_time as number | null | undefined) ?? null,
         speaker_id: dto.speaker_id ?? null,
         japanese_text: dto.japanese_text,
         translations: dto.translations
@@ -95,7 +95,10 @@ export class TranscriptLinesRepository {
     return this.prisma.transcript_lines.update({
       where: { id },
       data: {
-        ...fields,
+        scene_id: fields.scene_id,
+        start_time: (fields.start_time as number | null | undefined),
+        speaker_id: fields.speaker_id,
+        japanese_text: fields.japanese_text,
         translations: translations
           ? { deleteMany: {}, create: translations }
           : undefined,
