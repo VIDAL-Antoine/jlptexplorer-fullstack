@@ -46,8 +46,8 @@ export class ScenesController {
   @ApiSecurity('x-api-key')
   @ApiOperation({ summary: 'Replace a scene (full update)' })
   @Put(':id')
-  replace(@Param('id') id: string, @Body() updateSceneDto: UpdateSceneDto) {
-    return this.scenesService.update(+id, updateSceneDto);
+  replace(@Param('id') id: string, @Body() createSceneDto: CreateSceneDto) {
+    return this.scenesService.update(+id, createSceneDto);
   }
 
   @UseGuards(ApiKeyGuard)

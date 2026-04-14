@@ -50,9 +50,9 @@ export class TranscriptLinesController {
   @Put(':id')
   replace(
     @Param('id') id: string,
-    @Body() updateTranscriptLineDto: UpdateTranscriptLineDto,
+    @Body() createTranscriptLineDto: CreateTranscriptLineDto,
   ) {
-    return this.transcriptLinesService.update(+id, updateTranscriptLineDto);
+    return this.transcriptLinesService.update(+id, createTranscriptLineDto);
   }
 
   @UseGuards(ApiKeyGuard)

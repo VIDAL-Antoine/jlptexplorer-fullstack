@@ -52,11 +52,11 @@ export class TranscriptLineGrammarPointsController {
   replace(
     @Param('id') id: string,
     @Body()
-    updateTranscriptLineGrammarPointDto: UpdateTranscriptLineGrammarPointDto,
+    createTranscriptLineGrammarPointDto: CreateTranscriptLineGrammarPointDto,
   ) {
     return this.transcriptLineGrammarPointsService.update(
       +id,
-      updateTranscriptLineGrammarPointDto,
+      createTranscriptLineGrammarPointDto,
     );
   }
 

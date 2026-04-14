@@ -58,9 +58,9 @@ export class GrammarPointsController {
   @Put(':slug')
   replace(
     @Param('slug') slug: string,
-    @Body() updateGrammarPointDto: UpdateGrammarPointDto,
+    @Body() createGrammarPointDto: CreateGrammarPointDto,
   ) {
-    return this.grammarPointsService.update(slug, updateGrammarPointDto);
+    return this.grammarPointsService.update(slug, createGrammarPointDto);
   }
 
   @UseGuards(ApiKeyGuard)

@@ -58,9 +58,9 @@ export class SourcesController {
   @Put(':slug')
   replace(
     @Param('slug') slug: string,
-    @Body() updateSourceDto: UpdateSourceDto,
+    @Body() createSourceDto: CreateSourceDto,
   ) {
-    return this.sourcesService.update(slug, updateSourceDto);
+    return this.sourcesService.update(slug, createSourceDto);
   }
 
   @UseGuards(ApiKeyGuard)

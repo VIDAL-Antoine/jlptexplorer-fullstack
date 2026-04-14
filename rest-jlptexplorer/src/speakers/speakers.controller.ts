@@ -48,9 +48,9 @@ export class SpeakersController {
   @Put(':slug')
   replace(
     @Param('slug') slug: string,
-    @Body() updateSpeakerDto: UpdateSpeakerDto,
+    @Body() createSpeakerDto: CreateSpeakerDto,
   ) {
-    return this.speakersService.update(slug, updateSpeakerDto);
+    return this.speakersService.update(slug, createSpeakerDto);
   }
 
   @UseGuards(ApiKeyGuard)
