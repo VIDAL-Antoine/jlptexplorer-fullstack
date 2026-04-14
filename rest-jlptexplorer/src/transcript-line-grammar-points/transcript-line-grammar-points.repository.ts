@@ -1,48 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import type { Prisma } from '@prisma/client';
+import { CreateTranscriptLineGrammarPointDto } from './dto/create-transcript-line-grammar-point.dto';
+import { UpdateTranscriptLineGrammarPointDto } from './dto/update-transcript-line-grammar-point.dto';
 
 @Injectable()
 export class TranscriptLineGrammarPointsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAllTranscriptLineGrammarPoints(filters: { transcriptLineId?: number }) {
+  findAll() {
     return this.prisma.transcript_line_grammar_points.findMany({
-      where:
-        filters.transcriptLineId !== undefined
-          ? { transcript_line_id: filters.transcriptLineId }
-          : {},
-      orderBy: [{ transcript_line_id: 'asc' }, { start_index: 'asc' }],
+      include: { grammar_points: true },
     });
   }
 
-  findTranscriptLineGrammarPointById(id: number) {
+  findOne(id: number) {
     return this.prisma.transcript_line_grammar_points.findUnique({
       where: { id },
+      include: { grammar_points: true },
     });
   }
 
-  createTranscriptLineGrammarPoint(data: {
-    transcript_line_id: number;
-    grammar_point_id: number;
-    start_index?: number;
-    end_index?: number;
-    matched_form?: string;
-  }) {
-    return this.prisma.transcript_line_grammar_points.create({ data });
+  create(dto: CreateTranscriptLineGrammarPointDto) {
+    return this.prisma.transcript_line_grammar_points.create({
+      data: {
+        transcript_line_id: dto.transcript_line_id,
+        grammar_point_id: dto.grammar_point_id,
+        start_index: dto.start_index ?? null,
+        end_index: dto.end_index ?? null,
+        matched_form: dto.matched_form ?? null,
+      },
+      include: { grammar_points: true },
+    });
   }
 
-  updateTranscriptLineGrammarPoint(
-    id: number,
-    data: Prisma.transcript_line_grammar_pointsUncheckedUpdateInput,
-  ) {
+  update(id: number, dto: UpdateTranscriptLineGrammarPointDto) {
     return this.prisma.transcript_line_grammar_points.update({
       where: { id },
-      data,
+      data: {
+        transcript_line_id: dto.transcript_line_id,
+        grammar_point_id: dto.grammar_point_id,
+        start_index: dto.start_index,
+        end_index: dto.end_index,
+        matched_form: dto.matched_form,
+      },
+      include: { grammar_points: true },
     });
   }
 
-  deleteTranscriptLineGrammarPoint(id: number) {
+  remove(id: number) {
     return this.prisma.transcript_line_grammar_points.delete({ where: { id } });
   }
 }

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SpeakersController } from './speakers.controller';
 import { SpeakersService } from './speakers.service';
+import { SpeakersController } from './speakers.controller';
 import { SpeakersRepository } from './speakers.repository';
 
 @Module({

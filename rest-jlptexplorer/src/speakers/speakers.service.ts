@@ -1,142 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import {
-  flattenSpeaker,
-  flattenSource,
-  flattenGrammarPoint,
-} from '../utils/flatten';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SpeakersRepository } from './speakers.repository';
+import { CreateSpeakerDto } from './dto/create-speaker.dto';
+import { UpdateSpeakerDto } from './dto/update-speaker.dto';
+import { QuerySpeakerDto } from './dto/query-speaker.dto';
 
 @Injectable()
 export class SpeakersService {
-  constructor(private readonly speakersRepository: SpeakersRepository) {}
+  constructor(private readonly repo: SpeakersRepository) {}
 
-  async listSpeakers(
-    locale: string,
-    options: { slug?: string; page: number; limit: number },
-  ) {
-    const { slug, page, limit } = options;
-    const all = await this.speakersRepository.findSpeakers(locale);
-    const mapped = all
-      .map(flattenSpeaker)
-      .filter((s) => !slug || s.slug === slug);
-    const total = mapped.length;
-    return {
-      speakers: mapped.slice((page - 1) * limit, page * limit),
-      total,
-      page,
-      totalPages: Math.ceil(total / limit),
-    };
+  findAll(query: QuerySpeakerDto) {
+    return this.repo.findAll(query);
   }
 
-  async getSpeaker(slug: string, locale: string) {
-    const speaker = await this.speakersRepository.findSpeakerBySlug(
-      slug,
-      locale,
-    );
-    if (!speaker) return null;
-
-    return {
-      ...flattenSpeaker(speaker),
-      transcript_lines: speaker.transcript_lines.map((line) => ({
-        ...line,
-        scenes: {
-          ...line.scenes,
-          sources: flattenSource(line.scenes.sources),
-        },
-        transcript_line_grammar_points: line.transcript_line_grammar_points.map(
-          (tlgp) => ({
-            ...tlgp,
-            grammar_points: flattenGrammarPoint(tlgp.grammar_points),
-          }),
-        ),
-      })),
-    };
+  async findOne(slug: string) {
+    const speaker = await this.repo.findBySlug(slug);
+    if (!speaker) throw new NotFoundException(`Speaker "${slug}" not found`);
+    return speaker;
   }
 
-  async createSpeaker(data: {
-    slug: string;
-    name_japanese?: string;
-    image_url?: string;
-    translations: Record<string, string>;
-    descriptions?: Record<string, string>;
-  }) {
-    const speaker = await this.speakersRepository.createSpeaker(data);
-    return {
-      ...speaker,
-      translations: Object.fromEntries(
-        speaker.translations.map((t) => [
-          t.locale,
-          { name: t.name, description: t.description },
-        ]),
-      ),
-    };
+  create(dto: CreateSpeakerDto) {
+    return this.repo.create(dto);
   }
 
-  async updateSpeaker(
-    paramSlug: string,
-    data: {
-      slug: string;
-      name_japanese?: string;
-      image_url?: string;
-      translations: Record<string, string>;
-      descriptions?: Record<string, string>;
-    },
-  ) {
-    const existing = await this.speakersRepository.findSpeakerBySlug(
-      paramSlug,
-      'en',
-    );
-    if (!existing) return null;
-
-    const speaker = await this.speakersRepository.updateSpeaker(
-      paramSlug,
-      existing.id,
-      data,
-    );
-    return {
-      ...speaker,
-      translations: Object.fromEntries(
-        speaker.translations.map((t) => [
-          t.locale,
-          { name: t.name, description: t.description },
-        ]),
-      ),
-    };
+  async update(slug: string, dto: UpdateSpeakerDto) {
+    const existing = await this.findOne(slug);
+    return this.repo.update(existing.id, dto);
   }
 
-  async patchSpeaker(
-    paramSlug: string,
-    data: {
-      slug?: string;
-      name_japanese?: string;
-      image_url?: string;
-      translations?: Record<string, string>;
-      descriptions?: Record<string, string>;
-    },
-  ) {
-    const existing = await this.speakersRepository.findSpeakerBySlug(
-      paramSlug,
-      'en',
-    );
-    if (!existing) return null;
-
-    const speaker = await this.speakersRepository.patchSpeaker(
-      paramSlug,
-      existing.id,
-      data,
-    );
-    return {
-      ...speaker,
-      translations: Object.fromEntries(
-        speaker.translations.map((t) => [
-          t.locale,
-          { name: t.name, description: t.description },
-        ]),
-      ),
-    };
-  }
-
-  deleteSpeaker(slug: string) {
-    return this.speakersRepository.deleteSpeaker(slug);
+  async remove(slug: string) {
+    const existing = await this.findOne(slug);
+    return this.repo.remove(existing.id);
   }
 }

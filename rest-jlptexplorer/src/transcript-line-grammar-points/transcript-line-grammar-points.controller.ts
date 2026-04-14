@@ -2,150 +2,80 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Patch,
-  Delete,
-  Param,
-  Query,
   Body,
-  HttpCode,
-  NotFoundException,
-  ParseIntPipe,
+  Patch,
+  Put,
+  Param,
+  Delete,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiSecurity,
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiNoContentResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiSecurity, ApiOperation } from '@nestjs/swagger';
 import { TranscriptLineGrammarPointsService } from './transcript-line-grammar-points.service';
-import {
-  CreateTranscriptLineGrammarPointDto,
-  UpdateTranscriptLineGrammarPointDto,
-  PatchTranscriptLineGrammarPointDto,
-  ListTranscriptLineGrammarPointsQueryDto,
-} from './dto/transcript-line-grammar-point.dto';
+import { CreateTranscriptLineGrammarPointDto } from './dto/create-transcript-line-grammar-point.dto';
+import { UpdateTranscriptLineGrammarPointDto } from './dto/update-transcript-line-grammar-point.dto';
 import { ApiKeyGuard } from '../common/guards/api-key.guard';
-import { TlgpEntityResponseDto } from '../common/dto/tlgp.response.dto';
 
 @ApiTags('transcript-line-grammar-points')
-@Controller()
+@UseGuards(ApiKeyGuard)
+@ApiSecurity('x-api-key')
+@Controller('transcript-line-grammar-points')
 export class TranscriptLineGrammarPointsController {
   constructor(
-    private readonly tlgpService: TranscriptLineGrammarPointsService,
+    private readonly transcriptLineGrammarPointsService: TranscriptLineGrammarPointsService,
   ) {}
 
-  // ─── Admin (all routes are admin-only) ─────────────────────────────────────
-
-  @Get('transcript-line-grammar-points')
-  @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'List transcript line grammar point links',
-    operationId: 'listTranscriptLineGrammarPoints',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: [TlgpEntityResponseDto] })
-  listTranscriptLineGrammarPoints(
-    @Query() query: ListTranscriptLineGrammarPointsQueryDto,
-  ) {
-    return this.tlgpService.listTranscriptLineGrammarPoints({
-      transcriptLineId: query.transcript_line_id,
-    });
+  @ApiOperation({ summary: 'List all grammar point annotations' })
+  @Get()
+  findAll() {
+    return this.transcriptLineGrammarPointsService.findAll();
   }
 
-  @Get('transcript-line-grammar-points/:id')
-  @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'Get a transcript line grammar point link by id',
-    operationId: 'getTranscriptLineGrammarPoint',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: TlgpEntityResponseDto })
-  @ApiNotFoundResponse({ description: 'Transcript line grammar point not found' })
-  async getTranscriptLineGrammarPoint(@Param('id', ParseIntPipe) id: number) {
-    const result = await this.tlgpService.getTranscriptLineGrammarPointById(id);
-    if (!result)
-      throw new NotFoundException('Transcript line grammar point not found');
-    return result;
+  @ApiOperation({ summary: 'Get a grammar point annotation by id' })
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.transcriptLineGrammarPointsService.findOne(+id);
   }
 
-  @Post('transcript-line-grammar-points')
-  @UseGuards(ApiKeyGuard)
-  @HttpCode(201)
-  @ApiOperation({
-    summary: 'Link a grammar point to a transcript line',
-    operationId: 'createTranscriptLineGrammarPoint',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiCreatedResponse({ type: TlgpEntityResponseDto })
-  createTranscriptLineGrammarPoint(
-    @Body() body: CreateTranscriptLineGrammarPointDto,
+  @ApiOperation({ summary: 'Annotate a transcript line with a grammar point' })
+  @Post()
+  create(
+    @Body()
+    createTranscriptLineGrammarPointDto: CreateTranscriptLineGrammarPointDto,
   ) {
-    return this.tlgpService.createTranscriptLineGrammarPoint(body);
-  }
-
-  @Put('transcript-line-grammar-points/:id')
-  @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'Replace a transcript line grammar point link',
-    operationId: 'updateTranscriptLineGrammarPoint',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: TlgpEntityResponseDto })
-  @ApiNotFoundResponse({ description: 'Transcript line grammar point not found' })
-  async updateTranscriptLineGrammarPoint(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateTranscriptLineGrammarPointDto,
-  ) {
-    const result = await this.tlgpService.updateTranscriptLineGrammarPoint(
-      id,
-      body,
+    return this.transcriptLineGrammarPointsService.create(
+      createTranscriptLineGrammarPointDto,
     );
-    if (!result)
-      throw new NotFoundException('Transcript line grammar point not found');
-    return result;
   }
 
-  @Patch('transcript-line-grammar-points/:id')
-  @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'Update a transcript line grammar point link',
-    operationId: 'patchTranscriptLineGrammarPoint',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: TlgpEntityResponseDto })
-  @ApiNotFoundResponse({ description: 'Transcript line grammar point not found' })
-  async patchTranscriptLineGrammarPoint(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: PatchTranscriptLineGrammarPointDto,
+  @ApiOperation({ summary: 'Replace a grammar point annotation (full update)' })
+  @Put(':id')
+  replace(
+    @Param('id') id: string,
+    @Body()
+    updateTranscriptLineGrammarPointDto: UpdateTranscriptLineGrammarPointDto,
   ) {
-    const result = await this.tlgpService.patchTranscriptLineGrammarPoint(
-      id,
-      body,
+    return this.transcriptLineGrammarPointsService.update(
+      +id,
+      updateTranscriptLineGrammarPointDto,
     );
-    if (!result)
-      throw new NotFoundException('Transcript line grammar point not found');
-    return result;
   }
 
-  @Delete('transcript-line-grammar-points/:id')
-  @UseGuards(ApiKeyGuard)
-  @HttpCode(204)
-  @ApiOperation({
-    summary: 'Remove a grammar point link from a transcript line',
-    operationId: 'deleteTranscriptLineGrammarPoint',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiNoContentResponse({ description: 'Link deleted' })
-  async deleteTranscriptLineGrammarPoint(
-    @Param('id', ParseIntPipe) id: number,
+  @ApiOperation({ summary: 'Partially update a grammar point annotation' })
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body()
+    updateTranscriptLineGrammarPointDto: UpdateTranscriptLineGrammarPointDto,
   ) {
-    const result = await this.tlgpService.deleteTranscriptLineGrammarPoint(id);
-    if (!result)
-      throw new NotFoundException('Transcript line grammar point not found');
+    return this.transcriptLineGrammarPointsService.update(
+      +id,
+      updateTranscriptLineGrammarPointDto,
+    );
+  }
+
+  @ApiOperation({ summary: 'Delete a grammar point annotation' })
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.transcriptLineGrammarPointsService.remove(+id);
   }
 }

@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ScenesController } from './scenes.controller';
 import { ScenesService } from './scenes.service';
+import { ScenesController } from './scenes.controller';
 import { ScenesRepository } from './scenes.repository';
 import { SourcesModule } from '../sources/sources.module';
-import { GrammarPointsModule } from '../grammar-points/grammar-points.module';
 import { SpeakersModule } from '../speakers/speakers.module';
+import { GrammarPointsModule } from '../grammar-points/grammar-points.module';
 
 @Module({
-  imports: [SourcesModule, GrammarPointsModule, SpeakersModule],
+  imports: [SourcesModule, SpeakersModule, GrammarPointsModule],
   controllers: [ScenesController],
   providers: [ScenesService, ScenesRepository],
-  exports: [ScenesRepository],
 })
 export class ScenesModule {}

@@ -2,131 +2,73 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Patch,
-  Delete,
-  Param,
-  Query,
   Body,
-  HttpCode,
-  NotFoundException,
+  Patch,
+  Put,
+  Param,
+  Delete,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiSecurity,
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiNoContentResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiSecurity, ApiOperation } from '@nestjs/swagger';
 import { SpeakersService } from './speakers.service';
-import {
-  CreateSpeakerDto,
-  UpdateSpeakerDto,
-  PatchSpeakerDto,
-  ListSpeakersQueryDto,
-} from './dto/speaker.dto';
+import { CreateSpeakerDto } from './dto/create-speaker.dto';
+import { UpdateSpeakerDto } from './dto/update-speaker.dto';
+import { QuerySpeakerDto } from './dto/query-speaker.dto';
 import { ApiKeyGuard } from '../common/guards/api-key.guard';
-import {
-  PaginatedSpeakersResponseDto,
-  SpeakerDetailResponseDto,
-  SpeakerAdminResponseDto,
-} from '../common/dto/speaker.response.dto';
 
 @ApiTags('speakers')
-@Controller()
+@Controller('speakers')
 export class SpeakersController {
   constructor(private readonly speakersService: SpeakersService) {}
 
-  // ─── Public ────────────────────────────────────────────────────────────────
-
-  @Get(':locale/speakers')
-  @ApiOperation({ summary: 'List speakers', operationId: 'listSpeakers' })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiOkResponse({ type: PaginatedSpeakersResponseDto })
-  listSpeakers(
-    @Param('locale') locale: string,
-    @Query() query: ListSpeakersQueryDto,
-  ) {
-    const page = Math.max(1, query.page ?? 1);
-    const limit = Math.max(1, Math.min(200, query.limit ?? 100));
-    return this.speakersService.listSpeakers(locale, {
-      slug: query.slug,
-      page,
-      limit,
-    });
+  @ApiOperation({ summary: 'List all speakers' })
+  @Get()
+  findAll(@Query() query: QuerySpeakerDto) {
+    return this.speakersService.findAll(query);
   }
 
-  @Get(':locale/speakers/:slug')
-  @ApiOperation({ summary: 'Get a speaker by slug', operationId: 'getSpeaker' })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiParam({ name: 'slug', example: 'songoku' })
-  @ApiOkResponse({ type: SpeakerDetailResponseDto })
-  @ApiNotFoundResponse({ description: 'Speaker not found' })
-  async getSpeaker(
-    @Param('locale') locale: string,
+  @ApiOperation({ summary: 'Get a speaker by slug' })
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.speakersService.findOne(slug);
+  }
+
+  @UseGuards(ApiKeyGuard)
+  @ApiSecurity('x-api-key')
+  @ApiOperation({ summary: 'Create a speaker' })
+  @Post()
+  create(@Body() createSpeakerDto: CreateSpeakerDto) {
+    return this.speakersService.create(createSpeakerDto);
+  }
+
+  @UseGuards(ApiKeyGuard)
+  @ApiSecurity('x-api-key')
+  @ApiOperation({ summary: 'Replace a speaker (full update)' })
+  @Put(':slug')
+  replace(
     @Param('slug') slug: string,
+    @Body() updateSpeakerDto: UpdateSpeakerDto,
   ) {
-    const result = await this.speakersService.getSpeaker(slug, locale);
-    if (!result) throw new NotFoundException('Speaker not found');
-    return result;
+    return this.speakersService.update(slug, updateSpeakerDto);
   }
 
-  // ─── Admin ─────────────────────────────────────────────────────────────────
-
-  @Post('speakers')
   @UseGuards(ApiKeyGuard)
-  @HttpCode(201)
-  @ApiOperation({ summary: 'Create a speaker', operationId: 'createSpeaker' })
   @ApiSecurity('x-api-key')
-  @ApiCreatedResponse({ type: SpeakerAdminResponseDto })
-  createSpeaker(@Body() body: CreateSpeakerDto) {
-    return this.speakersService.createSpeaker(body);
-  }
-
-  @Put('speakers/:slug')
-  @UseGuards(ApiKeyGuard)
-  @ApiOperation({ summary: 'Replace a speaker', operationId: 'updateSpeaker' })
-  @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: SpeakerAdminResponseDto })
-  @ApiNotFoundResponse({ description: 'Speaker not found' })
-  async updateSpeaker(
+  @ApiOperation({ summary: 'Partially update a speaker' })
+  @Patch(':slug')
+  update(
     @Param('slug') slug: string,
-    @Body() body: UpdateSpeakerDto,
+    @Body() updateSpeakerDto: UpdateSpeakerDto,
   ) {
-    const result = await this.speakersService.updateSpeaker(slug, body);
-    if (!result) throw new NotFoundException('Speaker not found');
-    return result;
+    return this.speakersService.update(slug, updateSpeakerDto);
   }
 
-  @Patch('speakers/:slug')
   @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'Partially update a speaker',
-    operationId: 'patchSpeaker',
-  })
   @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: SpeakerAdminResponseDto })
-  @ApiNotFoundResponse({ description: 'Speaker not found' })
-  async patchSpeaker(
-    @Param('slug') slug: string,
-    @Body() body: PatchSpeakerDto,
-  ) {
-    const result = await this.speakersService.patchSpeaker(slug, body);
-    if (!result) throw new NotFoundException('Speaker not found');
-    return result;
-  }
-
-  @Delete('speakers/:slug')
-  @UseGuards(ApiKeyGuard)
-  @HttpCode(204)
-  @ApiOperation({ summary: 'Delete a speaker', operationId: 'deleteSpeaker' })
-  @ApiSecurity('x-api-key')
-  @ApiNoContentResponse({ description: 'Speaker deleted' })
-  deleteSpeaker(@Param('slug') slug: string) {
-    return this.speakersService.deleteSpeaker(slug);
+  @ApiOperation({ summary: 'Delete a speaker' })
+  @Delete(':slug')
+  remove(@Param('slug') slug: string) {
+    return this.speakersService.remove(slug);
   }
 }

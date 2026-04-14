@@ -2,191 +2,83 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Patch,
-  Delete,
-  Param,
-  Query,
   Body,
-  HttpCode,
-  NotFoundException,
+  Patch,
+  Put,
+  Param,
+  Delete,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiSecurity,
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiNoContentResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiSecurity, ApiOperation } from '@nestjs/swagger';
 import { GrammarPointsService } from './grammar-points.service';
-import {
-  CreateGrammarPointDto,
-  UpdateGrammarPointDto,
-  PatchGrammarPointDto,
-  ListGrammarPointsQueryDto,
-  GrammarPointScenesQueryDto,
-} from './dto/grammar-point.dto';
+import { CreateGrammarPointDto } from './dto/create-grammar-point.dto';
+import { UpdateGrammarPointDto } from './dto/update-grammar-point.dto';
+import { QueryGrammarPointDto } from './dto/query-grammar-point.dto';
+import { QueryGrammarPointScenesDto } from './dto/query-grammar-point-scenes.dto';
 import { ApiKeyGuard } from '../common/guards/api-key.guard';
-import {
-  PaginatedGrammarPointsResponseDto,
-  GrammarPointDetailResponseDto,
-  GrammarPointScenesResponseDto,
-  GrammarPointAdminResponseDto,
-} from '../common/dto/grammar-point.response.dto';
 
 @ApiTags('grammar-points')
-@Controller()
+@Controller('grammar-points')
 export class GrammarPointsController {
   constructor(private readonly grammarPointsService: GrammarPointsService) {}
 
-  // ─── Public ────────────────────────────────────────────────────────────────
-
-  @Get(':locale/grammar-points')
-  @ApiOperation({
-    summary: 'List grammar points',
-    operationId: 'listGrammarPoints',
-  })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiOkResponse({ type: PaginatedGrammarPointsResponseDto })
-  listGrammarPoints(
-    @Param('locale') locale: string,
-    @Query() query: ListGrammarPointsQueryDto,
-  ) {
-    const page = Math.max(1, query.page ?? 1);
-    const limit = Math.max(1, Math.min(500, query.limit ?? 50));
-    return this.grammarPointsService.listGrammarPoints(
-      locale,
-      { jlpt_level: query.jlpt_level, search: query.search },
-      { page, limit },
-    );
+  @ApiOperation({ summary: 'List all grammar points' })
+  @Get()
+  findAll(@Query() query: QueryGrammarPointDto) {
+    return this.grammarPointsService.findAll(query);
   }
 
-  @Get(':locale/grammar-points/:slug')
-  @ApiOperation({
-    summary: 'Get a grammar point by slug',
-    operationId: 'getGrammarPoint',
-  })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiParam({ name: 'slug', example: 'wa-topic' })
-  @ApiOkResponse({ type: GrammarPointDetailResponseDto })
-  @ApiNotFoundResponse({ description: 'Grammar point not found' })
-  async getGrammarPoint(
-    @Param('locale') locale: string,
+  @ApiOperation({ summary: 'Get scenes for a grammar point' })
+  @Get(':slug/scenes')
+  findScenes(
     @Param('slug') slug: string,
+    @Query() query: QueryGrammarPointScenesDto,
   ) {
-    const result = await this.grammarPointsService.getGrammarPoint(
-      slug,
-      locale,
-    );
-    if (!result) throw new NotFoundException('Grammar point not found');
-    return result;
+    return this.grammarPointsService.findScenes(slug, query);
   }
 
-  @Get(':locale/grammar-points/:slug/scenes')
-  @ApiOperation({
-    summary: 'List scenes for a grammar point',
-    operationId: 'getGrammarPointScenes',
-  })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiParam({ name: 'slug', example: 'wa-topic' })
-  @ApiOkResponse({ type: GrammarPointScenesResponseDto })
-  @ApiNotFoundResponse({ description: 'Grammar point not found' })
-  async getGrammarPointScenes(
-    @Param('locale') locale: string,
+  @ApiOperation({ summary: 'Get a grammar point by slug' })
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.grammarPointsService.findOne(slug);
+  }
+
+  @UseGuards(ApiKeyGuard)
+  @ApiSecurity('x-api-key')
+  @ApiOperation({ summary: 'Create a grammar point' })
+  @Post()
+  create(@Body() createGrammarPointDto: CreateGrammarPointDto) {
+    return this.grammarPointsService.create(createGrammarPointDto);
+  }
+
+  @UseGuards(ApiKeyGuard)
+  @ApiSecurity('x-api-key')
+  @ApiOperation({ summary: 'Replace a grammar point (full update)' })
+  @Put(':slug')
+  replace(
     @Param('slug') slug: string,
-    @Query() query: GrammarPointScenesQueryDto,
+    @Body() updateGrammarPointDto: UpdateGrammarPointDto,
   ) {
-    const page = Math.max(1, query.page ?? 1);
-    const limit = Math.max(1, Math.min(50, query.limit ?? 12));
-    const sourceSlugs =
-      query.sources
-        ?.split(',')
-        .map((s) => s.trim())
-        .filter(Boolean) ?? [];
-    const result = await this.grammarPointsService.getGrammarPointScenes(
-      slug,
-      locale,
-      {
-        sourceSlugs,
-        page,
-        limit,
-      },
-    );
-    if (!result) throw new NotFoundException('Grammar point not found');
-    return result;
+    return this.grammarPointsService.update(slug, updateGrammarPointDto);
   }
 
-  // ─── Admin ─────────────────────────────────────────────────────────────────
-
-  @Post('grammar-points')
   @UseGuards(ApiKeyGuard)
-  @HttpCode(201)
-  @ApiOperation({
-    summary: 'Create a grammar point',
-    operationId: 'createGrammarPoint',
-  })
   @ApiSecurity('x-api-key')
-  @ApiCreatedResponse({ type: GrammarPointAdminResponseDto })
-  createGrammarPoint(@Body() body: CreateGrammarPointDto) {
-    return this.grammarPointsService.createGrammarPoint(body);
-  }
-
-  @Put('grammar-points/:slug')
-  @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'Replace a grammar point',
-    operationId: 'updateGrammarPoint',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: GrammarPointAdminResponseDto })
-  @ApiNotFoundResponse({ description: 'Grammar point not found' })
-  async updateGrammarPoint(
+  @ApiOperation({ summary: 'Partially update a grammar point' })
+  @Patch(':slug')
+  update(
     @Param('slug') slug: string,
-    @Body() body: UpdateGrammarPointDto,
+    @Body() updateGrammarPointDto: UpdateGrammarPointDto,
   ) {
-    const result = await this.grammarPointsService.updateGrammarPoint(
-      slug,
-      body,
-    );
-    if (!result) throw new NotFoundException('Grammar point not found');
-    return result;
+    return this.grammarPointsService.update(slug, updateGrammarPointDto);
   }
 
-  @Patch('grammar-points/:slug')
   @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'Partially update a grammar point',
-    operationId: 'patchGrammarPoint',
-  })
   @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: GrammarPointAdminResponseDto })
-  @ApiNotFoundResponse({ description: 'Grammar point not found' })
-  async patchGrammarPoint(
-    @Param('slug') slug: string,
-    @Body() body: PatchGrammarPointDto,
-  ) {
-    const result = await this.grammarPointsService.patchGrammarPoint(
-      slug,
-      body,
-    );
-    if (!result) throw new NotFoundException('Grammar point not found');
-    return result;
-  }
-
-  @Delete('grammar-points/:slug')
-  @UseGuards(ApiKeyGuard)
-  @HttpCode(204)
-  @ApiOperation({
-    summary: 'Delete a grammar point',
-    operationId: 'deleteGrammarPoint',
-  })
-  @ApiSecurity('x-api-key')
-  @ApiNoContentResponse({ description: 'Grammar point deleted' })
-  deleteGrammarPoint(@Param('slug') slug: string) {
-    return this.grammarPointsService.deleteGrammarPoint(slug);
+  @ApiOperation({ summary: 'Delete a grammar point' })
+  @Delete(':slug')
+  remove(@Param('slug') slug: string) {
+    return this.grammarPointsService.remove(slug);
   }
 }

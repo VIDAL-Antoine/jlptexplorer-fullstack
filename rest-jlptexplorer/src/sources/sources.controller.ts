@@ -2,163 +2,83 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Patch,
-  Delete,
-  Param,
-  Query,
   Body,
-  HttpCode,
-  NotFoundException,
+  Patch,
+  Put,
+  Param,
+  Delete,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiSecurity,
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiNoContentResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiSecurity, ApiOperation } from '@nestjs/swagger';
 import { SourcesService } from './sources.service';
-import {
-  CreateSourceDto,
-  UpdateSourceDto,
-  PatchSourceDto,
-} from './dto/create-source.dto';
-import {
-  ListSourcesQueryDto,
-  SourceScenesQueryDto,
-} from './dto/query-source.dto';
+import { CreateSourceDto } from './dto/create-source.dto';
+import { UpdateSourceDto } from './dto/update-source.dto';
+import { QuerySourceDto } from './dto/query-source.dto';
+import { QuerySourceScenesDto } from './dto/query-source-scenes.dto';
 import { ApiKeyGuard } from '../common/guards/api-key.guard';
-import {
-  PaginatedSourcesResponseDto,
-  SourceDetailResponseDto,
-  SourceScenesResponseDto,
-  SourceAdminResponseDto,
-} from '../common/dto/source.response.dto';
 
 @ApiTags('sources')
-@Controller()
+@Controller('sources')
 export class SourcesController {
   constructor(private readonly sourcesService: SourcesService) {}
 
-  // ─── Public ────────────────────────────────────────────────────────────────
-
-  @Get(':locale/sources')
-  @ApiOperation({ summary: 'List sources', operationId: 'listSources' })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiOkResponse({ type: PaginatedSourcesResponseDto })
-  listSources(
-    @Param('locale') locale: string,
-    @Query() query: ListSourcesQueryDto,
-  ) {
-    const page = Math.max(1, query.page ?? 1);
-    const limit = Math.max(1, Math.min(50, query.limit ?? 12));
-    return this.sourcesService.listSources(locale, {
-      type: query.type,
-      page,
-      limit,
-    });
+  @ApiOperation({ summary: 'List sources (only those with scenes)' })
+  @Get()
+  findAll(@Query() query: QuerySourceDto) {
+    return this.sourcesService.findAll(query);
   }
 
-  @Get(':locale/sources/:slug')
-  @ApiOperation({ summary: 'Get a source by slug', operationId: 'getSource' })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiParam({ name: 'slug', example: 'dragon-ball-z' })
-  @ApiOkResponse({ type: SourceDetailResponseDto })
-  @ApiNotFoundResponse({ description: 'Source not found' })
-  async getSource(
-    @Param('locale') locale: string,
+  @ApiOperation({ summary: 'Get scenes for a source' })
+  @Get(':slug/scenes')
+  findScenes(
     @Param('slug') slug: string,
+    @Query() query: QuerySourceScenesDto,
   ) {
-    const result = await this.sourcesService.getSource(slug, locale);
-    if (!result) throw new NotFoundException('Source not found');
-    return result;
+    return this.sourcesService.findScenes(slug, query);
   }
 
-  @Get(':locale/sources/:slug/scenes')
-  @ApiOperation({
-    summary: 'List scenes for a source',
-    operationId: 'getSourceScenes',
-  })
-  @ApiParam({ name: 'locale', example: 'en' })
-  @ApiParam({ name: 'slug', example: 'dragon-ball-z' })
-  @ApiOkResponse({ type: SourceScenesResponseDto })
-  @ApiNotFoundResponse({ description: 'Source not found' })
-  async getSourceScenes(
-    @Param('locale') locale: string,
+  @ApiOperation({ summary: 'Get a source by slug' })
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.sourcesService.findOne(slug);
+  }
+
+  @UseGuards(ApiKeyGuard)
+  @ApiSecurity('x-api-key')
+  @ApiOperation({ summary: 'Create a source' })
+  @Post()
+  create(@Body() createSourceDto: CreateSourceDto) {
+    return this.sourcesService.create(createSourceDto);
+  }
+
+  @UseGuards(ApiKeyGuard)
+  @ApiSecurity('x-api-key')
+  @ApiOperation({ summary: 'Replace a source (full update)' })
+  @Put(':slug')
+  replace(
     @Param('slug') slug: string,
-    @Query() query: SourceScenesQueryDto,
+    @Body() updateSourceDto: UpdateSourceDto,
   ) {
-    const page = Math.max(1, query.page ?? 1);
-    const limit = Math.max(1, Math.min(50, query.limit ?? 12));
-    const grammarPointSlugs =
-      query.grammar_points
-        ?.split(',')
-        .map((s) => s.trim())
-        .filter(Boolean) ?? [];
-    const result = await this.sourcesService.getSourceScenes(slug, locale, {
-      grammarPointSlugs,
-      grammarMatch: query.grammar_match ?? 'scene',
-      page,
-      limit,
-    });
-    if (!result) throw new NotFoundException('Source not found');
-    return result;
+    return this.sourcesService.update(slug, updateSourceDto);
   }
 
-  // ─── Admin ─────────────────────────────────────────────────────────────────
-
-  @Post('sources')
   @UseGuards(ApiKeyGuard)
-  @HttpCode(201)
-  @ApiOperation({ summary: 'Create a source', operationId: 'createSource' })
   @ApiSecurity('x-api-key')
-  @ApiCreatedResponse({ type: SourceAdminResponseDto })
-  createSource(@Body() body: CreateSourceDto) {
-    return this.sourcesService.createSource(body);
-  }
-
-  @Put('sources/:slug')
-  @UseGuards(ApiKeyGuard)
-  @ApiOperation({ summary: 'Replace a source', operationId: 'updateSource' })
-  @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: SourceAdminResponseDto })
-  @ApiNotFoundResponse({ description: 'Source not found' })
-  async updateSource(
+  @ApiOperation({ summary: 'Partially update a source' })
+  @Patch(':slug')
+  update(
     @Param('slug') slug: string,
-    @Body() body: UpdateSourceDto,
+    @Body() updateSourceDto: UpdateSourceDto,
   ) {
-    const result = await this.sourcesService.updateSource(slug, body);
-    if (!result) throw new NotFoundException('Source not found');
-    return result;
+    return this.sourcesService.update(slug, updateSourceDto);
   }
 
-  @Patch('sources/:slug')
   @UseGuards(ApiKeyGuard)
-  @ApiOperation({
-    summary: 'Partially update a source',
-    operationId: 'patchSource',
-  })
   @ApiSecurity('x-api-key')
-  @ApiOkResponse({ type: SourceAdminResponseDto })
-  @ApiNotFoundResponse({ description: 'Source not found' })
-  async patchSource(@Param('slug') slug: string, @Body() body: PatchSourceDto) {
-    const result = await this.sourcesService.patchSource(slug, body);
-    if (!result) throw new NotFoundException('Source not found');
-    return result;
-  }
-
-  @Delete('sources/:slug')
-  @UseGuards(ApiKeyGuard)
-  @HttpCode(204)
-  @ApiOperation({ summary: 'Delete a source', operationId: 'deleteSource' })
-  @ApiSecurity('x-api-key')
-  @ApiNoContentResponse({ description: 'Source deleted' })
-  deleteSource(@Param('slug') slug: string) {
-    return this.sourcesService.deleteSource(slug);
+  @ApiOperation({ summary: 'Delete a source' })
+  @Delete(':slug')
+  remove(@Param('slug') slug: string) {
+    return this.sourcesService.remove(slug);
   }
 }

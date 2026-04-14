@@ -30,7 +30,8 @@ export class SceneAdminResponseDto {
   @ApiProperty() end_time: number;
   @ApiProperty({ example: 129, nullable: true }) episode_number: number | null;
   @ApiProperty({ nullable: true }) notes: string | null;
-  @ApiProperty({ type: () => SourceRawResponseDto }) sources: SourceRawResponseDto;
+  @ApiProperty({ type: () => SourceRawResponseDto })
+  sources: SourceRawResponseDto;
   @ApiProperty({ type: [TranscriptLineAdminResponseDto] })
   transcript_lines: TranscriptLineAdminResponseDto[];
 }

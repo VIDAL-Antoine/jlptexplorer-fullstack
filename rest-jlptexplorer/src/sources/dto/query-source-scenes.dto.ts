@@ -1,20 +1,8 @@
-import {
-  IsOptional,
-  IsString,
-  IsInt,
-  IsNumber,
-  Min,
-  IsIn,
-} from 'class-validator';
+import { IsOptional, IsString, IsInt, Min, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class QuerySceneDto {
-  @ApiPropertyOptional({ description: 'Comma-separated source slugs' })
-  @IsOptional()
-  @IsString()
-  sources?: string;
-
+export class QuerySourceScenesDto {
   @ApiPropertyOptional({ description: 'Comma-separated grammar point slugs' })
   @IsOptional()
   @IsString()
@@ -24,23 +12,6 @@ export class QuerySceneDto {
   @IsOptional()
   @IsIn(['scene', 'transcript_line'])
   grammar_match?: 'scene' | 'transcript_line' = 'scene';
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  youtube_video_id?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  start_time?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  end_time?: number;
 
   @ApiPropertyOptional({ default: 1 })
   @IsOptional()

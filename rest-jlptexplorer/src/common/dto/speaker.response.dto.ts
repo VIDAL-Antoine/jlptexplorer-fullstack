@@ -32,7 +32,8 @@ export class SpeakerTranscriptLineResponseDto {
   @ApiProperty({ nullable: true }) start_time: number | null;
   @ApiProperty({ nullable: true }) speaker_id: number | null;
   @ApiProperty({ example: 'オラは孫悟空だ。' }) japanese_text: string;
-  @ApiProperty({ type: () => SpeakerSceneResponseDto }) scenes: SpeakerSceneResponseDto;
+  @ApiProperty({ type: () => SpeakerSceneResponseDto })
+  scenes: SpeakerSceneResponseDto;
   @ApiProperty({ type: [SpeakerTranscriptLineGrammarPointResponseDto] })
   transcript_line_grammar_points: SpeakerTranscriptLineGrammarPointResponseDto[];
 }
@@ -52,7 +53,9 @@ export class PaginatedSpeakersResponseDto {
 export class SpeakerAdminResponseDto {
   @ApiProperty() id: number;
   @ApiProperty({ example: 'songoku' }) slug: string;
-  @ApiProperty({ example: '孫悟空', nullable: true }) name_japanese: string | null;
+  @ApiProperty({ example: '孫悟空', nullable: true }) name_japanese:
+    | string
+    | null;
   @ApiProperty({ nullable: true }) image_url: string | null;
   @ApiProperty({
     type: 'object',

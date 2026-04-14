@@ -1,29 +1,54 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { jlpt_level } from '@prisma/client';
-import { buildSceneInclude } from '../scenes/scenes.repository';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateGrammarPointDto } from './dto/create-grammar-point.dto';
+import { UpdateGrammarPointDto } from './dto/update-grammar-point.dto';
+
+const sceneInclude = {
+  sources: { include: { translations: true } },
+  transcript_lines: {
+    include: {
+      speakers: { include: { translations: true } },
+      translations: true,
+      transcript_line_grammar_points: {
+        include: { grammar_points: { include: { translations: true } } },
+      },
+    },
+    orderBy: { start_time: 'asc' as const },
+  },
+};
 
 @Injectable()
 export class GrammarPointsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findGrammarPoints(
-    locale: string,
-    filters: { jlpt_level?: jlpt_level; search?: string },
-  ) {
-    const { jlpt_level: jlptLevel, search } = filters;
+  async findAll(query: {
+    jlpt_level?: jlpt_level;
+    search?: string;
+    page: number;
+    limit: number;
+  }) {
     const where = {
-      ...(jlptLevel ? { jlpt_level: jlptLevel } : {}),
-      ...(search
+      ...(query.jlpt_level ? { jlpt_level: query.jlpt_level } : {}),
+      ...(query.search
         ? {
             OR: [
-              { title: { contains: search, mode: 'insensitive' as const } },
-              { romaji: { contains: search, mode: 'insensitive' as const } },
+              {
+                title: { contains: query.search, mode: 'insensitive' as const },
+              },
+              {
+                romaji: {
+                  contains: query.search,
+                  mode: 'insensitive' as const,
+                },
+              },
               {
                 translations: {
                   some: {
-                    locale,
-                    meaning: { contains: search, mode: 'insensitive' as const },
+                    meaning: {
+                      contains: query.search,
+                      mode: 'insensitive' as const,
+                    },
                   },
                 },
               },
@@ -32,214 +57,124 @@ export class GrammarPointsRepository {
         : {}),
     };
 
-    return this.prisma.grammar_points.findMany({
+    const levelOrder = Object.values(jlpt_level);
+
+    const rawItems = await this.prisma.grammar_points.findMany({
       where,
-      orderBy: [{ jlpt_level: 'asc' }, { title: 'asc' }],
       include: {
-        translations: { where: { locale } },
+        translations: true,
         _count: { select: { transcript_line_grammar_points: true } },
       },
     });
+
+    const sorted = rawItems
+      .map(({ _count, ...gp }) => ({
+        ...gp,
+        has_scenes: _count.transcript_line_grammar_points > 0,
+      }))
+      .sort((a, b) => {
+        if (a.has_scenes !== b.has_scenes) return a.has_scenes ? -1 : 1;
+        const levelDiff = levelOrder.indexOf(a.jlpt_level) - levelOrder.indexOf(b.jlpt_level);
+        if (levelDiff !== 0) return levelDiff;
+        return a.slug.localeCompare(b.slug);
+      });
+
+    const total = sorted.length;
+    const items = sorted.slice(
+      (query.page - 1) * query.limit,
+      query.page * query.limit,
+    );
+
+    return { items, total };
   }
 
-  findGrammarPointBySlug(slug: string, locale: string) {
+  findBySlug(slug: string) {
     return this.prisma.grammar_points.findUnique({
       where: { slug },
-      include: { translations: { where: { locale } } },
+      include: { translations: true },
     });
   }
 
-  findGrammarPointsBySlugIn(slugs: string[]) {
+  findManyBySlugs(slugs: string[]) {
     return this.prisma.grammar_points.findMany({
       where: { slug: { in: slugs } },
-      select: { id: true, slug: true },
     });
   }
 
-  async findGrammarPointMeta(grammarPointId: number, locale: string) {
-    const [scenesCount, availableSources] = await Promise.all([
-      this.prisma.scenes.count({
-        where: {
-          transcript_lines: {
-            some: {
-              transcript_line_grammar_points: {
-                some: { grammar_point_id: grammarPointId },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.sources.findMany({
-        where: {
-          scenes: {
-            some: {
-              transcript_lines: {
-                some: {
-                  transcript_line_grammar_points: {
-                    some: { grammar_point_id: grammarPointId },
-                  },
-                },
-              },
-            },
-          },
-        },
-        include: { translations: { where: { locale } } },
-        orderBy: { id: 'asc' },
-      }),
-    ]);
-    return { scenesCount, availableSources };
-  }
-
-  async findGrammarPointScenes(
-    grammarPointId: number,
-    locale: string,
-    options: { sourceSlugs: string[]; page: number; limit: number },
+  async findScenesBySlug(
+    slug: string,
+    query: { sourceSlugs: string[]; page: number; limit: number },
   ) {
-    const { sourceSlugs, page, limit } = options;
-    const where = {
+    const baseWhere = {
       transcript_lines: {
         some: {
           transcript_line_grammar_points: {
-            some: { grammar_point_id: grammarPointId },
+            some: { grammar_points: { slug } },
           },
         },
       },
-      ...(sourceSlugs.length > 0 && { sources: { slug: { in: sourceSlugs } } }),
     };
 
-    const [scenes, total, availableSources] = await Promise.all([
+    const where = {
+      ...baseWhere,
+      ...(query.sourceSlugs.length > 0
+        ? { sources: { slug: { in: query.sourceSlugs } } }
+        : {}),
+    };
+
+    const [items, total, availableSources] = await Promise.all([
       this.prisma.scenes.findMany({
         where,
-        include: buildSceneInclude(locale),
+        include: sceneInclude,
         orderBy: [
           { source_id: 'asc' },
           { episode_number: 'asc' },
           { start_time: 'asc' },
         ],
-        skip: (page - 1) * limit,
-        take: limit,
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
       }),
       this.prisma.scenes.count({ where }),
       this.prisma.sources.findMany({
-        where: {
-          scenes: {
-            some: {
-              transcript_lines: {
-                some: {
-                  transcript_line_grammar_points: {
-                    some: { grammar_point_id: grammarPointId },
-                  },
-                },
-              },
-            },
-          },
-        },
-        include: { translations: { where: { locale } } },
-        orderBy: { id: 'asc' },
+        where: { scenes: { some: baseWhere } },
+        include: { translations: true },
+        orderBy: { slug: 'asc' },
       }),
     ]);
 
-    return { scenes, total, availableSources };
+    return { items, total, availableSources };
   }
 
-  createGrammarPoint(data: {
-    slug: string;
-    title: string;
-    romaji: string;
-    jlpt_level: jlpt_level;
-    translations: { locale: string; meaning: string; notes?: string }[];
-  }) {
+  create(dto: CreateGrammarPointDto) {
     return this.prisma.grammar_points.create({
       data: {
-        slug: data.slug,
-        title: data.title,
-        romaji: data.romaji,
-        jlpt_level: data.jlpt_level,
-        translations: { create: data.translations },
+        slug: dto.slug,
+        title: dto.title,
+        romaji: dto.romaji,
+        jlpt_level: dto.jlpt_level,
+        translations: dto.translations
+          ? { create: dto.translations }
+          : undefined,
       },
       include: { translations: true },
     });
   }
 
-  updateGrammarPoint(
-    paramSlug: string,
-    grammarPointId: number,
-    data: {
-      slug: string;
-      title: string;
-      romaji: string;
-      jlpt_level: jlpt_level;
-      translations: { locale: string; meaning: string; notes?: string }[];
-    },
-  ) {
+  update(id: number, dto: UpdateGrammarPointDto) {
+    const { translations, ...fields } = dto;
     return this.prisma.grammar_points.update({
-      where: { slug: paramSlug },
+      where: { id },
       data: {
-        slug: data.slug,
-        title: data.title,
-        romaji: data.romaji,
-        jlpt_level: data.jlpt_level,
-        translations: {
-          upsert: data.translations.map(({ locale, meaning, notes }) => ({
-            where: {
-              grammar_point_id_locale: {
-                grammar_point_id: grammarPointId,
-                locale,
-              },
-            },
-            create: { locale, meaning, notes },
-            update: { meaning, notes },
-          })),
-        },
+        ...fields,
+        translations: translations
+          ? { deleteMany: {}, create: translations }
+          : undefined,
       },
       include: { translations: true },
     });
   }
 
-  patchGrammarPoint(
-    paramSlug: string,
-    grammarPointId: number,
-    data: {
-      slug?: string;
-      title?: string;
-      romaji?: string;
-      jlpt_level?: jlpt_level;
-      translations?: { locale: string; meaning?: string; notes?: string }[];
-    },
-  ) {
-    const { slug, title, romaji, jlpt_level: jlptLevel, translations } = data;
-    return this.prisma.grammar_points.update({
-      where: { slug: paramSlug },
-      data: {
-        ...(slug !== undefined ? { slug } : {}),
-        ...(title !== undefined ? { title } : {}),
-        ...(romaji !== undefined ? { romaji } : {}),
-        ...(jlptLevel !== undefined ? { jlpt_level: jlptLevel } : {}),
-        ...(translations?.length
-          ? {
-              translations: {
-                upsert: translations.map(({ locale, meaning, notes }) => ({
-                  where: {
-                    grammar_point_id_locale: {
-                      grammar_point_id: grammarPointId,
-                      locale,
-                    },
-                  },
-                  create: { locale, meaning: meaning ?? '', notes },
-                  update: {
-                    ...(meaning !== undefined ? { meaning } : {}),
-                    ...(notes !== undefined ? { notes } : {}),
-                  },
-                })),
-              },
-            }
-          : {}),
-      },
-      include: { translations: true },
-    });
-  }
-
-  deleteGrammarPoint(slug: string) {
-    return this.prisma.grammar_points.delete({ where: { slug } });
+  remove(id: number) {
+    return this.prisma.grammar_points.delete({ where: { id } });
   }
 }

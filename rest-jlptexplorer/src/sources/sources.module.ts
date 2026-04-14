@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SourcesController } from './sources.controller';
 import { SourcesService } from './sources.service';
+import { SourcesController } from './sources.controller';
 import { SourcesRepository } from './sources.repository';
 
 @Module({

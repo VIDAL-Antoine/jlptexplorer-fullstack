@@ -1,62 +1,70 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { source_type } from '@prisma/client';
-import { buildSceneInclude } from '../scenes/scenes.repository';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateSourceDto } from './dto/create-source.dto';
+import { UpdateSourceDto } from './dto/update-source.dto';
+
+const sceneInclude = {
+  sources: { include: { translations: true } },
+  transcript_lines: {
+    include: {
+      speakers: { include: { translations: true } },
+      translations: true,
+      transcript_line_grammar_points: {
+        include: { grammar_points: { include: { translations: true } } },
+      },
+    },
+    orderBy: { start_time: 'asc' as const },
+  },
+};
 
 @Injectable()
 export class SourcesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findSources(locale: string) {
-    return this.prisma.sources.findMany({
-      where: { scenes: { some: {} } },
-      include: { translations: { where: { locale } } },
-      orderBy: { id: 'asc' },
-    });
+  async findAll(query: { type?: source_type; page: number; limit: number }) {
+    const where = {
+      scenes: { some: {} },
+      ...(query.type ? { type: query.type } : {}),
+    };
+
+    const [items, total] = await Promise.all([
+      this.prisma.sources.findMany({
+        where,
+        include: { translations: true },
+        orderBy: { slug: 'asc' },
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+      }),
+      this.prisma.sources.count({ where }),
+    ]);
+
+    return { items, total };
   }
 
-  findSourceBySlug(slug: string, locale: string) {
+  findBySlug(slug: string) {
     return this.prisma.sources.findUnique({
       where: { slug },
-      include: { translations: { where: { locale } } },
+      include: { translations: true },
     });
   }
 
-  async findSourceMeta(sourceId: number, locale: string) {
-    const [scenesCount, grammarPoints] = await Promise.all([
-      this.prisma.scenes.count({ where: { source_id: sourceId } }),
-      this.prisma.grammar_points.findMany({
-        where: {
-          transcript_line_grammar_points: {
-            some: { transcript_lines: { scenes: { source_id: sourceId } } },
-          },
-        },
-        include: { translations: { where: { locale } } },
-        orderBy: [{ jlpt_level: 'asc' }, { title: 'asc' }],
-      }),
-    ]);
-    return { scenesCount, grammarPoints };
-  }
-
-  async findSourceScenes(
+  async findScenesBySlug(
     sourceId: number,
-    locale: string,
-    options: {
+    query: {
       grammarPointSlugs: string[];
       grammarMatch: 'scene' | 'transcript_line';
       page: number;
       limit: number;
     },
   ) {
-    const { grammarPointSlugs, grammarMatch, page, limit } = options;
-
     const grammarFilter =
-      grammarPointSlugs.length > 0
-        ? grammarMatch === 'transcript_line'
+      query.grammarPointSlugs.length > 0
+        ? query.grammarMatch === 'transcript_line'
           ? {
               transcript_lines: {
                 some: {
-                  AND: grammarPointSlugs.map((slug) => ({
+                  AND: query.grammarPointSlugs.map((slug) => ({
                     transcript_line_grammar_points: {
                       some: { grammar_points: { slug } },
                     },
@@ -65,7 +73,7 @@ export class SourcesRepository {
               },
             }
           : {
-              AND: grammarPointSlugs.map((slug) => ({
+              AND: query.grammarPointSlugs.map((slug) => ({
                 transcript_lines: {
                   some: {
                     transcript_line_grammar_points: {
@@ -79,126 +87,59 @@ export class SourcesRepository {
 
     const where = { source_id: sourceId, ...grammarFilter };
 
-    const [scenes, total, availableGrammarPoints] = await Promise.all([
+    const [items, total, availableGrammarPoints] = await Promise.all([
       this.prisma.scenes.findMany({
         where,
-        include: buildSceneInclude(locale),
+        include: sceneInclude,
         orderBy: [{ episode_number: 'asc' }, { start_time: 'asc' }],
-        skip: (page - 1) * limit,
-        take: limit,
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
       }),
       this.prisma.scenes.count({ where }),
       this.prisma.grammar_points.findMany({
         where: {
           transcript_line_grammar_points: {
-            some: { transcript_lines: { scenes: where } },
+            some: { transcript_lines: { scenes: { source_id: sourceId } } },
           },
         },
-        include: { translations: { where: { locale } } },
-        orderBy: [{ jlpt_level: 'asc' }, { title: 'asc' }],
+        include: { translations: true },
+        orderBy: [{ jlpt_level: 'asc' }, { slug: 'asc' }],
       }),
     ]);
 
-    return { scenes, total, availableGrammarPoints };
+    return { items, total, availableGrammarPoints };
   }
 
-  createSource(data: {
-    slug: string;
-    japanese_title?: string;
-    type: source_type;
-    cover_image_url?: string;
-    translations: Record<string, string>;
-  }) {
+  create(dto: CreateSourceDto) {
     return this.prisma.sources.create({
       data: {
-        slug: data.slug,
-        japanese_title: data.japanese_title,
-        type: data.type,
-        cover_image_url: data.cover_image_url,
-        translations: {
-          create: Object.entries(data.translations).map(([locale, title]) => ({
-            locale,
-            title,
-          })),
-        },
+        slug: dto.slug,
+        type: dto.type,
+        cover_image_url: dto.cover_image_url ?? null,
+        japanese_title: dto.japanese_title ?? null,
+        translations: dto.translations
+          ? { create: dto.translations }
+          : undefined,
       },
       include: { translations: true },
     });
   }
 
-  updateSource(
-    paramSlug: string,
-    sourceId: number,
-    data: {
-      slug: string;
-      japanese_title?: string;
-      type: source_type;
-      cover_image_url?: string;
-      translations: Record<string, string>;
-    },
-  ) {
+  update(id: number, dto: UpdateSourceDto) {
+    const { translations, ...fields } = dto;
     return this.prisma.sources.update({
-      where: { slug: paramSlug },
+      where: { id },
       data: {
-        slug: data.slug,
-        japanese_title: data.japanese_title,
-        type: data.type,
-        cover_image_url: data.cover_image_url,
-        translations: {
-          upsert: Object.entries(data.translations).map(([locale, title]) => ({
-            where: { source_id_locale: { source_id: sourceId, locale } },
-            create: { locale, title },
-            update: { title },
-          })),
-        },
+        ...fields,
+        translations: translations
+          ? { deleteMany: {}, create: translations }
+          : undefined,
       },
       include: { translations: true },
     });
   }
 
-  patchSource(
-    paramSlug: string,
-    sourceId: number,
-    data: {
-      slug?: string;
-      japanese_title?: string;
-      type?: source_type;
-      cover_image_url?: string;
-      translations?: Record<string, string>;
-    },
-  ) {
-    return this.prisma.sources.update({
-      where: { slug: paramSlug },
-      data: {
-        ...(data.slug !== undefined ? { slug: data.slug } : {}),
-        ...(data.japanese_title !== undefined
-          ? { japanese_title: data.japanese_title }
-          : {}),
-        ...(data.type !== undefined ? { type: data.type } : {}),
-        ...(data.cover_image_url !== undefined
-          ? { cover_image_url: data.cover_image_url }
-          : {}),
-        ...(data.translations
-          ? {
-              translations: {
-                upsert: Object.entries(data.translations).map(
-                  ([locale, title]) => ({
-                    where: {
-                      source_id_locale: { source_id: sourceId, locale },
-                    },
-                    create: { locale, title },
-                    update: { title },
-                  }),
-                ),
-              },
-            }
-          : {}),
-      },
-      include: { translations: true },
-    });
-  }
-
-  deleteSource(slug: string) {
-    return this.prisma.sources.delete({ where: { slug } });
+  remove(id: number) {
+    return this.prisma.sources.delete({ where: { id } });
   }
 }

@@ -1,13 +1,12 @@
-import { IsOptional, IsInt, Min, IsIn } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { source_type } from '@prisma/client';
 
-export class QuerySourceDto {
-  @ApiPropertyOptional({ enum: source_type })
+export class QueryGrammarPointScenesDto {
+  @ApiPropertyOptional({ description: 'Comma-separated source slugs' })
   @IsOptional()
-  @IsIn(Object.values(source_type))
-  type?: source_type;
+  @IsString()
+  sources?: string;
 
   @ApiPropertyOptional({ default: 1 })
   @IsOptional()
