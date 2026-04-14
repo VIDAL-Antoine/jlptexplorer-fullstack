@@ -69,7 +69,7 @@ src/
 ├── speakers/
 ├── transcript-lines/
 ├── transcript-line-grammar-points/
-└── utils/                               ← parse-time, flatten
+└── utils/                               ← parse-time
 prisma/
 ├── schema/                              ← Multi-file schema (one file per domain)
 └── migrations/
