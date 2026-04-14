@@ -24,11 +24,10 @@ export const AnimeOnly: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(`${BASE}/api/v1/:locale/sources`, () =>
+        http.get(`${BASE}/api/v1/sources`, () =>
           HttpResponse.json({
             ...sourcesPageResponse,
-            sources: allSources.filter((s) => s.type === 'anime'),
-            available_types: ['anime'],
+            items: allSources.filter((s) => s.type === 'anime'),
           })
         ),
       ],
@@ -40,7 +39,7 @@ export const Loading: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(`${BASE}/api/v1/:locale/sources`, async () => {
+        http.get(`${BASE}/api/v1/sources`, async () => {
           await new Promise(() => {}); // never resolves
         }),
       ],
@@ -52,14 +51,8 @@ export const Empty: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(`${BASE}/api/v1/:locale/sources`, () =>
-          HttpResponse.json({
-            sources: [],
-            total: 0,
-            page: 1,
-            totalPages: 0,
-            available_types: [],
-          })
+        http.get(`${BASE}/api/v1/sources`, () =>
+          HttpResponse.json({ items: [], total: 0 })
         ),
       ],
     },

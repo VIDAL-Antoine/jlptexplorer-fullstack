@@ -16,8 +16,8 @@ export default function HomePage() {
   const locale = useLocale();
 
   const { data: featuredScene } = useApiData(
-    () => api.scenes.list(locale, { limit: 1 }).then((page) => page.scenes[0] ?? null),
-    [locale]
+    () => api.scenes.list({ limit: 1 }).then((result) => result.items[0] ?? null),
+    []
   );
 
   const firstGrammarPointId =

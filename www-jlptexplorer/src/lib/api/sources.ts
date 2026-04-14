@@ -1,49 +1,45 @@
 import { apiFetch } from './client';
-import type { SourceDetail, SourceScenesPage, SourcesPage } from './types';
+import type { Source, SourceScenesPage, SourcesPage } from './types';
 
 export const sources = {
-  list: (locale: string, params?: { type?: string; page?: number; limit?: number }) => {
-    const query = new URLSearchParams();
+  list: (params?: { type?: string; page?: number; limit?: number }) => {
+    const qs = new URLSearchParams();
     if (params?.type) {
-      query.set('type', params.type);
+      qs.set('type', params.type);
     }
     if (params?.page) {
-      query.set('page', String(params.page));
+      qs.set('page', String(params.page));
     }
     if (params?.limit) {
-      query.set('limit', String(params.limit));
+      qs.set('limit', String(params.limit));
     }
-    const qs = query.toString();
-    return apiFetch<SourcesPage>(`/api/v1/${locale}/sources${qs ? `?${qs}` : ''}`);
+    const query = qs.toString();
+    return apiFetch<SourcesPage>(`/api/v1/sources${query ? `?${query}` : ''}`);
   },
-  get: (locale: string, slug: string) =>
-    apiFetch<SourceDetail>(`/api/v1/${locale}/sources/${slug}`),
+  get: (slug: string) => apiFetch<Source>(`/api/v1/sources/${slug}`),
   scenes: (
-    locale: string,
     slug: string,
     params?: {
+      grammar_points?: string[];
+      grammar_match?: 'scene' | 'transcript_line';
       page?: number;
       limit?: number;
-      grammarPoints?: string[];
-      grammarMatch?: 'scene' | 'transcript_line';
     }
   ) => {
-    const query = new URLSearchParams();
+    const qs = new URLSearchParams();
+    if (params?.grammar_points?.length) {
+      qs.set('grammar_points', params.grammar_points.join(','));
+    }
+    if (params?.grammar_match) {
+      qs.set('grammar_match', params.grammar_match);
+    }
     if (params?.page) {
-      query.set('page', String(params.page));
+      qs.set('page', String(params.page));
     }
     if (params?.limit) {
-      query.set('limit', String(params.limit));
+      qs.set('limit', String(params.limit));
     }
-    if (params?.grammarPoints?.length) {
-      query.set('grammar_points', params.grammarPoints.join(','));
-    }
-    if (params?.grammarMatch) {
-      query.set('grammar_match', params.grammarMatch);
-    }
-    const qs = query.toString();
-    return apiFetch<SourceScenesPage>(
-      `/api/v1/${locale}/sources/${slug}/scenes${qs ? `?${qs}` : ''}`
-    );
+    const query = qs.toString();
+    return apiFetch<SourceScenesPage>(`/api/v1/sources/${slug}/scenes${query ? `?${query}` : ''}`);
   },
 };

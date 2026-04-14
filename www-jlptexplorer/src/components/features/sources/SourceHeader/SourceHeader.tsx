@@ -1,24 +1,33 @@
 import { AspectRatio, Badge, Group, Image, Stack, Text, Title } from '@mantine/core';
 import { Link } from '@/i18n/navigation';
-import { type SourceDetail } from '@/lib/api/types';
+import { type Source } from '@/lib/api/types';
 import { routes } from '@/lib/routes';
 import { getSourceTypeIcon } from '@/utils/icons';
 
 type Props = {
-  source: SourceDetail;
+  source: Source;
   displayTitle: string;
+  scenesCount: number;
+  grammarPointsCount: number;
   tTypes: (key: string) => string;
   tScenes: (key: string, values?: Record<string, number>) => string;
 };
 
-export function SourceHeader({ source, displayTitle, tTypes, tScenes }: Props) {
+export function SourceHeader({
+  source,
+  displayTitle,
+  scenesCount,
+  grammarPointsCount,
+  tTypes,
+  tScenes,
+}: Props) {
   const SourceTypeIcon = getSourceTypeIcon(source.type);
 
   return (
     <Group align="flex-start" gap="xl">
       {source.cover_image_url && (
         <AspectRatio ratio={2 / 3} w={120} style={{ flexShrink: 0 }}>
-          <Image src={source.cover_image_url} alt={source.title ?? ''} radius="md" fit="cover" />
+          <Image src={source.cover_image_url} alt={displayTitle} radius="md" fit="cover" />
         </AspectRatio>
       )}
       <Stack gap="xs">
@@ -37,15 +46,15 @@ export function SourceHeader({ source, displayTitle, tTypes, tScenes }: Props) {
         </Group>
         <Group gap="xs">
           <Text size="sm" c="dimmed">
-            {tScenes('scenesCount', { count: source.scenes_count })}
+            {tScenes('scenesCount', { count: scenesCount })}
           </Text>
-          {source.grammar_points.length > 0 && (
+          {grammarPointsCount > 0 && (
             <>
               <Text size="sm" c="dimmed">
                 ·
               </Text>
               <Text size="sm" c="dimmed">
-                {tScenes('grammarPointsCount', { count: source.grammar_points.length })}
+                {tScenes('grammarPointsCount', { count: grammarPointsCount })}
               </Text>
             </>
           )}

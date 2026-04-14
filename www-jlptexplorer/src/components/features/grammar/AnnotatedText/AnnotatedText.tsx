@@ -1,10 +1,14 @@
+'use client';
+
 import { IconExternalLink } from '@tabler/icons-react';
+import { useLocale } from 'next-intl';
 import { Anchor, Badge, Box, Group, HoverCard, Stack, Text } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { Link } from '@/i18n/navigation';
 import { type TranscriptLineGrammarPoint } from '@/lib/api';
 import { routes } from '@/lib/routes';
 import { buildSegments } from '@/utils/annotations';
+import { getLocalizedMeaning } from '@/utils/i18n';
 
 interface AnnotatedTextProps {
   text: string;
@@ -21,6 +25,7 @@ export function AnnotatedText({
   currentGrammarPointIds,
   script,
 }: AnnotatedTextProps) {
+  const locale = useLocale();
   const segments = buildSegments(text, annotations);
 
   return (
@@ -98,10 +103,10 @@ export function AnnotatedText({
                         <Text size="sm" component="span">
                           {label}
                         </Text>
-                        {gp.meaning && (
+                        {getLocalizedMeaning(gp.translations, locale) && (
                           <Text size="xs" c="dimmed" component="span">
                             {' '}
-                            — {gp.meaning}
+                            — {getLocalizedMeaning(gp.translations, locale)}
                           </Text>
                         )}
                         <IconExternalLink size={11} style={{ flexShrink: 0 }} />

@@ -34,7 +34,9 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, YoutubePlayerProps>
     }));
 
     useEffect(() => {
-      if (!isYoutubeAccepted) {return;}
+      if (!isYoutubeAccepted) {
+        return;
+      }
 
       let cancelled = false;
 

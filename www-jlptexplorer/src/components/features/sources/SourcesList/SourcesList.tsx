@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Center, Chip, Group, Pagination, SimpleGrid, Stack, TextInput } from '@mantine/core';
@@ -28,33 +28,49 @@ export function SourcesList() {
   const [page, setPage] = useState(1);
   const { sourceTitleLang } = useSettings();
 
+  const { data: sourcesPage, loading } = useApiData(
+    () =>
+      api.sources.list({
+        type: activeType !== 'all' ? activeType : undefined,
+        page,
+        limit: PAGE_SIZE,
+      }),
+    [activeType, page]
+  );
+
   const handleTypeChange = (v: string) => {
     setActiveType(v);
     setPage(1);
     setParam('type', v === 'all' ? null : v);
   };
 
-  const { data, loading } = useApiData(
-    () =>
-      api.sources.list(locale, {
-        type: activeType !== 'all' ? activeType : undefined,
-        page,
-        limit: PAGE_SIZE,
-      }),
-    [locale, activeType, page]
-  );
+  const filtered = useMemo(() => {
+    if (!sourcesPage) {
+      return null;
+    }
+    if (!search) {
+      return sourcesPage.items;
+    }
+    const q = search.toLowerCase();
+    return sourcesPage.items.filter(
+      (s) =>
+        s.translations.some((tr) => tr.title.toLowerCase().includes(q)) ||
+        (s.japanese_title ?? '').toLowerCase().includes(q)
+    );
+  }, [sourcesPage, search]);
 
-  if (!data) {
+  const availableTypes = useMemo(() => {
+    if (!sourcesPage) {
+      return [];
+    }
+    return Array.from(new Set(sourcesPage.items.map((s) => s.type)));
+  }, [sourcesPage]);
+
+  const totalPages = sourcesPage ? Math.ceil(sourcesPage.total / PAGE_SIZE) : 0;
+
+  if (!sourcesPage && loading) {
     return <SourcesListSkeleton />;
   }
-
-  const filtered = data.sources.filter((s) => {
-    const q = search.toLowerCase();
-    return (
-      (s.title ?? '').toLowerCase().includes(q) ||
-      (s.japanese_title ?? '').toLowerCase().includes(q)
-    );
-  });
 
   return (
     <Stack mt="xl">
@@ -70,7 +86,7 @@ export function SourcesList() {
           <Chip value="all" size="xl">
             {t('all')}
           </Chip>
-          {data.available_types.map((type) => {
+          {availableTypes.map((type) => {
             const Icon = getSourceTypeIcon(type);
             return (
               <Chip key={type} value={type} size="xl">
@@ -88,14 +104,19 @@ export function SourcesList() {
         cols={{ base: 3, sm: 3, md: 4, lg: 8 }}
         style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.15s' }}
       >
-        {filtered.map((source) => (
-          <SourceCard key={source.id} source={source} sourceTitleLang={sourceTitleLang} />
+        {(filtered ?? []).map((source) => (
+          <SourceCard
+            key={source.id}
+            source={source}
+            sourceTitleLang={sourceTitleLang}
+            locale={locale}
+          />
         ))}
       </SimpleGrid>
 
-      {data.totalPages > 1 && (
+      {totalPages > 1 && (
         <Center>
-          <Pagination total={data.totalPages} value={page} onChange={setPage} />
+          <Pagination total={totalPages} value={page} onChange={setPage} />
         </Center>
       )}
     </Stack>

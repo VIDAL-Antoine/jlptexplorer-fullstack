@@ -1,6 +1,10 @@
+'use client';
+
+import { useLocale } from 'next-intl';
 import { Box, Group, MultiSelect, Text } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import type { GrammarPoint } from '@/lib/api';
+import { getLocalizedMeaning } from '@/utils/i18n';
 
 const JLPT_LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'] as const;
 
@@ -12,12 +16,17 @@ type Props = {
 };
 
 export function GrammarPointsMultiSelect({ grammarPoints, value, onChange, placeholder }: Props) {
-  const toItem = (gp: GrammarPoint) => ({
-    value: gp.slug,
-    label: [gp.romaji ? `${gp.title} (${gp.romaji})` : gp.title, gp.meaning]
-      .filter(Boolean)
-      .join(' — '),
-  });
+  const locale = useLocale();
+
+  const toItem = (gp: GrammarPoint) => {
+    const meaning = getLocalizedMeaning(gp.translations, locale);
+    return {
+      value: gp.slug,
+      label: [gp.romaji ? `${gp.title} (${gp.romaji})` : gp.title, meaning]
+        .filter(Boolean)
+        .join(' — '),
+    };
+  };
 
   const data = JLPT_LEVELS.flatMap((level) => {
     const items = grammarPoints.filter((gp) => gp.jlpt_level === level).map(toItem);

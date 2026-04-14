@@ -8,10 +8,12 @@ import { getSourceTypeIcon } from '@/utils/icons';
 interface SourceCardProps {
   source: Source;
   sourceTitleLang: 'localized' | 'japanese';
+  locale: string;
 }
 
-export function SourceCard({ source, sourceTitleLang }: SourceCardProps) {
+export function SourceCard({ source, sourceTitleLang, locale }: SourceCardProps) {
   const TypeIcon = getSourceTypeIcon(source.type);
+  const title = getLocalizedTitle(source, sourceTitleLang, locale);
 
   return (
     <Card
@@ -26,7 +28,7 @@ export function SourceCard({ source, sourceTitleLang }: SourceCardProps) {
         <AspectRatio ratio={2 / 3}>
           <Image
             src={source.cover_image_url}
-            alt={source.title ?? ''}
+            alt={title ?? ''}
             fit="cover"
             fallbackSrc="https://placehold.co/400x600?text=No+image"
           />
@@ -39,7 +41,7 @@ export function SourceCard({ source, sourceTitleLang }: SourceCardProps) {
       </Card.Section>
       <Center w="100%">
         <Text fw={600} size="md" mt="sm">
-          {getLocalizedTitle(source, sourceTitleLang)}
+          {title}
         </Text>
       </Center>
     </Card>

@@ -1,16 +1,20 @@
 import { apiFetch } from './client';
-import type { SpeakersPage } from './types';
+import type { Speaker, SpeakersPage } from './types';
 
 export const speakers = {
-  list: (locale: string, params?: { page?: number; limit?: number }) => {
-    const query = new URLSearchParams();
+  list: (params?: { slug?: string; page?: number; limit?: number }) => {
+    const qs = new URLSearchParams();
+    if (params?.slug) {
+      qs.set('slug', params.slug);
+    }
     if (params?.page) {
-      query.set('page', String(params.page));
+      qs.set('page', String(params.page));
     }
     if (params?.limit) {
-      query.set('limit', String(params.limit));
+      qs.set('limit', String(params.limit));
     }
-    const qs = query.toString();
-    return apiFetch<SpeakersPage>(`/api/v1/${locale}/speakers${qs ? `?${qs}` : ''}`);
+    const query = qs.toString();
+    return apiFetch<SpeakersPage>(`/api/v1/speakers${query ? `?${query}` : ''}`);
   },
+  get: (slug: string) => apiFetch<Speaker>(`/api/v1/speakers/${slug}`),
 };

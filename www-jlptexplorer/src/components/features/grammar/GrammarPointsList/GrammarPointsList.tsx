@@ -2,8 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';
-import { useLocale, useTranslations } from 'next-intl';
-import { Center, Pagination, SegmentedControl, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { useTranslations } from 'next-intl';
+import {
+  Center,
+  Pagination,
+  SegmentedControl,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { useApiData } from '@/hooks/useApiData';
 import { useQueryParam } from '@/hooks/useQueryParam';
@@ -12,11 +20,10 @@ import { GrammarPointCard } from './GrammarPointCard';
 import { GrammarPointsListSkeleton } from './GrammarPointsListSkeleton';
 
 const LEVELS = Object.keys(JLPT_LEVEL_COLORS);
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
 
 export function GrammarPointsList() {
   const t = useTranslations('GrammarPointsList');
-  const locale = useLocale();
   const { setParam, searchParams } = useQueryParam();
   const rawLevel = searchParams.get('jlpt_level');
   const [level, setLevel] = useState(rawLevel && LEVELS.includes(rawLevel) ? rawLevel : 'All');
@@ -37,6 +44,20 @@ export function GrammarPointsList() {
     setPage(1);
     setParam('jlpt_level', newLevel === 'All' ? null : newLevel);
   };
+
+  const { data: grammarPointsPage, loading } = useApiData(
+    () =>
+      api.grammarPoints.list({
+        jlpt_level: level !== 'All' ? level : undefined,
+        search: search || undefined,
+        page,
+        limit: PAGE_SIZE,
+      }),
+    [level, search, page]
+  );
+
+  const items = grammarPointsPage?.items ?? null;
+  const totalPages = grammarPointsPage ? Math.ceil(grammarPointsPage.total / PAGE_SIZE) : 0;
 
   const levelSegmentedData = [
     {
@@ -62,17 +83,6 @@ export function GrammarPointsList() {
       value: l,
     })),
   ];
-
-  const { data, loading } = useApiData(
-    () =>
-      api.grammarPoints.list(locale, {
-        jlptLevel: level === 'All' ? undefined : level,
-        search: search || undefined,
-        page,
-        limit: PAGE_SIZE,
-      }),
-    [level, search, page, locale]
-  );
 
   return (
     <Stack mt="xl">
@@ -100,7 +110,7 @@ export function GrammarPointsList() {
         onChange={(e) => setInputValue(e.currentTarget.value)}
       />
 
-      {!data ? (
+      {!items ? (
         <GrammarPointsListSkeleton />
       ) : (
         <Stack>
@@ -108,13 +118,13 @@ export function GrammarPointsList() {
             cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
             style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.15s' }}
           >
-            {data.grammar_points.map((gp) => (
-              <GrammarPointCard key={gp.id} gp={gp} />
+            {items.map((gp) => (
+              <GrammarPointCard key={gp.id} gp={gp} hasScenes={gp.has_scenes ?? false} />
             ))}
           </SimpleGrid>
-          {data.totalPages > 1 && (
+          {totalPages > 1 && (
             <Center>
-              <Pagination total={data.totalPages} value={page} onChange={setPage} />
+              <Pagination total={totalPages} value={page} onChange={setPage} />
             </Center>
           )}
         </Stack>

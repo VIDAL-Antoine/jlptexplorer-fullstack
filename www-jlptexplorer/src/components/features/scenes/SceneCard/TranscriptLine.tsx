@@ -1,8 +1,11 @@
+'use client';
+
+import { useLocale } from 'next-intl';
 import { Box, Group, Text } from '@mantine/core';
 import { AnnotatedText } from '@/components/features/grammar/AnnotatedText/AnnotatedText';
 import { GrammarBadgeGroup } from '@/components/features/grammar/GrammarBadgeGroup/GrammarBadgeGroup';
 import { type TranscriptLine as TranscriptLineData } from '@/lib/api';
-import { getLocalizedName } from '@/utils/i18n';
+import { getLocalizedName, getLocalizedTranslation } from '@/utils/i18n';
 import { formatTime } from '@/utils/time';
 
 interface TranscriptLineProps {
@@ -24,9 +27,11 @@ export function TranscriptLine({
   speakerNameLang,
   script,
 }: TranscriptLineProps) {
+  const locale = useLocale();
   const grammarPoints = line.transcript_line_grammar_points;
   const hasGrammar =
     activeIds.size > 0 && grammarPoints.some((tlgp) => activeIds.has(tlgp.grammar_point_id));
+  const translation = getLocalizedTranslation(line.translations, locale);
 
   return (
     <Box
@@ -53,7 +58,7 @@ export function TranscriptLine({
         )}
         {line.speakers && (
           <Text size="xs" fw={700} c="dimmed">
-            {getLocalizedName(line.speakers, speakerNameLang)}
+            {getLocalizedName(line.speakers, speakerNameLang, locale)}
           </Text>
         )}
       </Group>
@@ -65,9 +70,9 @@ export function TranscriptLine({
           script={script}
         />
       </Text>
-      {showDialogueTranslations && line.translation && (
+      {showDialogueTranslations && translation && (
         <Text size="sm" c="dimmed" mt={2}>
-          {line.translation}
+          {translation}
         </Text>
       )}
       <GrammarBadgeGroup

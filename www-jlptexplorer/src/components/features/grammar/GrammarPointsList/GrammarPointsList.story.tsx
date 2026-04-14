@@ -24,10 +24,10 @@ export const FilteredN5: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(`${BASE}/api/v1/:locale/grammar-points`, () =>
+        http.get(`${BASE}/api/v1/grammar-points`, () =>
           HttpResponse.json({
             ...grammarPointsPageResponse,
-            grammar_points: allGrammarPoints.filter((gp) => gp.jlpt_level === 'N5'),
+            items: allGrammarPoints.filter((gp) => gp.jlpt_level === 'N5'),
           })
         ),
       ],
@@ -39,7 +39,7 @@ export const Loading: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(`${BASE}/api/v1/:locale/grammar-points`, async () => {
+        http.get(`${BASE}/api/v1/grammar-points`, async () => {
           await new Promise(() => {}); // never resolves
         }),
       ],
@@ -51,8 +51,8 @@ export const Empty: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(`${BASE}/api/v1/:locale/grammar-points`, () =>
-          HttpResponse.json({ grammar_points: [], total: 0, page: 1, totalPages: 0 })
+        http.get(`${BASE}/api/v1/grammar-points`, () =>
+          HttpResponse.json({ items: [], total: 0 })
         ),
       ],
     },

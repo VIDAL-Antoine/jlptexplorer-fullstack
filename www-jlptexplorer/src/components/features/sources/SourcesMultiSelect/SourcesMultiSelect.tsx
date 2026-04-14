@@ -1,7 +1,10 @@
-import { useTranslations } from 'next-intl';
+'use client';
+
+import { useLocale, useTranslations } from 'next-intl';
 import { Group, MultiSelect } from '@mantine/core';
 import { useSettings } from '@/contexts/SettingsContext';
 import type { Source } from '@/lib/api';
+import { getLocalizedTitle } from '@/utils/i18n';
 import { getSourceTypeIcon } from '@/utils/icons';
 
 const SOURCE_TYPE_ORDER = ['anime', 'game', 'movie', 'series', 'music'] as const;
@@ -15,13 +18,14 @@ type Props = {
 
 export function SourcesMultiSelect({ sources, value, onChange, placeholder }: Props) {
   const tTypes = useTranslations('SourceTypes');
+  const locale = useLocale();
   const { sourceTitleLang } = useSettings();
 
   const slugToType = Object.fromEntries(sources.map((s) => [s.slug, s.type]));
 
   const toItem = (s: Source) => ({
     value: s.slug,
-    label: (sourceTitleLang === 'japanese' ? (s.japanese_title ?? s.title) : s.title) ?? s.slug,
+    label: getLocalizedTitle(s, sourceTitleLang, locale) ?? s.slug,
   });
 
   const data = SOURCE_TYPE_ORDER.flatMap((type) => {

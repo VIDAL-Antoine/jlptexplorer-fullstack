@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { gpTeIruDetail, gpWaTopicDetail } from '../../../../../.storybook/fixtures';
+import { gpTeIru, gpWaTopic } from '../../../../../.storybook/fixtures';
 import { GrammarPointHeader } from './GrammarPointHeader';
 
 const tScenes = (key: string, values?: Record<string, number>) => {
@@ -23,28 +23,28 @@ export default meta;
 type Story = StoryObj<typeof GrammarPointHeader>;
 
 export const N5NoNotes: Story = {
-  args: { grammarPoint: gpWaTopicDetail },
+  args: { grammarPoint: gpWaTopic, scenesCount: 42 },
 };
 
 export const N5WithNotes: Story = {
   args: {
-    grammarPoint: {
-      ...gpTeIruDetail,
-      notes: 'Also used for habitual actions. Contracted form: てる.',
-    },
+    grammarPoint: gpTeIru,
+    scenesCount: 17,
   },
 };
 
 export const N4: Story = {
   args: {
     grammarPoint: {
-      ...gpTeIruDetail,
+      ...gpTeIru,
       jlpt_level: 'N4',
       title: 'たら',
       romaji: 'tara',
-      meaning: 'conditional: if/when (after completion)',
-      scenes_count: 5,
-      notes: null,
+      translations: [
+        { id: 99, grammar_point_id: 99, locale: 'en', meaning: 'conditional: if/when (after completion)', notes: null },
+        { id: 100, grammar_point_id: 99, locale: 'fr', meaning: 'conditionnel : si/quand (après accomplissement)', notes: null },
+      ],
     },
+    scenesCount: 5,
   },
 };

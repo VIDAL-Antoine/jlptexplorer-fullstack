@@ -1,47 +1,39 @@
 import { apiFetch } from './client';
-import type { GrammarPointDetail, GrammarPointScenesPage, GrammarPointsPage } from './types';
+import type { GrammarPoint, GrammarPointScenesPage, GrammarPointsPage } from './types';
 
 export const grammarPoints = {
-  list: (
-    locale: string,
-    params?: { jlptLevel?: string; search?: string; page?: number; limit?: number }
-  ) => {
-    const query = new URLSearchParams();
-    if (params?.jlptLevel) {
-      query.set('jlpt_level', params.jlptLevel);
+  list: (params?: { jlpt_level?: string; search?: string; page?: number; limit?: number }) => {
+    const qs = new URLSearchParams();
+    if (params?.jlpt_level) {
+      qs.set('jlpt_level', params.jlpt_level);
     }
     if (params?.search) {
-      query.set('search', params.search);
+      qs.set('search', params.search);
     }
     if (params?.page) {
-      query.set('page', String(params.page));
+      qs.set('page', String(params.page));
     }
     if (params?.limit) {
-      query.set('limit', String(params.limit));
+      qs.set('limit', String(params.limit));
     }
-    const qs = query.toString();
-    return apiFetch<GrammarPointsPage>(`/api/v1/${locale}/grammar-points${qs ? `?${qs}` : ''}`);
+    const query = qs.toString();
+    return apiFetch<GrammarPointsPage>(`/api/v1/grammar-points${query ? `?${query}` : ''}`);
   },
-  get: (locale: string, slug: string) =>
-    apiFetch<GrammarPointDetail>(`/api/v1/${locale}/grammar-points/${slug}`),
-  scenes: (
-    locale: string,
-    slug: string,
-    params?: { page?: number; limit?: number; sources?: string[] }
-  ) => {
-    const query = new URLSearchParams();
+  get: (slug: string) => apiFetch<GrammarPoint>(`/api/v1/grammar-points/${slug}`),
+  scenes: (slug: string, params?: { sources?: string[]; page?: number; limit?: number }) => {
+    const qs = new URLSearchParams();
+    if (params?.sources?.length) {
+      qs.set('sources', params.sources.join(','));
+    }
     if (params?.page) {
-      query.set('page', String(params.page));
+      qs.set('page', String(params.page));
     }
     if (params?.limit) {
-      query.set('limit', String(params.limit));
+      qs.set('limit', String(params.limit));
     }
-    if (params?.sources?.length) {
-      query.set('sources', params.sources.join(','));
-    }
-    const qs = query.toString();
+    const query = qs.toString();
     return apiFetch<GrammarPointScenesPage>(
-      `/api/v1/${locale}/grammar-points/${slug}/scenes${qs ? `?${qs}` : ''}`
+      `/api/v1/grammar-points/${slug}/scenes${query ? `?${query}` : ''}`
     );
   },
 };

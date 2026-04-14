@@ -1,34 +1,60 @@
 import { type JlptLevel } from '@/constants/jlpt';
 
+export type SourceTranslation = {
+  id: number;
+  source_id: number;
+  locale: string;
+  title: string;
+};
+
+export type SpeakerTranslation = {
+  id: number;
+  speaker_id: number;
+  locale: string;
+  name: string;
+  description: string | null;
+};
+
+export type GrammarPointTranslation = {
+  id: number;
+  grammar_point_id: number;
+  locale: string;
+  meaning: string;
+  notes: string | null;
+};
+
+export type TranscriptLineTranslation = {
+  id: number;
+  transcript_line_id: number;
+  locale: string;
+  translation: string | null;
+};
+
 export type GrammarPoint = {
   id: number;
   slug: string;
   title: string;
   romaji: string;
-  meaning: string | null;
   jlpt_level: JlptLevel;
-  notes: string | null;
-  created_at: string;
-  has_scenes: boolean;
+  translations: GrammarPointTranslation[];
+  has_scenes?: boolean;
 };
 
 export type Source = {
   id: number;
   slug: string;
-  title: string | null;
-  japanese_title: string | null;
   type: 'game' | 'anime' | 'movie' | 'series' | 'music';
   cover_image_url: string | null;
-  created_at: string;
+  japanese_title: string | null;
+  translations: SourceTranslation[];
 };
 
 export type Speaker = {
   id: number;
   slug: string;
-  name: string | null;
   name_japanese: string | null;
-  description: string | null;
   image_url: string | null;
+  translations: SpeakerTranslation[];
 };
 
 export type TranscriptLineGrammarPoint = {
@@ -48,7 +74,7 @@ export type TranscriptLine = {
   speaker_id: number | null;
   speakers: Speaker | null;
   japanese_text: string;
-  translation: string | null;
+  translations: TranscriptLineTranslation[];
   transcript_line_grammar_points: TranscriptLineGrammarPoint[];
 };
 
@@ -60,7 +86,6 @@ export type Scene = {
   end_time: number;
   episode_number: number;
   notes: string | null;
-  created_at: string;
 };
 
 export type SceneWithDetails = Scene & {
@@ -68,59 +93,26 @@ export type SceneWithDetails = Scene & {
   transcript_lines: TranscriptLine[];
 };
 
-export type GrammarPointsPage = {
-  grammar_points: GrammarPoint[];
+export type Paginated<T> = {
+  items: T[];
   total: number;
-  page: number;
-  totalPages: number;
 };
 
-export type GrammarPointDetail = GrammarPoint & {
-  scenes_count: number;
-  available_sources: Source[];
+export type GrammarPointsPage = Paginated<GrammarPoint>;
+
+export type GrammarPointScenesPage = Paginated<SceneWithDetails> & {
+  availableSources: Source[];
 };
 
-export type GrammarPointScenesPage = {
-  scenes: SceneWithDetails[];
-  total: number;
-  page: number;
-  totalPages: number;
-  available_sources: Source[];
+export type ScenesPage = Paginated<SceneWithDetails> & {
+  availableSources: Source[];
+  availableGrammarPoints: GrammarPoint[];
 };
 
-export type SourcesPage = {
-  sources: Source[];
-  total: number;
-  page: number;
-  totalPages: number;
-  available_types: Source['type'][];
+export type SourcesPage = Paginated<Source>;
+
+export type SourceScenesPage = Paginated<SceneWithDetails> & {
+  availableGrammarPoints: GrammarPoint[];
 };
 
-export type SourceDetail = Source & {
-  scenes_count: number;
-  grammar_points: GrammarPoint[];
-};
-
-export type SourceScenesPage = {
-  scenes: SceneWithDetails[];
-  total: number;
-  page: number;
-  totalPages: number;
-  available_grammar_points: GrammarPoint[];
-};
-
-export type ScenesPage = {
-  scenes: SceneWithDetails[];
-  total: number;
-  page: number;
-  totalPages: number;
-  available_sources: Source[];
-  available_grammar_points: GrammarPoint[];
-};
-
-export type SpeakersPage = {
-  speakers: Speaker[];
-  total: number;
-  page: number;
-  totalPages: number;
-};
+export type SpeakersPage = Paginated<Speaker>;

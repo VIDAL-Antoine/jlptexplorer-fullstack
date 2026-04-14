@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   Anchor,
   AspectRatio,
@@ -38,6 +38,7 @@ export function SceneCard({
   defaultOpened = false,
 }: SceneCardProps) {
   const t = useTranslations('SceneCard');
+  const locale = useLocale();
   const [opened, { toggle }] = useDisclosure(defaultOpened);
   const [activeIds, setActiveIds] = useState<Set<number>>(
     () => new Set(currentGrammarPointIds ?? [])
@@ -90,7 +91,7 @@ export function SceneCard({
             underline="never"
             c="inherit"
           >
-            <Title order={4}>{getLocalizedTitle(scene.sources, sourceTitleLang)}</Title>
+            <Title order={4}>{getLocalizedTitle(scene.sources, sourceTitleLang, locale)}</Title>
           </Anchor>
           <Anchor
             component={Link}

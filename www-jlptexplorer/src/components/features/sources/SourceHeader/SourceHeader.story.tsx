@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import {
   sourceDragonBall,
-  sourceDragonBallZDetail,
-  sourceFinalFantasyVIIDetail,
+  sourceDragonBallZ,
+  sourceFinalFantasyVII,
   sourceTekken4,
 } from '../../../../../.storybook/fixtures';
 import { SourceHeader } from './SourceHeader';
@@ -40,28 +40,36 @@ type Story = StoryObj<typeof SourceHeader>;
 
 export const Anime: Story = {
   args: {
-    source: sourceDragonBallZDetail,
+    source: sourceDragonBallZ,
     displayTitle: 'Dragon Ball Z',
+    scenesCount: 24,
+    grammarPointsCount: 4,
   },
 };
 
 export const Game: Story = {
   args: {
-    source: sourceFinalFantasyVIIDetail,
+    source: sourceFinalFantasyVII,
     displayTitle: 'Final Fantasy VII',
+    scenesCount: 8,
+    grammarPointsCount: 2,
   },
 };
 
 export const NoCover: Story = {
   args: {
-    source: { ...sourceTekken4, scenes_count: 6, grammar_points: [] },
+    source: sourceTekken4,
     displayTitle: 'Tekken 4',
+    scenesCount: 6,
+    grammarPointsCount: 0,
   },
 };
 
 export const JapaneseTitle: Story = {
   args: {
-    source: { ...sourceDragonBall, scenes_count: 12, grammar_points: [] },
+    source: sourceDragonBall,
     displayTitle: 'ドラゴンボール',
+    scenesCount: 12,
+    grammarPointsCount: 0,
   },
 };

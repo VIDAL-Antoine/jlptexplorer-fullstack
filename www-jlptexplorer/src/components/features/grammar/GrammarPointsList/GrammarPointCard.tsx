@@ -1,19 +1,25 @@
-import { useTranslations } from 'next-intl';
+'use client';
+
+import { useLocale, useTranslations } from 'next-intl';
 import { Badge, Card, Group, Text, Title } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { Link } from '@/i18n/navigation';
 import { type GrammarPoint } from '@/lib/api';
 import { routes } from '@/lib/routes';
+import { getLocalizedMeaning } from '@/utils/i18n';
 
 interface GrammarPointCardProps {
   gp: GrammarPoint;
+  hasScenes: boolean;
 }
 
-export function GrammarPointCard({ gp }: GrammarPointCardProps) {
+export function GrammarPointCard({ gp, hasScenes }: GrammarPointCardProps) {
   const t = useTranslations('GrammarPointsList');
-  const meaning = gp.meaning ? gp.meaning.charAt(0).toUpperCase() + gp.meaning.slice(1) : '';
+  const locale = useLocale();
+  const meaning = getLocalizedMeaning(gp.translations, locale);
+  const displayMeaning = meaning ? meaning.charAt(0).toUpperCase() + meaning.slice(1) : '';
 
-  if (gp.has_scenes) {
+  if (hasScenes) {
     return (
       <Card
         shadow="sm"
@@ -34,7 +40,7 @@ export function GrammarPointCard({ gp }: GrammarPointCardProps) {
           {gp.romaji}
         </Text>
         <Text size="md" mt="xs">
-          {meaning}
+          {displayMeaning}
         </Text>
       </Card>
     );
@@ -52,7 +58,7 @@ export function GrammarPointCard({ gp }: GrammarPointCardProps) {
         {gp.romaji}
       </Text>
       <Text size="md" mt="xs">
-        {meaning}
+        {displayMeaning}
       </Text>
       <Badge mt="xs" color="gray" variant="light">
         {t('comingSoon')}

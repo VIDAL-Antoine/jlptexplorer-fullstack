@@ -19,12 +19,16 @@ export function GrammarBadgeGroup({
   onToggle,
   script,
 }: GrammarBadgeGroupProps) {
-  if (grammarPoints.length === 0) return null;
+  if (grammarPoints.length === 0) {
+    return null;
+  }
 
   return (
     <Group gap="xs" mt="xs">
       {deduplicateAndSortGrammarPoints(grammarPoints).map((tlgp) => {
-        if (!tlgp.grammar_points) return null;
+        if (!tlgp.grammar_points) {
+          return null;
+        }
         const isActive = activeIds.has(tlgp.grammar_point_id);
         return (
           <Badge

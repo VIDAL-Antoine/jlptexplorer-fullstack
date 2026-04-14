@@ -1,7 +1,8 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Group, Skeleton, Stack } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
 import { GrammarPointHeader } from '@/components/features/grammar/GrammarPointHeader/GrammarPointHeader';
@@ -12,9 +13,34 @@ import { api } from '@/lib/api';
 
 const PAGE_SIZE = 12;
 
-export default function GrammarPointPage() {
+function GrammarPointLoadingFallback() {
+  return (
+    <Stack mt="xl" gap="lg">
+      <div>
+        <Group align="center" gap="sm" mb="xs">
+          <Skeleton height={36} width={200} radius="sm" />
+          <Skeleton height={24} width={40} radius="xl" />
+        </Group>
+        <Skeleton height={14} width={120} radius="sm" mb="xs" />
+        <Skeleton height={14} width={300} radius="sm" mb="xs" />
+        <Skeleton height={12} width={100} radius="sm" />
+      </div>
+      <ScenesGrid
+        scenes={null}
+        totalPages={0}
+        page={1}
+        onPageChange={() => {}}
+        loading
+        pageSize={PAGE_SIZE}
+        noScenesMessage=""
+        currentGrammarPointIds={[]}
+      />
+    </Stack>
+  );
+}
+
+function GrammarPointContent() {
   const { slug } = useParams<{ lang: string; slug: string }>();
-  const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -25,13 +51,13 @@ export default function GrammarPointPage() {
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const { data: grammarPoint, loading: grammarPointLoading } = useApiData(
-    () => api.grammarPoints.get(locale, slug),
-    [slug, locale]
+    () => api.grammarPoints.get(slug),
+    [slug]
   );
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
-    () => api.grammarPoints.scenes(locale, slug, { page, limit: PAGE_SIZE, sources: sourceFilter }),
-    [slug, locale, page, sourceFilterRaw]
+    () => api.grammarPoints.scenes(slug, { sources: sourceFilter, page, limit: PAGE_SIZE }),
+    [slug, sourceFilterRaw, page]
   );
 
   function updateParams(sources: string[], newPage: number) {
@@ -47,53 +73,26 @@ export default function GrammarPointPage() {
   }
 
   if (grammarPointLoading) {
-    return (
-      <Stack mt="xl" gap="lg">
-        <div>
-          <Group align="center" gap="sm" mb="xs">
-            <Skeleton height={36} width={200} radius="sm" />
-            <Skeleton height={24} width={40} radius="xl" />
-          </Group>
-          <Skeleton height={14} width={120} radius="sm" mb="xs" />
-          <Skeleton height={14} width={300} radius="sm" mb="xs" />
-          <Skeleton height={12} width={100} radius="sm" />
-        </div>
-        <ScenesGrid
-          scenes={null}
-          totalPages={0}
-          page={1}
-          onPageChange={() => {}}
-          loading
-          pageSize={PAGE_SIZE}
-          noScenesMessage=""
-          currentGrammarPointIds={[]}
-        />
-      </Stack>
-    );
+    return <GrammarPointLoadingFallback />;
   }
   if (!grammarPoint) {
     return <NotFound />;
   }
 
-  const selectedSources = grammarPoint.available_sources.filter((s) =>
-    sourceFilter.includes(s.slug)
-  );
-  const availableSources = scenesPage?.available_sources ?? grammarPoint.available_sources;
-  const mergedSources = [
-    ...availableSources,
-    ...selectedSources.filter((s) => !availableSources.some((a) => a.id === s.id)),
-  ];
+  const availableSources = scenesPage?.availableSources ?? [];
+  const totalPages = scenesPage ? Math.ceil(scenesPage.total / PAGE_SIZE) : 0;
 
   return (
     <Stack mt="xl" gap="lg">
       <GrammarPointHeader
         grammarPoint={grammarPoint}
+        scenesCount={scenesPage?.total ?? 0}
         tScenes={(key, values) => t(key as Parameters<typeof t>[0], values)}
       />
 
-      {grammarPoint.available_sources.length > 0 && (
+      {availableSources.length > 0 && (
         <SourcesMultiSelect
-          sources={mergedSources}
+          sources={availableSources}
           value={sourceFilter}
           onChange={(value) => updateParams(value, 1)}
           placeholder={t('filterPlaceholder')}
@@ -101,15 +100,23 @@ export default function GrammarPointPage() {
       )}
 
       <ScenesGrid
-        scenes={scenesPage?.scenes ?? null}
-        totalPages={scenesPage?.totalPages ?? 0}
+        scenes={scenesPage?.items ?? null}
+        totalPages={totalPages}
         page={page}
         onPageChange={(newPage) => updateParams(sourceFilter, newPage)}
         loading={scenesLoading}
         pageSize={PAGE_SIZE}
         noScenesMessage={t('noScenes')}
-        currentGrammarPointIds={[grammarPoint.id]}
+        currentGrammarPointIds={grammarPoint ? [grammarPoint.id] : []}
       />
     </Stack>
+  );
+}
+
+export default function GrammarPointPage() {
+  return (
+    <Suspense fallback={<GrammarPointLoadingFallback />}>
+      <GrammarPointContent />
+    </Suspense>
   );
 }

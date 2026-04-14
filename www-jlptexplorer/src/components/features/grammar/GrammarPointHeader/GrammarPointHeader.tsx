@@ -1,15 +1,27 @@
+'use client';
+
+import { useLocale } from 'next-intl';
 import { Badge, Group, Stack, Text, Title } from '@mantine/core';
 import { JLPT_LEVEL_COLORS } from '@/constants/jlpt';
 import { Link } from '@/i18n/navigation';
-import { type GrammarPointDetail } from '@/lib/api/types';
+import { type GrammarPoint } from '@/lib/api/types';
 import { routes } from '@/lib/routes';
+import { getLocalizedMeaning } from '@/utils/i18n';
 
 type Props = {
-  grammarPoint: GrammarPointDetail;
+  grammarPoint: GrammarPoint;
+  scenesCount: number;
   tScenes: (key: string, values?: Record<string, number>) => string;
 };
 
-export function GrammarPointHeader({ grammarPoint, tScenes }: Props) {
+export function GrammarPointHeader({ grammarPoint, scenesCount, tScenes }: Props) {
+  const locale = useLocale();
+  const meaning = getLocalizedMeaning(grammarPoint.translations, locale);
+  const notes =
+    grammarPoint.translations.find((t) => t.locale === locale)?.notes ??
+    grammarPoint.translations[0]?.notes ??
+    null;
+
   return (
     <Stack gap={0}>
       <Group align="center" gap="sm">
@@ -25,18 +37,14 @@ export function GrammarPointHeader({ grammarPoint, tScenes }: Props) {
         </Badge>
       </Group>
       <Text c="dimmed">{grammarPoint.romaji}</Text>
-      <Text mt="xs">
-        {grammarPoint.meaning
-          ? grammarPoint.meaning.charAt(0).toUpperCase() + grammarPoint.meaning.slice(1)
-          : ''}
-      </Text>
-      {grammarPoint.notes && (
+      <Text mt="xs">{meaning ? meaning.charAt(0).toUpperCase() + meaning.slice(1) : ''}</Text>
+      {notes && (
         <Text size="sm" c="dimmed" mt="xs">
-          {grammarPoint.notes}
+          {notes}
         </Text>
       )}
       <Text size="sm" c="dimmed" mt="xs">
-        {tScenes('scenesCount', { count: grammarPoint.scenes_count })}
+        {tScenes('scenesCount', { count: scenesCount })}
       </Text>
     </Stack>
   );
