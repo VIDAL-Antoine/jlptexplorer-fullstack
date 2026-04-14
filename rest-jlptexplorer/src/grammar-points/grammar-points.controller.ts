@@ -29,6 +29,12 @@ export class GrammarPointsController {
     return this.grammarPointsService.findAll(query);
   }
 
+  @ApiOperation({ summary: 'Get a grammar point by slug' })
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.grammarPointsService.findOne(slug);
+  }
+
   @ApiOperation({ summary: 'Get scenes for a grammar point' })
   @Get(':slug/scenes')
   findScenes(
@@ -36,12 +42,6 @@ export class GrammarPointsController {
     @Query() query: QueryGrammarPointScenesDto,
   ) {
     return this.grammarPointsService.findScenes(slug, query);
-  }
-
-  @ApiOperation({ summary: 'Get a grammar point by slug' })
-  @Get(':slug')
-  findOne(@Param('slug') slug: string) {
-    return this.grammarPointsService.findOne(slug);
   }
 
   @UseGuards(ApiKeyGuard)

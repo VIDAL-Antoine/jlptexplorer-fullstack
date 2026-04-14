@@ -45,7 +45,15 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+
+  SwaggerModule.setup('docs', app, document, {
+    swaggerOptions: {
+      operationsSorter: (a: { get: (key: string) => string }, b: { get: (key: string) => string }) => {
+        const order = ['get', 'post', 'put', 'patch', 'delete'];
+        return order.indexOf(a.get('method')) - order.indexOf(b.get('method'));
+      },
+    },
+  });
 
   await app.listen(process.env['PORT'] ?? 8080);
 }

@@ -29,6 +29,12 @@ export class SourcesController {
     return this.sourcesService.findAll(query);
   }
 
+  @ApiOperation({ summary: 'Get a source by slug' })
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.sourcesService.findOne(slug);
+  }
+
   @ApiOperation({ summary: 'Get scenes for a source' })
   @Get(':slug/scenes')
   findScenes(
@@ -36,12 +42,6 @@ export class SourcesController {
     @Query() query: QuerySourceScenesDto,
   ) {
     return this.sourcesService.findScenes(slug, query);
-  }
-
-  @ApiOperation({ summary: 'Get a source by slug' })
-  @Get(':slug')
-  findOne(@Param('slug') slug: string) {
-    return this.sourcesService.findOne(slug);
   }
 
   @UseGuards(ApiKeyGuard)
