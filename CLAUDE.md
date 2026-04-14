@@ -87,14 +87,15 @@ jlptexplorer-fullstack/
     │   ├── prisma/                      ← PrismaService (@Global module)
     │   ├── common/
     │   │   ├── guards/api-key.guard.ts  ← x-api-key header guard
-    │   │   └── filters/prisma-exception.filter.ts
+    │   │   ├── filters/prisma-exception.filter.ts
+    │   │   └── interceptors/strip-timestamps.interceptor.ts
     │   ├── sources/                     ← controller / service / repository / dto
     │   ├── scenes/
     │   ├── grammar-points/
     │   ├── speakers/
     │   ├── transcript-lines/
     │   ├── transcript-line-grammar-points/
-    │   └── utils/                       ← parse-time, flatten
+    │   └── utils/                       ← parse-time
     ├── prisma/
     └── prisma.config.ts
 ```
@@ -103,18 +104,20 @@ jlptexplorer-fullstack/
 
 ```
 /api/v1/
-├── /{locale}/               ← Public locale-scoped routes (read-only)
-│   ├── /sources             GET (filterable by type, grammar_points, grammar_match)
-│   ├── /sources/{slug}      GET
-│   ├── /scenes              GET (filterable by source, grammar, jlpt_level, grammar_match; paginated)
-│   ├── /grammar-points      GET (filterable by jlpt_level)
-│   ├── /speakers            GET
-│   └── /transcript-lines    GET (filterable by scene_id, speaker_slug, grammar_points; enriched with source, speaker, grammar points)
-├── /scenes                  POST, PUT, PATCH, DELETE (admin)
-├── /sources                 POST, PUT, PATCH, DELETE (admin)
-├── /speakers                POST, PUT, PATCH, DELETE (admin)
-├── /transcript-lines        POST, PUT, PATCH, DELETE (admin)
-└── /transcript-line-grammar-points  POST, PATCH, DELETE (admin)
+├── /sources                       GET (filterable by type; paginated), POST (admin)
+├── /sources/{slug}                GET, PUT, PATCH, DELETE (admin)
+├── /sources/{slug}/scenes         GET (filterable by grammar_points, grammar_match; paginated)
+├── /scenes                        GET (filterable by sources, grammar_points, grammar_match, youtube_video_id, start_time, end_time; paginated), POST (admin)
+├── /scenes/{id}                   GET, PUT, PATCH, DELETE (admin)
+├── /grammar-points                GET (filterable by jlpt_level, search; paginated), POST (admin)
+├── /grammar-points/{slug}         GET, PUT, PATCH, DELETE (admin)
+├── /grammar-points/{slug}/scenes  GET (paginated)
+├── /speakers                      GET, POST (admin)
+├── /speakers/{slug}               GET, PUT, PATCH, DELETE (admin)
+├── /transcript-lines              GET (filterable by scene_id, speaker_slug, grammar_points; paginated), POST (admin)
+├── /transcript-lines/{id}         GET, PUT, PATCH, DELETE (admin)
+├── /transcript-line-grammar-points       GET, POST (admin — entire resource is admin-only)
+└── /transcript-line-grammar-points/{id}  GET, PUT, PATCH, DELETE (admin)
 ```
 
 ## Key architectural decisions
@@ -129,8 +132,7 @@ jlptexplorer-fullstack/
 - **Path alias `@/`** available in both `www-jlptexplorer` (`src/`) and `rest-jlptexplorer` (`src/`)
 - **i18n** via next-intl: all www-jlptexplorer routes under `app/[lang]/`, messages in `src/messages/`
 - **SettingsContext** manages 5 user preferences in localStorage: speaker name language, source title language, dialogue translations visibility, grammar point script (romaji/kana), grammar match mode (`scene` | `transcript_line`)
-- **`grammar_match`** query param on `/scenes` and `/sources`: `scene` returns scenes that have at least one grammar match anywhere in their transcript lines; `transcript_line` filters by individual line
-- `transcript_lines.japanese_text` — field was renamed from `text` to `japanese_text`
+- **`grammar_match`** query param on `/scenes` and `/sources/{slug}/scenes`: `scene` returns scenes that have at least one grammar match anywhere in their transcript lines; `transcript_line` filters by individual line
 
 ## Dev commands
 

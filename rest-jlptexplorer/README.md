@@ -49,7 +49,6 @@ npm run test         # run unit tests
 npm run lint         # eslint with auto-fix
 npm run db:generate  # regenerate Prisma client after schema changes
 npm run db:migrate   # create and apply a migration
-npm run db:push      # push schema changes without migration (dev only)
 npm run db:studio    # open Prisma Studio
 ```
 
@@ -62,7 +61,8 @@ src/
 ├── prisma/                              ← @Global PrismaService (PrismaPg adapter)
 ├── common/
 │   ├── guards/api-key.guard.ts          ← x-api-key header guard
-│   └── filters/prisma-exception.filter.ts
+│   ├── filters/prisma-exception.filter.ts
+│   └── interceptors/strip-timestamps.interceptor.ts
 ├── sources/                             ← controller / service / repository / dto
 ├── scenes/
 ├── grammar-points/
@@ -80,23 +80,23 @@ prisma.config.ts                         ← Prisma v7 datasource config
 
 Base URL: `http://localhost:8080/api/v1`
 
-Public routes (read-only, no auth) are locale-scoped:
+Public routes (read-only, no auth):
 
-| Method | Path |
-|--------|------|
-| GET | `/{locale}/sources` |
-| GET | `/{locale}/sources/{slug}` |
-| GET | `/{locale}/sources/{slug}/scenes` |
-| GET | `/{locale}/scenes` |
-| GET | `/{locale}/scenes/{id}` |
-| GET | `/{locale}/grammar-points` |
-| GET | `/{locale}/grammar-points/{slug}` |
-| GET | `/{locale}/grammar-points/{slug}/scenes` |
-| GET | `/{locale}/speakers` |
-| GET | `/{locale}/speakers/{slug}` |
-| GET | `/{locale}/transcript-lines` |
-| GET | `/{locale}/transcript-lines/{id}` |
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/sources` | filterable by `type` |
+| GET | `/sources/{slug}` | |
+| GET | `/sources/{slug}/scenes` | filterable by `grammar_points`, `grammar_match` |
+| GET | `/scenes` | filterable by `sources`, `grammar_points`, `grammar_match`, `youtube_video_id` |
+| GET | `/scenes/{id}` | |
+| GET | `/grammar-points` | filterable by `jlpt_level`, `search` |
+| GET | `/grammar-points/{slug}` | |
+| GET | `/grammar-points/{slug}/scenes` | |
+| GET | `/speakers` | |
+| GET | `/speakers/{slug}` | |
+| GET | `/transcript-lines` | filterable by `scene_id`, `speaker_slug`, `grammar_points` |
+| GET | `/transcript-lines/{id}` | |
 
-Admin routes (require `x-api-key` header): POST, PUT, PATCH, DELETE on `/sources`, `/scenes`, `/grammar-points`, `/speakers`, `/transcript-lines`, `/transcript-line-grammar-points`.
+Admin routes (require `x-api-key` header): POST, PUT, PATCH, DELETE on all resources above, plus all routes on `/transcript-line-grammar-points` (fully admin-only).
 
 Full interactive docs: `http://localhost:8080/docs`
