@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Group, Skeleton, Stack } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
@@ -10,6 +10,7 @@ import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourceHeader } from '@/components/features/sources/SourceHeader/SourceHeader';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useApiData } from '@/hooks/useApiData';
+import { useUrlFilters } from '@/hooks/useUrlFilters';
 import { api } from '@/lib/api';
 import { getLocalizedTitle } from '@/utils/i18n';
 
@@ -44,41 +45,23 @@ function SourceLoadingFallback() {
 function SourceContent() {
   const { slug } = useParams<{ lang: string; slug: string }>();
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const t = useTranslations('SourcePage');
   const tTypes = useTranslations('SourceTypes');
   const { sourceTitleLang, grammarMatch } = useSettings();
-
-  const grammarFilterRaw = searchParams.get('grammar_points') ?? '';
-  const grammarFilter = grammarFilterRaw ? grammarFilterRaw.split(',') : [];
-  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
+  const { filters, rawFilters, setFilters } = useUrlFilters(['grammar_points'] as const);
 
   const { data: source, loading: sourceLoading } = useApiData(() => api.sources.get(slug), [slug]);
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
     () =>
       api.sources.scenes(slug, {
-        grammar_points: grammarFilter.length ? grammarFilter : undefined,
+        grammar_points: filters.grammar_points.length ? filters.grammar_points : undefined,
         grammar_match: grammarMatch,
-        page,
+        page: filters.page,
         limit: PAGE_SIZE,
       }),
-    [slug, grammarFilterRaw, grammarMatch, page]
+    [slug, rawFilters.grammar_points, grammarMatch, filters.page]
   );
-
-  function updateParams(grammar: string[], newPage: number) {
-    const params = new URLSearchParams();
-    if (grammar.length > 0) {
-      params.set('grammar_points', grammar.join(','));
-    }
-    if (newPage > 1) {
-      params.set('page', String(newPage));
-    }
-    const qs = params.toString();
-    router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
-  }
 
   if (sourceLoading) {
     return <SourceLoadingFallback />;
@@ -91,7 +74,7 @@ function SourceContent() {
   const availableGrammarPoints = scenesPage?.availableGrammarPoints ?? [];
   const totalPages = scenesPage ? Math.ceil(scenesPage.total / PAGE_SIZE) : 0;
   const currentGrammarPointIds = availableGrammarPoints
-    .filter((gp) => grammarFilter.includes(gp.slug))
+    .filter((gp) => filters.grammar_points.includes(gp.slug))
     .map((gp) => gp.id);
 
   return (
@@ -108,8 +91,8 @@ function SourceContent() {
       {availableGrammarPoints.length > 0 && (
         <GrammarPointsMultiSelect
           grammarPoints={availableGrammarPoints}
-          value={grammarFilter}
-          onChange={(value) => updateParams(value, 1)}
+          value={filters.grammar_points}
+          onChange={(value) => setFilters({ grammar_points: value, page: 1 })}
           placeholder={t('filterPlaceholder')}
         />
       )}
@@ -117,8 +100,8 @@ function SourceContent() {
       <ScenesGrid
         scenes={scenesPage?.items ?? null}
         totalPages={totalPages}
-        page={page}
-        onPageChange={(newPage) => updateParams(grammarFilter, newPage)}
+        page={filters.page}
+        onPageChange={(newPage) => setFilters({ page: newPage })}
         loading={scenesLoading}
         pageSize={PAGE_SIZE}
         noScenesMessage={t('noScenes')}

@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Group, Skeleton, Stack } from '@mantine/core';
 import NotFound from '@/app/[lang]/not-found';
@@ -9,6 +9,7 @@ import { GrammarPointHeader } from '@/components/features/grammar/GrammarPointHe
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourcesMultiSelect } from '@/components/features/sources/SourcesMultiSelect/SourcesMultiSelect';
 import { useApiData } from '@/hooks/useApiData';
+import { useUrlFilters } from '@/hooks/useUrlFilters';
 import { api } from '@/lib/api';
 
 const PAGE_SIZE = 12;
@@ -41,14 +42,8 @@ function GrammarPointLoadingFallback() {
 
 function GrammarPointContent() {
   const { slug } = useParams<{ lang: string; slug: string }>();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const t = useTranslations('GrammarPointPage');
-
-  const sourceFilterRaw = searchParams.get('sources') ?? '';
-  const sourceFilter = sourceFilterRaw ? sourceFilterRaw.split(',') : [];
-  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
+  const { filters, rawFilters, setFilters } = useUrlFilters(['sources'] as const);
 
   const { data: grammarPoint, loading: grammarPointLoading } = useApiData(
     () => api.grammarPoints.get(slug),
@@ -56,21 +51,9 @@ function GrammarPointContent() {
   );
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
-    () => api.grammarPoints.scenes(slug, { sources: sourceFilter, page, limit: PAGE_SIZE }),
-    [slug, sourceFilterRaw, page]
+    () => api.grammarPoints.scenes(slug, { sources: filters.sources, page: filters.page, limit: PAGE_SIZE }),
+    [slug, rawFilters.sources, filters.page]
   );
-
-  function updateParams(sources: string[], newPage: number) {
-    const params = new URLSearchParams();
-    if (sources.length > 0) {
-      params.set('sources', sources.join(','));
-    }
-    if (newPage > 1) {
-      params.set('page', String(newPage));
-    }
-    const qs = params.toString();
-    router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
-  }
 
   if (grammarPointLoading) {
     return <GrammarPointLoadingFallback />;
@@ -93,8 +76,8 @@ function GrammarPointContent() {
       {availableSources.length > 0 && (
         <SourcesMultiSelect
           sources={availableSources}
-          value={sourceFilter}
-          onChange={(value) => updateParams(value, 1)}
+          value={filters.sources}
+          onChange={(value) => setFilters({ sources: value, page: 1 })}
           placeholder={t('filterPlaceholder')}
         />
       )}
@@ -102,8 +85,8 @@ function GrammarPointContent() {
       <ScenesGrid
         scenes={scenesPage?.items ?? null}
         totalPages={totalPages}
-        page={page}
-        onPageChange={(newPage) => updateParams(sourceFilter, newPage)}
+        page={filters.page}
+        onPageChange={(newPage) => setFilters({ page: newPage })}
         loading={scenesLoading}
         pageSize={PAGE_SIZE}
         noScenesMessage={t('noScenes')}
