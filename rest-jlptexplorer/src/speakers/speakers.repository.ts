@@ -52,7 +52,18 @@ export class SpeakersRepository {
       data: {
         ...fields,
         translations: translations
-          ? { deleteMany: {}, create: translations }
+          ? {
+              upsert: translations.map((t) => ({
+                where: {
+                  speaker_id_locale: {
+                    speaker_id: id,
+                    locale: t.locale,
+                  },
+                },
+                update: { name: t.name, description: t.description },
+                create: { locale: t.locale, name: t.name, description: t.description },
+              })),
+            }
           : undefined,
       },
       include: { translations: true },

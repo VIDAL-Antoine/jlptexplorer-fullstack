@@ -107,7 +107,18 @@ export class TranscriptLinesRepository {
         speaker_id: fields.speaker_id,
         japanese_text: fields.japanese_text,
         translations: translations
-          ? { deleteMany: {}, create: translations }
+          ? {
+              upsert: translations.map((t) => ({
+                where: {
+                  transcript_line_id_locale: {
+                    transcript_line_id: id,
+                    locale: t.locale,
+                  },
+                },
+                update: { translation: t.translation },
+                create: { locale: t.locale, translation: t.translation },
+              })),
+            }
           : undefined,
       },
       include: transcriptLineInclude,

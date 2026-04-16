@@ -167,7 +167,18 @@ export class GrammarPointsRepository {
       data: {
         ...fields,
         translations: translations
-          ? { deleteMany: {}, create: translations }
+          ? {
+              upsert: translations.map((t) => ({
+                where: {
+                  grammar_point_id_locale: {
+                    grammar_point_id: id,
+                    locale: t.locale,
+                  },
+                },
+                update: { meaning: t.meaning, notes: t.notes },
+                create: { locale: t.locale, meaning: t.meaning, notes: t.notes },
+              })),
+            }
           : undefined,
       },
       include: { translations: true },

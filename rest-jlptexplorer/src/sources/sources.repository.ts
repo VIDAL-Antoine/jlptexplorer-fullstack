@@ -132,7 +132,18 @@ export class SourcesRepository {
       data: {
         ...fields,
         translations: translations
-          ? { deleteMany: {}, create: translations }
+          ? {
+              upsert: translations.map((t) => ({
+                where: {
+                  source_id_locale: {
+                    source_id: id,
+                    locale: t.locale,
+                  },
+                },
+                update: { title: t.title },
+                create: { locale: t.locale, title: t.title },
+              })),
+            }
           : undefined,
       },
       include: { translations: true },
