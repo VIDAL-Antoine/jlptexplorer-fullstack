@@ -11,7 +11,10 @@ import { SettingsProvider } from '@/contexts/SettingsContext';
 import { theme } from '@/theme';
 
 export const metadata = {
-  title: 'JLPTExplorer',
+  title: {
+    template: '%s | JLPTExplorer',
+    default: 'JLPTExplorer',
+  },
   description: 'Japanese grammar in context — JLPT N5 to N1',
 };
 
