@@ -1,7 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateTranscriptLineGrammarPointDto } from './dto/create-transcript-line-grammar-point.dto';
-import { UpdateTranscriptLineGrammarPointDto } from './dto/update-transcript-line-grammar-point.dto';
+
+type CreateTranscriptLineGrammarPointData = {
+  transcript_line_id: number;
+  grammar_point_id: number;
+  start_index?: number | null;
+  end_index?: number | null;
+  matched_form?: string | null;
+};
+
+type UpdateTranscriptLineGrammarPointData = {
+  transcript_line_id?: number;
+  grammar_point_id?: number;
+  start_index?: number | null;
+  end_index?: number | null;
+  matched_form?: string | null;
+};
 
 @Injectable()
 export class TranscriptLineGrammarPointsRepository {
@@ -20,28 +34,28 @@ export class TranscriptLineGrammarPointsRepository {
     });
   }
 
-  create(dto: CreateTranscriptLineGrammarPointDto) {
+  create(data: CreateTranscriptLineGrammarPointData) {
     return this.prisma.transcript_line_grammar_points.create({
       data: {
-        transcript_line_id: dto.transcript_line_id,
-        grammar_point_id: dto.grammar_point_id,
-        start_index: dto.start_index ?? null,
-        end_index: dto.end_index ?? null,
-        matched_form: dto.matched_form ?? null,
+        transcript_line_id: data.transcript_line_id,
+        grammar_point_id: data.grammar_point_id,
+        start_index: data.start_index ?? null,
+        end_index: data.end_index ?? null,
+        matched_form: data.matched_form ?? null,
       },
       include: { grammar_points: true },
     });
   }
 
-  update(id: number, dto: UpdateTranscriptLineGrammarPointDto) {
+  update(id: number, data: UpdateTranscriptLineGrammarPointData) {
     return this.prisma.transcript_line_grammar_points.update({
       where: { id },
       data: {
-        transcript_line_id: dto.transcript_line_id,
-        grammar_point_id: dto.grammar_point_id,
-        start_index: dto.start_index,
-        end_index: dto.end_index,
-        matched_form: dto.matched_form,
+        transcript_line_id: data.transcript_line_id,
+        grammar_point_id: data.grammar_point_id,
+        start_index: data.start_index,
+        end_index: data.end_index,
+        matched_form: data.matched_form,
       },
       include: { grammar_points: true },
     });

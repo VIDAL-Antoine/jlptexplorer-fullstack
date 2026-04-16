@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateTranscriptLineGrammarPointDto {
@@ -7,10 +7,10 @@ export class CreateTranscriptLineGrammarPointDto {
   @Min(1)
   transcript_line_id: number;
 
-  @ApiProperty({ example: 1 })
-  @IsInt()
-  @Min(1)
-  grammar_point_id: number;
+  @ApiProperty({ example: 'wa-topic' })
+  @IsString()
+  @IsNotEmpty()
+  grammar_point_slug: string;
 
   @ApiPropertyOptional({ example: 2, nullable: true })
   @IsOptional()

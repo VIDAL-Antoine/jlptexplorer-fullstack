@@ -1,8 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateTranscriptLineDto } from './dto/create-transcript-line.dto';
-import { UpdateTranscriptLineDto } from './dto/update-transcript-line.dto';
 import { QueryTranscriptLineDto } from './dto/query-transcript-line.dto';
+
+type TranscriptLineTranslation = {
+  locale: string;
+  translation?: string | null;
+};
+
+type CreateTranscriptLineData = {
+  scene_id: number;
+  start_time: number | null;
+  speaker_id: number | null;
+  japanese_text: string;
+  translations?: TranscriptLineTranslation[];
+};
+
+type UpdateTranscriptLineData = {
+  scene_id?: number;
+  start_time?: number | null;
+  speaker_id?: number | null;
+  japanese_text?: string;
+  translations?: TranscriptLineTranslation[];
+};
+
+const transcriptLineInclude = {
+  speakers: { include: { translations: true } },
+  translations: true,
+  transcript_line_grammar_points: {
+    include: { grammar_points: { include: { translations: true } } },
+  },
+};
 
 @Injectable()
 export class TranscriptLinesRepository {
@@ -35,18 +62,10 @@ export class TranscriptLinesRepository {
         : {}),
     };
 
-    const include = {
-      speakers: { include: { translations: true } },
-      translations: true,
-      transcript_line_grammar_points: {
-        include: { grammar_points: { include: { translations: true } } },
-      },
-    };
-
     const [items, total] = await Promise.all([
       this.prisma.transcript_lines.findMany({
         where,
-        include,
+        include: transcriptLineInclude,
         orderBy: { id: 'asc' },
         skip: (page - 1) * limit,
         take: limit,
@@ -59,57 +78,39 @@ export class TranscriptLinesRepository {
   findOne(id: number) {
     return this.prisma.transcript_lines.findUnique({
       where: { id },
-      include: {
-        speakers: { include: { translations: true } },
-        translations: true,
-        transcript_line_grammar_points: {
-          include: { grammar_points: { include: { translations: true } } },
-        },
-      },
+      include: transcriptLineInclude,
     });
   }
 
-  create(dto: CreateTranscriptLineDto) {
+  create(data: CreateTranscriptLineData) {
     return this.prisma.transcript_lines.create({
       data: {
-        scene_id: dto.scene_id,
-        start_time: (dto.start_time as number | null | undefined) ?? null,
-        speaker_id: dto.speaker_id ?? null,
-        japanese_text: dto.japanese_text,
-        translations: dto.translations
-          ? { create: dto.translations }
+        scene_id: data.scene_id,
+        start_time: data.start_time,
+        speaker_id: data.speaker_id,
+        japanese_text: data.japanese_text,
+        translations: data.translations
+          ? { create: data.translations }
           : undefined,
       },
-      include: {
-        speakers: { include: { translations: true } },
-        translations: true,
-        transcript_line_grammar_points: {
-          include: { grammar_points: { include: { translations: true } } },
-        },
-      },
+      include: transcriptLineInclude,
     });
   }
 
-  update(id: number, dto: UpdateTranscriptLineDto) {
-    const { translations, ...fields } = dto;
+  update(id: number, data: UpdateTranscriptLineData) {
+    const { translations, ...fields } = data;
     return this.prisma.transcript_lines.update({
       where: { id },
       data: {
         scene_id: fields.scene_id,
-        start_time: (fields.start_time as number | null | undefined),
+        start_time: fields.start_time,
         speaker_id: fields.speaker_id,
         japanese_text: fields.japanese_text,
         translations: translations
           ? { deleteMany: {}, create: translations }
           : undefined,
       },
-      include: {
-        speakers: { include: { translations: true } },
-        translations: true,
-        transcript_line_grammar_points: {
-          include: { grammar_points: { include: { translations: true } } },
-        },
-      },
+      include: transcriptLineInclude,
     });
   }
 

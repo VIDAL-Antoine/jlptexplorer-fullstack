@@ -7,6 +7,7 @@ import {
   ValidateNested,
   Min,
 } from 'class-validator';
+
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -36,11 +37,10 @@ export class CreateTranscriptLineDto {
   @IsOptional()
   start_time?: string | number | null;
 
-  @ApiPropertyOptional({ example: 1, nullable: true })
+  @ApiPropertyOptional({ example: 'songoku', nullable: true })
   @IsOptional()
-  @IsInt()
-  @Min(1)
-  speaker_id?: number | null;
+  @IsString()
+  speaker_slug?: string | null;
 
   @ApiProperty({ example: 'オラは孫悟空だ。' })
   @IsString()
