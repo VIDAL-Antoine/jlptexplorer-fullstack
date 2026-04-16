@@ -30,7 +30,12 @@ export class TranscriptLinesService {
     await this.findOne(id);
     return this.repo.update(id, {
       ...dto,
-      start_time: dto.start_time != null ? parseTime(dto.start_time) : null,
+      start_time:
+        dto.start_time === undefined
+          ? undefined
+          : dto.start_time != null
+            ? parseTime(dto.start_time)
+            : null,
     });
   }
 

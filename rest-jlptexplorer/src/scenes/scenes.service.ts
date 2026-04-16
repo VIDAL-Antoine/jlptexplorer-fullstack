@@ -98,8 +98,9 @@ export class ScenesService {
         dto.start_time !== undefined ? parseTime(dto.start_time) : undefined,
       end_time:
         dto.end_time !== undefined ? parseTime(dto.end_time) : undefined,
-      episode_number: dto.episode_number ?? 1,
-      notes: dto.notes ?? null,
+      episode_number:
+        dto.episode_number !== undefined ? dto.episode_number : undefined,
+      notes: dto.notes !== undefined ? dto.notes : undefined,
       transcript_lines: resolvedLines,
     };
   }
