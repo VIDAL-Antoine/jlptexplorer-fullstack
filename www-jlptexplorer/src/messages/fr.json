@@ -70,7 +70,9 @@
     "all": "Tous"
   },
   "SceneCard": {
-    "transcript": "Transcription"
+    "transcript": "Transcription",
+    "expand": "Agrandir la scène",
+    "close": "Fermer"
   },
   "HomePage": {
     "tagline": "La grammaire japonaise avec du contexte — du JLPT N5 au JLPT N1",

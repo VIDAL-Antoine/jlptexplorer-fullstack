@@ -70,7 +70,9 @@
     "all": "All"
   },
   "SceneCard": {
-    "transcript": "Transcript"
+    "transcript": "Transcript",
+    "expand": "Expand scene",
+    "close": "Close"
   },
   "HomePage": {
     "tagline": "Japanese grammar in context — from JLPT N5 to JLPT N1",
