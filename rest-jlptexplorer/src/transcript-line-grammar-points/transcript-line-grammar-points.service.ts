@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TranscriptLineGrammarPointsRepository } from './transcript-line-grammar-points.repository';
-import { GrammarPointsRepository } from '../grammar-points/grammar-points.repository';
+import { GrammarPointsService } from '../grammar-points/grammar-points.service';
 import { CreateTranscriptLineGrammarPointDto } from './dto/create-transcript-line-grammar-point.dto';
 import { UpdateTranscriptLineGrammarPointDto } from './dto/update-transcript-line-grammar-point.dto';
 
@@ -12,7 +8,7 @@ import { UpdateTranscriptLineGrammarPointDto } from './dto/update-transcript-lin
 export class TranscriptLineGrammarPointsService {
   constructor(
     private readonly repo: TranscriptLineGrammarPointsRepository,
-    private readonly grammarPointsRepo: GrammarPointsRepository,
+    private readonly grammarPointsService: GrammarPointsService,
   ) {}
 
   findAll() {
@@ -29,9 +25,9 @@ export class TranscriptLineGrammarPointsService {
   }
 
   async create(dto: CreateTranscriptLineGrammarPointDto) {
-    const grammar_point_id = await this.resolveGrammarPointId(
-      dto.grammar_point_slug,
-    );
+    const grammar_point_id = (
+      await this.grammarPointsService.findOne(dto.grammar_point_slug)
+    ).id;
     return this.repo.create({
       transcript_line_id: dto.transcript_line_id,
       grammar_point_id,
@@ -45,7 +41,7 @@ export class TranscriptLineGrammarPointsService {
     await this.findOne(id);
     const grammar_point_id =
       dto.grammar_point_slug !== undefined
-        ? await this.resolveGrammarPointId(dto.grammar_point_slug)
+        ? (await this.grammarPointsService.findOne(dto.grammar_point_slug)).id
         : undefined;
     return this.repo.update(id, {
       transcript_line_id: dto.transcript_line_id,
@@ -59,12 +55,5 @@ export class TranscriptLineGrammarPointsService {
   async remove(id: number) {
     await this.findOne(id);
     return this.repo.remove(id);
-  }
-
-  private async resolveGrammarPointId(slug: string): Promise<number> {
-    const gp = await this.grammarPointsRepo.findBySlug(slug);
-    if (!gp)
-      throw new BadRequestException(`Grammar point slug "${slug}" not found`);
-    return gp.id;
   }
 }

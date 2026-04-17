@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TranscriptLinesRepository } from './transcript-lines.repository';
-import { SpeakersRepository } from '../speakers/speakers.repository';
+import { SpeakersService } from '../speakers/speakers.service';
 import { CreateTranscriptLineDto } from './dto/create-transcript-line.dto';
 import { UpdateTranscriptLineDto } from './dto/update-transcript-line.dto';
 import { QueryTranscriptLineDto } from './dto/query-transcript-line.dto';
@@ -14,7 +10,7 @@ import { parseTime } from '../utils/parse-time';
 export class TranscriptLinesService {
   constructor(
     private readonly repo: TranscriptLinesRepository,
-    private readonly speakersRepo: SpeakersRepository,
+    private readonly speakersService: SpeakersService,
   ) {}
 
   findAll(query: QueryTranscriptLineDto) {
@@ -28,7 +24,9 @@ export class TranscriptLinesService {
   }
 
   async create(dto: CreateTranscriptLineDto) {
-    const speaker_id = await this.resolveSpeakerId(dto.speaker_slug);
+    const speaker_id = dto.speaker_slug
+      ? (await this.speakersService.findOne(dto.speaker_slug)).id
+      : null;
     return this.repo.create({
       scene_id: dto.scene_id,
       start_time: dto.start_time != null ? parseTime(dto.start_time) : null,
@@ -42,7 +40,9 @@ export class TranscriptLinesService {
     await this.findOne(id);
     const speaker_id =
       dto.speaker_slug !== undefined
-        ? await this.resolveSpeakerId(dto.speaker_slug)
+        ? dto.speaker_slug
+          ? (await this.speakersService.findOne(dto.speaker_slug)).id
+          : null
         : undefined;
     return this.repo.update(id, {
       scene_id: dto.scene_id,
@@ -56,16 +56,6 @@ export class TranscriptLinesService {
       japanese_text: dto.japanese_text,
       translations: dto.translations,
     });
-  }
-
-  private async resolveSpeakerId(
-    slug: string | null | undefined,
-  ): Promise<number | null> {
-    if (!slug) return null;
-    const speaker = await this.speakersRepo.findBySlug(slug);
-    if (!speaker)
-      throw new BadRequestException(`Speaker slug "${slug}" not found`);
-    return speaker.id;
   }
 
   async remove(id: number) {

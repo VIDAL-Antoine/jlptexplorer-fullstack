@@ -36,6 +36,10 @@ export class GrammarPointsService {
     });
   }
 
+  findManyBySlugs(slugs: string[]) {
+    return this.repo.findManyBySlugs(slugs);
+  }
+
   create(dto: CreateGrammarPointDto) {
     return this.repo.create(dto);
   }

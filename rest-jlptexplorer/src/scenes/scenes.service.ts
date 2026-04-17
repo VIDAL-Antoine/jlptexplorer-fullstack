@@ -1,12 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ScenesRepository } from './scenes.repository';
-import { SourcesRepository } from '../sources/sources.repository';
-import { SpeakersRepository } from '../speakers/speakers.repository';
-import { GrammarPointsRepository } from '../grammar-points/grammar-points.repository';
+import { SourcesService } from '../sources/sources.service';
+import { SpeakersService } from '../speakers/speakers.service';
+import { GrammarPointsService } from '../grammar-points/grammar-points.service';
 import { CreateSceneDto } from './dto/create-scene.dto';
 import { UpdateSceneDto } from './dto/update-scene.dto';
 import { QuerySceneDto } from './dto/query-scene.dto';
@@ -16,9 +12,9 @@ import { parseTime } from '../utils/parse-time';
 export class ScenesService {
   constructor(
     private readonly repo: ScenesRepository,
-    private readonly sourcesRepo: SourcesRepository,
-    private readonly speakersRepo: SpeakersRepository,
-    private readonly grammarPointsRepo: GrammarPointsRepository,
+    private readonly sourcesService: SourcesService,
+    private readonly speakersService: SpeakersService,
+    private readonly grammarPointsService: GrammarPointsService,
   ) {}
 
   findAll(query: QuerySceneDto) {
@@ -58,7 +54,7 @@ export class ScenesService {
         'source_slug, youtube_video_id, start_time and end_time are required',
       );
     }
-    return this.repo.create(resolved as Parameters<typeof this.repo.create>[0]);
+    return this.repo.create({ ...resolved, transcript_lines: resolved.transcript_lines ?? [] } as Parameters<typeof this.repo.create>[0]);
   }
 
   async update(id: number, dto: UpdateSceneDto) {
@@ -73,23 +69,15 @@ export class ScenesService {
   }
 
   private async resolveDto(dto: CreateSceneDto | UpdateSceneDto) {
-    let source_id: number | undefined;
-    if (dto.source_slug !== undefined) {
-      const source = await this.sourcesRepo.findBySlug(dto.source_slug);
-      if (!source) {
-        throw new BadRequestException(
-          `Source slug "${dto.source_slug}" not found`,
-        );
-      }
-      source_id = source.id;
-    }
+    const source_id =
+      dto.source_slug !== undefined
+        ? (await this.sourcesService.findOne(dto.source_slug)).id
+        : undefined;
 
-    let resolvedLines:
-      | Awaited<ReturnType<typeof this.resolveTranscriptLines>>
-      | undefined;
-    if (dto.transcript_lines !== undefined) {
-      resolvedLines = await this.resolveTranscriptLines(dto.transcript_lines);
-    }
+    const resolvedLines =
+      dto.transcript_lines !== undefined
+        ? await this.resolveTranscriptLines(dto.transcript_lines)
+        : undefined;
 
     return {
       source_id,
@@ -110,21 +98,14 @@ export class ScenesService {
   ) {
     return Promise.all(
       lines.map(async (line) => {
-        let speaker_id: number | null = null;
-        if (line.speaker_slug) {
-          const speaker = await this.speakersRepo.findBySlug(line.speaker_slug);
-          if (!speaker) {
-            throw new BadRequestException(
-              `Speaker slug "${line.speaker_slug}" not found`,
-            );
-          }
-          speaker_id = speaker.id;
-        }
+        const speaker_id = line.speaker_slug
+          ? (await this.speakersService.findOne(line.speaker_slug)).id
+          : null;
 
         const slugs = (line.grammar_points ?? []).map((gp) => gp.slug);
         const grammarPoints =
           slugs.length > 0
-            ? await this.grammarPointsRepo.findManyBySlugs(slugs)
+            ? await this.grammarPointsService.findManyBySlugs(slugs)
             : [];
         const grammarPointMap = new Map(
           grammarPoints.map((gp) => [gp.slug, gp.id]),
@@ -133,7 +114,7 @@ export class ScenesService {
         const grammar_point_annotations = (line.grammar_points ?? []).map(
           (gp) => {
             const grammar_point_id = grammarPointMap.get(gp.slug);
-            if (!grammar_point_id) {
+            if (grammar_point_id === undefined) {
               throw new BadRequestException(
                 `Grammar point slug "${gp.slug}" not found`,
               );

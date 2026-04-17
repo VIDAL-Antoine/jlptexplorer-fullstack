@@ -6,6 +6,6 @@ import { GrammarPointsRepository } from './grammar-points.repository';
 @Module({
   controllers: [GrammarPointsController],
   providers: [GrammarPointsService, GrammarPointsRepository],
-  exports: [GrammarPointsRepository],
+  exports: [GrammarPointsService],
 })
 export class GrammarPointsModule {}

@@ -6,6 +6,6 @@ import { SpeakersRepository } from './speakers.repository';
 @Module({
   controllers: [SpeakersController],
   providers: [SpeakersService, SpeakersRepository],
-  exports: [SpeakersRepository],
+  exports: [SpeakersService],
 })
 export class SpeakersModule {}
