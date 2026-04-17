@@ -105,7 +105,6 @@ export function SourceContent() {
         pageSize={PAGE_SIZE}
         noScenesMessage={t('noScenes')}
         currentGrammarPointIds={currentGrammarPointIds}
-        hideSourceInfo
       />
     </Stack>
   );

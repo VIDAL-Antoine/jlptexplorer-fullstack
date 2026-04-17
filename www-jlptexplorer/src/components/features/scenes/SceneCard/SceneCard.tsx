@@ -1,10 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  IconArrowsMaximize,
-  IconChevronDown,
-  IconChevronUp,
-  IconXFilled,
-} from '@tabler/icons-react';
+import { IconArrowsMaximize, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   ActionIcon,
@@ -28,13 +23,11 @@ import { Link } from '@/i18n/navigation';
 import { type SceneWithDetails } from '@/lib/api';
 import { routes } from '@/lib/routes';
 import { getLocalizedTitle } from '@/utils/i18n';
-import { getSourceTypeIcon } from '@/utils/icons';
 import { TranscriptLine } from './TranscriptLine';
 
 interface SceneCardProps {
   scene: SceneWithDetails;
   currentGrammarPointIds?: number[];
-  hideSourceInfo?: boolean;
   defaultOpened?: boolean;
   onClose?: () => void;
 }
@@ -42,7 +35,6 @@ interface SceneCardProps {
 export function SceneCard({
   scene,
   currentGrammarPointIds,
-  hideSourceInfo = false,
   defaultOpened = false,
   onClose,
 }: SceneCardProps) {
@@ -77,13 +69,12 @@ export function SceneCard({
     grammarPointTranscriptScript,
   } = useSettings();
 
-  const SourceTypeIcon = getSourceTypeIcon(scene.sources.type);
   const playerRef = useRef<YoutubePlayerHandle>(null);
 
   return (
     <>
       <Card shadow="sm" padding="md" radius="md" withBorder>
-        <Card.Section mb="md" pos="relative">
+        <Card.Section mb="md">
           <AspectRatio ratio={16 / 9}>
             <YoutubePlayer
               ref={playerRef}
@@ -92,42 +83,30 @@ export function SceneCard({
               endTime={scene.end_time}
             />
           </AspectRatio>
-          <ActionIcon
-            variant="filled"
-            color="dark"
-            size="md"
-            pos="absolute"
-            top={8}
-            right={8}
-            visibleFrom="md"
-            onClick={onClose ?? openModal}
-            aria-label={onClose ? t('close') : t('expand')}
-          >
-            {onClose ? <IconXFilled size={16} /> : <IconArrowsMaximize size={16} />}
-          </ActionIcon>
         </Card.Section>
 
-        {!hideSourceInfo && (
-          <Group mb="xs" align="flex-start" justify="space-between" wrap="nowrap">
-            <Anchor
-              component={Link}
-              href={routes.sources.detail(scene.sources.slug)}
-              underline="never"
-              c="inherit"
+        <Group mb="xs" align="flex-start" justify="space-between" wrap="nowrap">
+          <Anchor
+            component={Link}
+            href={routes.sources.detail(scene.sources.slug)}
+            underline="never"
+            c="inherit"
+          >
+            <Title order={4}>{getLocalizedTitle(scene.sources, sourceTitleLang, locale)}</Title>
+          </Anchor>
+          {!onClose && (
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              size="md"
+              visibleFrom="md"
+              onClick={openModal}
+              aria-label={t('expand')}
             >
-              <Title order={4}>{getLocalizedTitle(scene.sources, sourceTitleLang, locale)}</Title>
-            </Anchor>
-            <Anchor
-              component={Link}
-              href={routes.sources.list(scene.sources.type)}
-              mt={4}
-              lh={0}
-              style={{ flexShrink: 0 }}
-            >
-              <SourceTypeIcon size={16} color="gray" />
-            </Anchor>
-          </Group>
-        )}
+              <IconArrowsMaximize size={16} />
+            </ActionIcon>
+          )}
+        </Group>
 
         <Button
           variant="subtle"
@@ -158,11 +137,10 @@ export function SceneCard({
         </Collapse>
       </Card>
 
-      <Modal opened={modalOpened} onClose={closeModal} size="xl" withCloseButton={false} centered>
+      <Modal opened={modalOpened} onClose={closeModal} size="xl" centered>
         <SceneCard
           scene={scene}
           currentGrammarPointIds={currentGrammarPointIds}
-          hideSourceInfo={hideSourceInfo}
           defaultOpened
           onClose={closeModal}
         />

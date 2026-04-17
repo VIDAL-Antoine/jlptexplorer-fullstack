@@ -11,7 +11,6 @@ type Props = {
   pageSize: number;
   noScenesMessage: string;
   currentGrammarPointIds?: number[];
-  hideSourceInfo?: boolean;
 };
 
 export function ScenesGrid({
@@ -23,7 +22,6 @@ export function ScenesGrid({
   pageSize,
   noScenesMessage,
   currentGrammarPointIds,
-  hideSourceInfo,
 }: Props) {
   if (!scenes && loading) {
     return (
@@ -47,7 +45,6 @@ export function ScenesGrid({
             key={scene.id}
             scene={scene}
             currentGrammarPointIds={currentGrammarPointIds}
-            hideSourceInfo={hideSourceInfo}
           />
         ))}
       </SimpleGrid>
