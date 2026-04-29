@@ -137,7 +137,7 @@ export function SceneCard({
         </Collapse>
       </Card>
 
-      <Modal opened={modalOpened} onClose={closeModal} size="xl" centered>
+      <Modal opened={modalOpened} onClose={closeModal} size="85vh" centered>
         <SceneCard
           scene={scene}
           currentGrammarPointIds={currentGrammarPointIds}
