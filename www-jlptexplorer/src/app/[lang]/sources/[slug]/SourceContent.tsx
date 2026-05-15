@@ -1,9 +1,7 @@
 'use client';
 
-import { useParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Group, Skeleton, Stack } from '@mantine/core';
-import NotFound from '@/app/[lang]/not-found';
 import { GrammarPointsMultiSelect } from '@/components/features/grammar/GrammarPointsMultiSelect/GrammarPointsMultiSelect';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourceHeader } from '@/components/features/sources/SourceHeader/SourceHeader';
@@ -11,6 +9,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { useApiData } from '@/hooks/useApiData';
 import { useUrlFilters } from '@/hooks/useUrlFilters';
 import { api } from '@/lib/api';
+import type { Source } from '@/lib/api/types';
 import { getLocalizedTitle } from '@/utils/i18n';
 
 const PAGE_SIZE = 12;
@@ -41,15 +40,12 @@ export function SourceLoadingFallback() {
   );
 }
 
-export function SourceContent() {
-  const { slug } = useParams<{ lang: string; slug: string }>();
+export function SourceContent({ source, slug }: { source: Source; slug: string }) {
   const locale = useLocale();
   const t = useTranslations('SourcePage');
   const tTypes = useTranslations('SourceTypes');
   const { sourceTitleLang, grammarMatch } = useSettings();
   const { filters, rawFilters, setFilters } = useUrlFilters(['grammar_points'] as const);
-
-  const { data: source, loading: sourceLoading } = useApiData(() => api.sources.get(slug), [slug]);
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
     () =>
@@ -61,13 +57,6 @@ export function SourceContent() {
       }),
     [slug, rawFilters.grammar_points, grammarMatch, filters.page]
   );
-
-  if (sourceLoading) {
-    return <SourceLoadingFallback />;
-  }
-  if (!source) {
-    return <NotFound />;
-  }
 
   const displayTitle = getLocalizedTitle(source, sourceTitleLang, locale);
   const availableGrammarPoints = scenesPage?.availableGrammarPoints ?? [];

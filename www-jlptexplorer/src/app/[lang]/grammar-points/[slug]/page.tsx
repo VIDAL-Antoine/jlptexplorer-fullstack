@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import { getLocalizedMeaning } from '@/utils/i18n';
-import { GrammarPointContent, GrammarPointLoadingFallback } from './GrammarPointContent';
+import { GrammarPointContent } from './GrammarPointContent';
 
 export async function generateMetadata({
   params,
@@ -19,10 +19,17 @@ export async function generateMetadata({
   }
 }
 
-export default function GrammarPointPage() {
-  return (
-    <Suspense fallback={<GrammarPointLoadingFallback />}>
-      <GrammarPointContent />
-    </Suspense>
-  );
+export default async function GrammarPointPage({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}) {
+  const { slug } = await params;
+  let grammarPoint;
+  try {
+    grammarPoint = await api.grammarPoints.get(slug);
+  } catch {
+    notFound();
+  }
+  return <GrammarPointContent grammarPoint={grammarPoint} slug={slug} />;
 }

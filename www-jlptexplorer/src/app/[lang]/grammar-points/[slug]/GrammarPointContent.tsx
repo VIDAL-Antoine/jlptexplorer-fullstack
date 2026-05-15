@@ -1,15 +1,14 @@
 'use client';
 
-import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Group, Skeleton, Stack } from '@mantine/core';
-import NotFound from '@/app/[lang]/not-found';
 import { GrammarPointHeader } from '@/components/features/grammar/GrammarPointHeader/GrammarPointHeader';
 import { ScenesGrid } from '@/components/features/scenes/ScenesGrid/ScenesGrid';
 import { SourcesMultiSelect } from '@/components/features/sources/SourcesMultiSelect/SourcesMultiSelect';
 import { useApiData } from '@/hooks/useApiData';
 import { useUrlFilters } from '@/hooks/useUrlFilters';
 import { api } from '@/lib/api';
+import type { GrammarPoint } from '@/lib/api/types';
 
 const PAGE_SIZE = 12;
 
@@ -39,15 +38,15 @@ export function GrammarPointLoadingFallback() {
   );
 }
 
-export function GrammarPointContent() {
-  const { slug } = useParams<{ lang: string; slug: string }>();
+export function GrammarPointContent({
+  grammarPoint,
+  slug,
+}: {
+  grammarPoint: GrammarPoint;
+  slug: string;
+}) {
   const t = useTranslations('GrammarPointPage');
   const { filters, rawFilters, setFilters } = useUrlFilters(['sources'] as const);
-
-  const { data: grammarPoint, loading: grammarPointLoading } = useApiData(
-    () => api.grammarPoints.get(slug),
-    [slug]
-  );
 
   const { data: scenesPage, loading: scenesLoading } = useApiData(
     () =>
@@ -58,13 +57,6 @@ export function GrammarPointContent() {
       }),
     [slug, rawFilters.sources, filters.page]
   );
-
-  if (grammarPointLoading) {
-    return <GrammarPointLoadingFallback />;
-  }
-  if (!grammarPoint) {
-    return <NotFound />;
-  }
 
   const availableSources = scenesPage?.availableSources ?? [];
   const totalPages = scenesPage ? Math.ceil(scenesPage.total / PAGE_SIZE) : 0;
@@ -94,7 +86,7 @@ export function GrammarPointContent() {
         loading={scenesLoading}
         pageSize={PAGE_SIZE}
         noScenesMessage={t('noScenes')}
-        currentGrammarPointIds={grammarPoint ? [grammarPoint.id] : []}
+        currentGrammarPointIds={[grammarPoint.id]}
       />
     </Stack>
   );

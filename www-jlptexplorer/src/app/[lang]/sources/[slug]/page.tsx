@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import { getLocalizedTitle } from '@/utils/i18n';
-import { SourceContent, SourceLoadingFallback } from './SourceContent';
+import { SourceContent } from './SourceContent';
 
 export async function generateMetadata({
   params,
@@ -18,10 +18,17 @@ export async function generateMetadata({
   }
 }
 
-export default function SourcePage() {
-  return (
-    <Suspense fallback={<SourceLoadingFallback />}>
-      <SourceContent />
-    </Suspense>
-  );
+export default async function SourcePage({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}) {
+  const { slug } = await params;
+  let source;
+  try {
+    source = await api.sources.get(slug);
+  } catch {
+    notFound();
+  }
+  return <SourceContent source={source} slug={slug} />;
 }
